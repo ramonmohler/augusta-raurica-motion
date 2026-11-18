@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Menü – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Navbar (wie Demo «Navbar», hier nur als Auslöser) ---------- */
+  .nav { position: fixed; inset: 0 0 auto; z-index: 60; color: var(--weiss); transition: color .25s ease; }
+  .nav__in { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding-block: var(--s2); }
+  .nav__left { display: flex; align-items: center; gap: var(--s2); }
+  .nav__right { display: flex; justify-content: flex-end; }
+  .nav__btn { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-decoration: none; font: 700 16px/1.5 var(--font); transition: color .2s ease; }
+  .nav__btn::after { content: ""; position: absolute; inset: -7px; }
+  .nav__btn svg.i { width: 24px; height: 24px; stroke-width: 1.5; }
+  @media (hover: hover) and (pointer: fine) { .nav__btn:hover { color: var(--gold-20); } }
+  .nav.is-a11y .nav__btn:not([aria-pressed="true"]) { color: var(--weiss-a60); }     /* Barrierefreiheit aktiv: andere grau */
+  .nav__logo { display: block; height: 22px; aspect-ratio: 1344 / 112.709; background: currentColor; -webkit-mask: url(../../shared/img/logo-weiss.svg) center / contain no-repeat; mask: url(../../shared/img/logo-weiss.svg) center / contain no-repeat; }
+  .menu-btn { text-transform: uppercase; letter-spacing: .04em; }
+  .menu-btn__label { display: inline-block; }
+  .burger { display: inline-grid; gap: 4px; width: 14px; }
+  .burger span { height: 1.5px; background: currentColor; }
+  @media (max-width: 900px) {
+    .nav__in { grid-template-columns: auto 1fr auto; column-gap: 20px; padding-block: 20px; }
+    .nav__logo { height: 14px; order: 1; } .nav__left { order: 2; justify-content: flex-end; gap: 20px; } .nav__right { order: 3; }
+    .nav__lang { display: none; }
+  }
+
+  /* ---------- Menü-Overlay (Figma 3567:29053) – volle Viewport-Grösse, scrollbar ---------- */
+  .menu { position: fixed; inset: 0; z-index: 55; background: var(--black); color: var(--weiss); overflow-y: auto; overscroll-behavior: contain; visibility: hidden; }
+  .menu__bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+  .menu__bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(6px); opacity: 0; }
+  .menu__bg::before { content: ""; position: absolute; inset: 0; z-index: 1; -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
+    -webkit-mask: linear-gradient(90deg, transparent 30%, #000 60%); mask: linear-gradient(90deg, transparent 30%, #000 60%); }
+  .menu__bg::after { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.55) 35%, rgba(0,0,0,.92) 70%, #000 100%); }
+  .menu__in { position: relative; min-height: 100%; display: grid; grid-template-rows: 1fr auto; padding-top: calc(94px + 120px); padding-bottom: var(--s2); }
+  .menu__body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); align-items: start; padding-bottom: var(--s5); }
+
+  /* Ebene 1 */
+  .m1-list { grid-column: 1 / span 5; list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+  .m1-list > li { overflow: hidden; }                 /* Einträge steigen aus dieser Kante auf */
+  .m1 { display: inline-flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; font: 700 var(--h3)/1.2 var(--font); transition: opacity .25s ease; }
+  .m1-list.has-sel .m1:not([aria-expanded="true"]) { opacity: .4; }
+  @media (hover: hover) and (pointer: fine) { .m1-list .m1:hover { opacity: 1 !important; } }
+
+  /* Ebene 2 + 3 (Desktop: Spalte 7 und 10) */
+  .cols { grid-column: 7 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); column-gap: var(--g); }
+  .panel { grid-row: 1; grid-column: 1 / span 3; display: grid; align-content: start; visibility: hidden; }
+  .panel--l3 { grid-column: 4 / span 3; }
+  .panel__eyebrow { font-size: var(--small); margin-bottom: 20px; }
+  .panel__head { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font: 700 14px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; }
+  .panel__desc { margin: 16px 0 40px; max-width: 318px; font-size: 14px; line-height: 1.5; transition: opacity .25s ease; }
+  .panel__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 24px; }
+  .panel__list a, .panel__list button { display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; text-decoration: none;
+    font: 700 14px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: opacity .25s ease; }
+  .panel__list a::after, .panel__list button::after { content: ""; position: absolute; inset: -13px 0; }   /* Trefferfläche 44 px */
+  .panel__list li { position: relative; }
+  .panel__list svg.i, .panel__head svg.i { width: 14px; height: 14px; transition: transform .25s var(--ease-out); }
+  .chev { transform: rotate(-90deg); }
+  .panel.is-dim .panel__list > li > *:not([aria-expanded="true"]), .panel.is-dim .panel__desc { opacity: .4; }
+  @media (hover: hover) and (pointer: fine) {
+    .panel__list a:hover svg.i:not(.chev), .panel__head:hover svg.i { transform: translateX(4px); }
+    .panel__list a:hover span, .panel__list button:hover span { text-decoration: underline; text-underline-offset: 4px; }
+  }
+
+  /* Fuss: Tickets + Öffnungszeiten */
+  .foot { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); row-gap: var(--s2); align-items: end; }
+  .foot__tickets { grid-column: 1 / span 6; }
+  .hours { grid-column: 7 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; font-size: var(--small); }
+  .hours > div { display: grid; gap: 8px; align-content: start; }
+  .hrow { display: flex; align-items: center; gap: 8px; }
+  .hdot { width: 26px; height: 26px; flex: none; border-radius: 50%; background: rgba(117, 141, 93, .6); display: grid; place-items: center; }
+  .hdot.is-closed { background: rgba(255, 255, 255, .2); }
+  .hdot svg.i { width: 14px; height: 14px; stroke-width: 1.5; }
+  /* «Heute geöffnet»: Ring hinter dem Uhr-Icon pulsiert (Figma: Punkt AR Grün 60 %, Icon/Clock). Gleicher Puls wie hero/hero-museen (.status__ic) */
+  .hdot { position: relative; isolation: isolate; }
+  .hdot::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: 50%; background: rgb(117, 141, 93); opacity: 0; pointer-events: none; }
+  .hdot:not(.is-closed)::before { animation: pulse 2.4s cubic-bezier(0.23, 1, 0.32, 1) infinite; }
+  @keyframes pulse { 0% { transform: scale(1); opacity: .45; } 70%, 100% { transform: scale(2); opacity: 0; } }
+  .hdot.no-pulse::before { animation: none !important; }
+  @media (prefers-reduced-motion: reduce) { .hdot::before { animation: none !important; } }
+
+  /* Barrierefreiheit im Menü (dunkle Variante) */
+  .ma11y { grid-column: 1 / -1; grid-row: 1; align-self: start; display: grid; grid-template-columns: 318px minmax(0, 1fr); column-gap: calc(var(--g) * 3); row-gap: var(--s15); visibility: hidden; }
+  .ma11y h2 { font-size: var(--h4); } .ma11y p { font-size: var(--small); }
+  .ma11y__intro { display: grid; gap: var(--s125); align-content: start; }
+  .ma11y__opts { display: flex; flex-wrap: wrap; gap: var(--s125); align-items: center; align-content: start; align-self: start; padding-top: 40px; }
+  .ma11y .btn { min-height: 40px; padding: 10px 18px; font-size: 13px; }
+  .stack { display: grid; }
+  .stack > * { grid-area: 1 / 1; }
+
+  /* Sprachen (nur Mobile, im Menü) */
+  .mlang { display: none; gap: 16px; margin-bottom: var(--s2); }
+  .mlang button { min-width: 44px; min-height: 44px; padding: 0; border: 0; background: none; color: var(--weiss-a60); font: 700 14px/1 var(--font); cursor: pointer; text-align: left; }
+  .mlang button[aria-pressed="true"] { color: var(--weiss); }
+
+  /* Mobile: Akkordeon auf Ebene 1, Ebene 3 als eigene Ansicht mit Zurück (wie harvard.edu) */
+  .acc { display: none; overflow: hidden; height: 0; }
+  .mback { display: none; }
+  .mview3 { display: none; }
+  @media (max-width: 900px) {
+    .menu__in { padding-top: calc(64px + 16px); }
+    .menu__bg::before { -webkit-mask: none; mask: none; }
+    .menu__bg::after { background: linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.85) 50%); }
+    .menu__body { grid-template-columns: minmax(0, 1fr); padding-bottom: var(--s3); }
+    .mlang { display: flex; }
+    .m1-list { grid-column: 1; grid-row: 1; gap: 12px; }
+    .m1 { font-size: 24px; }
+    .acc { display: block; }
+    .acc .panel { visibility: visible; padding: 16px 0 12px; }
+    .acc .panel__head { display: none; }
+    .acc .panel__desc { margin: 0 0 20px; }
+    .acc .panel__list { gap: 16px; }
+    .cols { grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr); margin-top: var(--s4); }
+    .cols .panel:not(.panel--aud) { display: none; }
+    .ma11y { grid-template-columns: minmax(0, 1fr); }
+    .foot { grid-template-columns: minmax(0, 1fr); }
+    .foot__tickets, .hours { grid-column: 1; }
+    .hours { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
+    .mview3 { display: grid; grid-column: 1; grid-row: 1; align-content: start; visibility: hidden; }
+    .mview3 .panel { visibility: visible; grid-column: 1; }
+    .mview3 h2 { font-size: 24px; margin: 8px 0 16px; }
+    .mback { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; font: 700 12px/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; }
+    .mback svg { transform: rotate(180deg); }
+  }
+
+  /* ---------- Seite hinter dem Menü ---------- */
+  .hero { position: relative; height: 100svh; min-height: 560px; background: var(--anth); }
+  .hero img { width: 100%; height: 100%; object-fit: cover; }
+  .hero::before { content: ""; position: absolute; inset: 0 0 auto; height: 40%; z-index: 1; background: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,0)); }
+  .hero__hint { position: absolute; z-index: 1; left: var(--m); bottom: var(--s5); color: var(--weiss); max-width: 36ch; font-size: var(--small); }
+  body.is-locked { overflow: hidden; }
+</style>
+</head>
+<body data-section="Navigation Components" data-title="Menü">
+
+<header class="nav" id="nav">
+  <div class="nav__in wrap">
+    <div class="nav__left">
+      <a class="nav__btn" href="../../interactive/search-results/" aria-label="Suche"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg></a>
+      <button class="nav__btn" type="button" id="a11yBtn" aria-pressed="false" aria-label="Barrierefreiheit"><svg class="i" aria-hidden="true"><use href="#i-access"/></svg></button>
+      <button class="nav__btn nav__lang" type="button" aria-label="Sprache: Deutsch">DE</button>
+    </div>
+    <a class="nav__logo" href="#" aria-label="Augusta Raurica – Startseite"></a>
+    <div class="nav__right">
+      <button class="nav__btn menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="menu"><span class="menu-btn__label">Menü</span> <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menü">
+  <div class="menu__bg" id="menuBg"></div>
+  <div class="menu__in wrap">
+    <div class="stack">
+      <div class="menu__body" id="menuBody">
+        <div class="mlang" role="group" aria-label="Sprache">
+          <button type="button" aria-pressed="true">DE</button><button type="button" aria-pressed="false" lang="fr">FR</button><button type="button" aria-pressed="false" lang="it">IT</button><button type="button" aria-pressed="false" lang="en">EN</button>
+        </div>
+        <div class="stack" style="grid-column:1 / -1; grid-template-columns: inherit; display:grid">
+          <div class="mroot" id="mroot" style="display:contents"></div>
+        </div>
+      </div>
+      <section class="ma11y" id="ma11y" aria-labelledby="ma11yTitle">
+        <div class="ma11y__intro">
+          <h2 id="ma11yTitle">Barrierefreiheit</h2>
+          <p>Augusta Raurica soll für alle zugänglich sein. Passen Sie Kontrast und Schriftgrösse an oder wechseln Sie zu Gebärdensprache und Leichter Sprache.</p>
+          <a class="tlink" href="#"><span>Alle Informationen</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+        <div class="ma11y__opts">
+          <a class="btn btn--ghost-light" href="#"><svg class="i" aria-hidden="true"><use href="#i-hand"/></svg>Gebärdensprache</a>
+          <a class="btn btn--ghost-light" href="#"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg>Leichte Sprache</a>
+          <p style="flex-basis:100%; opacity:.8">Die Einstellungen werden in diesem Browser gespeichert. Die Regler für Kontrast und Schriftgrösse zeigt die Demo «Navbar».</p>
+        </div>
+      </section>
+    </div>
+    <div class="foot" id="foot">
+      <div class="foot__tickets"><a class="btn btn--light" href="#">Museum und Römerhaus Tickets <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+      <div class="hours" id="hours"></div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="media" style="height:100%"><img src="../../shared/img/rh-hero.jpg" alt="Römerhaus Augusta Raurica" width="1920" height="1080"></div>
+    <p class="hero__hint">Klicken Sie oben rechts auf «Menü». Ebene 1 wählen, dann ein Thema mit Pfeil für die dritte Ebene. Esc schliesst.</p>
+  </section>
+</main>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Volle Viewport-Grösse, scrollbar. Das Hintergrundbild wechselt mit dem gewählten Bereich. Öffnungszeiten werden aus dem heutigen Datum berechnet. Barrierefreiheit im Menü ersetzt den Inhalt; erneuter Klick (oder «Menü») zeigt wieder das Menü, das Burger-Symbol ist so lange ausgeblendet. Mobile: Ebene 1 klappt auf (Akkordeon), Ebene 3 schiebt als eigene Ansicht mit «Zurück» herein (Vorbild harvard.edu).</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Overlay blendet ein, Bild zoomt von 108 % auf 100 %</td><td>Klick Menü</td><td>0.3 s / 1.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Ebene 1 steigt zeilenweise aus der Kante auf</td><td>+0.06 s, 45 ms gestaffelt</td><td>0.7 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Rechte Spalte + Fuss blenden von unten ein</td><td>+0.15 s, 35 ms gestaffelt</td><td>0.4 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Burger → Kreuz</td><td>mit dem Öffnen</td><td>0.3 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Ebene 2 gleitet von rechts ein (16 px), Einträge gestaffelt</td><td>Hover (Desktop, 80 ms Verzögerung) oder Klick</td><td>0.35 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Hintergrundbild überblendet</td><td>mit Ebene 1</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Ebene 3 in Spalte 10, Ebene 2 dimmt auf 40 %</td><td>Klick auf Eintrag mit Pfeil</td><td>0.35 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Mobile: Akkordeon öffnet (Höhe), Inhalt folgt</td><td>Klick Ebene 1</td><td>0.35 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Mobile: Ansicht schiebt 24 px seitlich</td><td>Ebene 3 / Zurück</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Barrierefreiheit ↔ Menü überblenden</td><td>Klick Barrierefreiheit</td><td>0.2 s aus / 0.3 s ein</td></tr>
+    <tr><td>Schliessen: Overlay blendet aus</td><td>Kreuz, Esc</td><td>0.25 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>«Heute geöffnet»: Ring hinter dem Uhr-Icon pulsiert (AR Grün, Scale 1 → 2, Deckkraft 0.45 → 0, ab 70 % Pause), gleicher Puls wie Hero Museen</td><td>Endlosschleife, nur wenn geöffnet</td><td>CSS <code>@keyframes pulse</code> 2.4 s · <code>cubic-bezier(0.23, 1, 0.32, 1)</code> (= <code>--ease-out</code>)</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Nur Überblendungen: kein Zoom, kein Aufsteigen, kein seitliches Gleiten. Der Öffnungszeiten-Punkt steht still (kein Puls).</td></tr>
+  </table>
+</template>
+
+<script>
+/* ---------- Inhalt + Markup (kein Motion-Code): Sitemap aus dem Prototyp ---------- */
+const NAV = [
+  { t: 'Besuch planen', img: 'f-1a7abcf4', d: 'Hier finden Sie alles, was Sie für einen Besuch in unserem Archäologischen Park oder für unsere Aktivitäten benötigen.', c: [
+    { t: 'Tickets und Öffnungszeiten' }, { t: 'Anreise' }, { t: 'Lageplan' }, { t: 'Museumshop' },
+    { t: 'Praktische Informationen', d: 'Filmen und Fotografieren, Buchungs- und Annullationsbedingungen, Toiletten, Gepäck und Hunde.', c: [{ t: 'Filmen, Fotografieren und Drohnenflüge' }, { t: 'Buchen und Annullationsbedingungen' }, { t: 'Toiletten, Gepäck und Hunde' }, { t: 'Metalldetektoren' }] },
+    { t: 'Essen und Trinken' }, { t: 'Barrierefreier Besuch' }] },
+  { t: 'Römerstadt und Museum', img: 'f-b57deaa0', d: 'Die grösste erhaltene Römerstadt nördlich der Alpen: Monumente, Tierpark, Römerhaus und Museum.', c: [
+    { t: 'Die römische Stadt', d: 'Stadtgeschichte, Umland und die Monumente unter freiem Himmel.', c: [{ t: 'Stadt und Umland' }, { t: 'Monumente' }] },
+    { t: 'Tierpark', d: 'Alte Haustierrassen, wie sie schon die Römer hielten.', c: [{ t: 'Wild- und Nutztiere' }] },
+    { t: 'Landgut Castelen', d: 'Seminarräume für Universitäten und Firmen.', c: [{ t: 'Mieträume' }] },
+    { t: 'Römerhaus' },
+    { t: 'Museum', d: 'Aktuelle Ausstellungen, der Silberschatz und die Highlights der Sammlung.', c: [{ t: 'Aktuelle Ausstellungen' }, { t: 'Silberschatz' }, { t: 'Sammlung Highlights' }] }] },
+  { t: 'Programm', img: 'f-b9f14153', d: 'Führungen, Workshops, Ausstellungen und Feste: Das ganze Programm auf einen Blick.', c: [
+    { t: 'Angebote und Kalender' }, { t: 'Aktuelle Ausstellung' },
+    { t: 'Römisches Theater', d: 'Konzerte, Theater und Führungen im antiken Theater.', c: [{ t: 'Live in Concert' }] },
+    { t: 'Römerfest', d: 'Das grösste Römerfest der Schweiz, jedes Jahr Ende August.', c: [{ t: 'Besuch' }, { t: 'Über das Römerfest' }, { t: 'Kontakt und Medien' }] }] },
+  { t: 'Archäologie und Sammlung', img: 'f-0d2a16e7', d: 'Hier finden Sie alles über Ausgrabungen, Sammlung und Forschung in Augusta Raurica.', c: [
+    { t: 'Ausgrabung', d: 'Was der Boden in Augst und Kaiseraugst dieses Jahr freigibt.', c: [{ t: 'Ausgrabungen Augst' }, { t: 'Ausgrabungen Kaiseraugst' }] },
+    { t: 'Sammlung', d: 'Über eine Million Fundstücke, online und im Sammlungszentrum.', c: [{ t: 'Sammlung online' }, { t: 'Leihgaben' }, { t: 'Archiv und Bibliothek' }] },
+    { t: 'Konservierung und Restaurierung' },
+    { t: 'Forschung', d: 'Hier finden Sie alles über aktuelle Projekte, Schwerpunkte und das Team der Forschung.', c: [{ t: 'Aktuelle Projekte' }, { t: 'Forschungsschwerpunkte' }, { t: 'Archäologischer Stadtplan' }, { t: 'Forschungsteam' }, { t: 'Publikationen' }, { t: 'Kooperationen und Partner' }] }] },
+  { t: 'Wissenswertes', img: 'f-4b772745', d: 'Geschichten und Einblicke, nach Themen filterbar.', c: [
+    { t: 'Geschichten und Einblicke' }, { t: 'Ausgrabungen' }, { t: 'Römer im Alltag' }, { t: 'Sammlungen' }, { t: 'Digitale Angebote' }, { t: 'Rezepte' }] },
+  { t: 'Institution', img: 'f-c7d7de05', d: 'Auftrag, Geschichte und Team von Augusta Raurica – und wie Sie mitwirken können.', c: [
+    { t: 'Über uns', d: 'Auftrag und Philosophie, Geschichte der Institution, Team und Governance.', c: [{ t: 'Auftrag und Philosophie' }, { t: 'Geschichte der Institution' }, { t: 'Team' }, { t: 'Geschäftsberichte' }] },
+    { t: 'Mitwirken', d: 'Mitglied werden, spenden oder die Stiftung unterstützen.', c: [{ t: 'Mitglied werden' }, { t: 'Spenden' }, { t: 'Stiftung Pro Augusta Raurica' }] },
+    { t: 'Medien' }, { t: 'Kontakt' }] },
+];
+const AUD = ['Erwachsene', 'Schulen', 'Familien', 'Gruppen', 'Forschende', 'Förderer und Mitglieder'];
+const ICON = (n, cls = 'i') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const item = (n, key) => n.c
+  ? `<li class="stg"><button type="button" data-l2="${key}" aria-expanded="false"><span>${n.t}</span>${ICON('down', 'i chev')}</button></li>`
+  : `<li class="stg"><a href="#"><span>${n.t}</span>${ICON('arrow')}</a></li>`;
+const panel = (n, key, cls = '') => `<div class="panel ${cls}" data-panel="${key}">
+    <a class="panel__head stg" href="#">${n.t} ${ICON('arrow')}</a>
+    <p class="panel__desc stg">${n.d || ''}</p>
+    <ul class="panel__list">${n.c.map((c, j) => item(c, `${key}-${j}`)).join('')}</ul></div>`;
+
+document.getElementById('mroot').innerHTML = `
+  <ul class="m1-list" id="m1">${NAV.map((n, i) => `<li>
+    <button class="m1" type="button" data-l1="${i}" aria-expanded="false">${n.t}</button>
+    <div class="acc" data-acc="${i}">${panel(n, i)}</div></li>`).join('')}</ul>
+  <div class="cols" id="cols">
+    <div class="panel panel--aud" data-panel="aud"><p class="panel__eyebrow stg">Wir sind für:</p>
+      <ul class="panel__list">${AUD.map(a => `<li class="stg"><a href="#"><span>${a}</span>${ICON('arrow')}</a></li>`).join('')}</ul></div>
+    ${NAV.map((n, i) => panel(n, i)).join('')}
+    ${NAV.flatMap((n, i) => n.c.map((c, j) => c.c ? panel(c, `${i}-${j}`, 'panel--l3') : '')).join('')}
+  </div>
+  <div class="mview3" id="mview3"><button class="mback" type="button" id="mback">${ICON('arrow')}<span></span></button><h2></h2><div class="mslot"></div></div>`;
+
+document.getElementById('menuBg').innerHTML = ['rh-garten', ...NAV.map(n => n.img)]
+  .map((src, i) => `<img src="../../shared/img/${src}.jpg" alt="" data-bg="${i - 1}">`).join('');
+
+/* Öffnungszeiten: aus dem heutigen Datum (Beispielzeiten 10.00 – 17.00 Uhr, täglich) */
+(() => {
+  const now = new Date(), h = 12, open = h >= 10 && h < 17;   // Demo fix auf Mittag, damit «geöffnet» + Puls sichtbar sind. Im Projekt: aktuelle Uhrzeit
+  const day = now.toLocaleDateString('de-CH', { weekday: 'long' });
+  document.getElementById('hours').innerHTML = `
+    <div><strong>Museum, Monumente und Tierpark</strong>
+      <p class="hrow"><span class="hdot ${open ? '' : 'is-closed'}">${ICON('clock')}</span>${open ? `Heute geöffnet: 10.00 – 17.00 Uhr` : `${day}: 10.00 – 17.00 Uhr, jetzt geschlossen`}</p></div>
+    <div><strong>Freilichtgelände</strong><p>Ganzen Tag offen</p></div>`;
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const nav = document.querySelector('#nav');
+  const menu = document.querySelector('#menu');
+  const menuBtn = document.querySelector('#menuBtn');
+  const a11yBtn = document.querySelector('#a11yBtn');
+  const body = document.querySelector('#menuBody');
+  const a11y = document.querySelector('#ma11y');
+  const m1List = document.querySelector('#m1');
+  const m1 = [...m1List.querySelectorAll('.m1')];
+  const cols = document.querySelector('#cols');
+  const bgs = [...document.querySelectorAll('#menuBg img')];
+  const bars = menuBtn.querySelectorAll('.burger span');
+  const burger = menuBtn.querySelector('.burger');
+  const mobile = matchMedia('(max-width: 900px)');
+  const panelOf = key => cols.querySelector(`[data-panel="${key}"]`);
+  const y = v => reduced ? 0 : v;
+  AR.lazy();
+  // Puls am Öffnungszeiten-Punkt läuft per CSS; bei Reduzierter Bewegung (auch Demo-Schalter) anhalten
+  if (reduced) document.querySelector('.hdot')?.classList.add('no-pulse');
+
+  // Burger ↔ Kreuz
+  const toX = gsap.timeline({ paused: true, defaults: { duration: .3, ease: AR.ease.inOut } })
+    .to(bars[0], { y: 5.5, rotation: 45 }, 0).to(bars[1], { scaleX: 0, duration: .15 }, 0).to(bars[2], { y: -5.5, rotation: -45 }, 0);
+
+  // ---------- Öffnen ----------
+  const openTl = gsap.timeline({ paused: true, defaults: { ease: AR.ease.out } })
+    .set(menu, { autoAlpha: 1 })
+    .fromTo(menu, { opacity: 0 }, { opacity: 1, duration: .3 })
+    .fromTo('#menuBg', { scale: reduced ? 1 : 1.08 }, { scale: 1, duration: 1.6 }, 0)
+    // Nur transform auf dem Button – die Deckkraft (Dimmen nicht gewählter Einträge) bleibt beim CSS
+    .fromTo(m1, { yPercent: y(105) }, { yPercent: 0, duration: .7, stagger: .045 }, .06)
+    .fromTo(m1List.children, { autoAlpha: reduced ? 0 : 1 }, { autoAlpha: 1, duration: .4, stagger: .045 }, .06)
+    .fromTo('.mlang, .panel--aud .stg', { y: y(10), autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .4, stagger: .035 }, .15)
+    .fromTo('#foot', { y: y(10), autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .4 }, .3);
+
+  let sel1 = null, sel2 = null, trigger = null;
+  function open() {
+    reset();
+    menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('is-locked');
+    gsap.set(panelOf('aud'), { autoAlpha: 1 });
+    gsap.set(bgs, { autoAlpha: 0 }); gsap.set(bgs[0], { autoAlpha: 1 });
+    openTl.play(0);
+    toX.play();
+  }
+  function close() {
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('is-locked');
+    setA11y(false, true);
+    toX.reverse();
+    gsap.to(menu, { opacity: 0, duration: .25, ease: AR.ease.out, onComplete: () => { openTl.pause(0); gsap.set(menu, { autoAlpha: 0 }); } });
+    menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', () => {
+    if (a11yBtn.getAttribute('aria-pressed') === 'true') return setA11y(false);   // «Menü» bringt das Menü zurück
+    menuBtn.getAttribute('aria-expanded') === 'true' ? close() : open();
+  });
+
+  // ---------- Ebene 1 → Ebene 2 (Desktop: Spalte 7, Mobile: Akkordeon) ----------
+  function showPanel(next, prev) {
+    if (prev && prev !== next) gsap.to(prev, { autoAlpha: 0, x: y(-8), duration: .2, ease: AR.ease.out, overwrite: true });
+    if (!next || next === prev) return;
+    gsap.fromTo(next, { autoAlpha: 0, x: y(16) }, { autoAlpha: 1, x: 0, duration: .35, ease: AR.ease.out, overwrite: true });
+    gsap.fromTo(next.querySelectorAll(':scope > .stg, :scope > .panel__list > .stg'), { y: y(10), autoAlpha: 0 },
+      { y: 0, autoAlpha: 1, duration: .3, stagger: .035, delay: .05, ease: AR.ease.out, overwrite: true });
+  }
+  function showBg(i) {
+    const on = bgs[i + 1];
+    bgs.forEach(b => { if (b !== on) gsap.to(b, { autoAlpha: 0, duration: .6, delay: .1, ease: AR.ease.out, overwrite: true }); });
+    gsap.set(on, { zIndex: 0 });
+    gsap.fromTo(on, { autoAlpha: 0, scale: reduced ? 1 : 1.04 }, { autoAlpha: 1, scale: 1, duration: .6, ease: AR.ease.out, overwrite: true });
+  }
+  function pick1(i) {
+    if (sel1 === i && !mobile.matches) return;
+    if (sel2) showPanel(null, panelOf(sel2));
+    const prev = panelOf(sel1 ?? 'aud');
+    sel2 = null;
+    if (mobile.matches) return toggleAcc(i);
+    sel1 = i;
+    m1List.classList.add('has-sel');
+    m1.forEach((b, k) => b.setAttribute('aria-expanded', k === i));
+    prev.classList.remove('is-dim');
+    showPanel(panelOf(i), prev);
+    showBg(i);
+  }
+  let hoverTimer;
+  m1.forEach((b, i) => {
+    b.addEventListener('click', () => pick1(i));
+    b.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse' && !mobile.matches) { clearTimeout(hoverTimer); hoverTimer = setTimeout(() => pick1(i), 80); } });
+    b.addEventListener('pointerleave', () => clearTimeout(hoverTimer));
+  });
+
+  // ---------- Ebene 2 → Ebene 3 (Desktop: Spalte 10, Mobile: eigene Ansicht) ----------
+  menu.addEventListener('click', e => {
+    const b = e.target.closest('[data-l2]');
+    if (!b) return;
+    const key = b.dataset.l2;
+    if (mobile.matches) return slideTo3(key);
+    const p2 = panelOf(sel1);
+    const same = sel2 === key;
+    if (sel2) showPanel(null, panelOf(sel2));
+    sel2 = same ? null : key;
+    p2.querySelectorAll('[data-l2]').forEach(x => x.setAttribute('aria-expanded', x.dataset.l2 === sel2));
+    p2.classList.toggle('is-dim', !!sel2);
+    if (sel2) showPanel(panelOf(sel2));
+  });
+
+  // Mobile: Akkordeon auf Ebene 1
+  function toggleAcc(i) {
+    const was = sel1;
+    sel1 = was === i ? null : i;
+    m1List.classList.toggle('has-sel', sel1 !== null);
+    m1.forEach((b, k) => b.setAttribute('aria-expanded', k === sel1));
+    document.querySelectorAll('.acc').forEach((acc, k) => {
+      if (k === sel1) {
+        gsap.fromTo(acc, { height: 0 }, { height: 'auto', duration: .35, ease: AR.ease.out, overwrite: true });
+        gsap.fromTo(acc.querySelectorAll('.stg'), { y: y(8), autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .3, stagger: .03, delay: .05, ease: AR.ease.out });
+      } else if (k === was) gsap.to(acc, { height: 0, duration: .25, ease: AR.ease.out, overwrite: true });
+    });
+    if (sel1 !== null) showBg(sel1);
+  }
+  // Mobile: Ebene 3 schiebt als Ansicht herein, Zurück schiebt zurück
+  const view3 = document.querySelector('#mview3');
+  const rootParts = () => [m1List, panelOf('aud'), document.querySelector('.mlang')];
+  function slideTo3(key) {
+    const [i, j] = key.split('-').map(Number);
+    view3.querySelector('h2').textContent = NAV[i].c[j].t;
+    view3.querySelector('.mback span').textContent = NAV[i].t;
+    view3.querySelector('.mslot').innerHTML = panelOf(key).outerHTML.replace(/ style="[^"]*"/g, '');   // Inline-Styles der Desktop-Animation nicht mitkopieren
+    gsap.to(rootParts(), { x: y(-24), autoAlpha: 0, duration: .2, ease: AR.ease.out });
+    gsap.fromTo(view3, { x: y(24), autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .3, delay: .1, ease: AR.ease.out });
+    gsap.fromTo(view3.querySelectorAll('.stg'), { y: y(8), autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .3, stagger: .03, delay: .15, ease: AR.ease.out });
+    menu.scrollTo({ top: 0 });
+    view3.querySelector('.mback').focus({ preventScroll: true });
+  }
+  document.querySelector('#mback').addEventListener('click', () => {
+    gsap.to(view3, { x: y(24), autoAlpha: 0, duration: .2, ease: AR.ease.out });
+    gsap.fromTo(rootParts(), { x: y(-24), autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: .3, delay: .1, ease: AR.ease.out });
+    m1[sel1 ?? 0].focus({ preventScroll: true });
+  });
+
+  // ---------- Barrierefreiheit im Menü ----------
+  function setA11y(on, instant) {
+    const isOn = a11yBtn.getAttribute('aria-pressed') === 'true';
+    if (on === isOn) return;
+    a11yBtn.setAttribute('aria-pressed', on);
+    nav.classList.toggle('is-a11y', on);
+    if (instant) { gsap.set(a11y, { autoAlpha: 0 }); gsap.set([body, '#foot'], { autoAlpha: 1, y: 0 }); gsap.set(burger, { autoAlpha: 1, scale: 1 }); gsap.set('.menu-btn__label', { x: 0 }); return; }
+    const [from, to] = on ? [[body, '#foot'], a11y] : [a11y, [body, '#foot']];
+    gsap.to(from, { autoAlpha: 0, y: y(-8), duration: .2, ease: AR.ease.out, overwrite: true });
+    gsap.fromTo(to, { autoAlpha: 0, y: y(8) }, { autoAlpha: 1, y: 0, duration: .3, delay: .12, ease: AR.ease.out, overwrite: true });
+    // Burger aus, «Menü» rückt an seine Stelle
+    gsap.to(burger, { autoAlpha: on ? 0 : 1, scale: on ? .6 : 1, duration: .2, ease: AR.ease.out });
+    gsap.to('.menu-btn__label', { x: on ? burger.offsetWidth + 8 : 0, duration: .25, ease: AR.ease.out });
+  }
+  a11yBtn.addEventListener('click', () => {
+    if (menuBtn.getAttribute('aria-expanded') !== 'true') { open(); setA11y(true); return; }
+    setA11y(a11yBtn.getAttribute('aria-pressed') !== 'true');
+  });
+
+  // Zurücksetzen beim Öffnen: keine Auswahl, rechts «Wir sind für»
+  function reset() {
+    sel1 = sel2 = null;
+    m1List.classList.remove('has-sel');
+    m1.forEach(b => b.setAttribute('aria-expanded', 'false'));
+    gsap.set(cols.querySelectorAll('.panel'), { autoAlpha: 0, x: 0 });
+    cols.querySelectorAll('.panel').forEach(p => p.classList.remove('is-dim'));
+    gsap.set('.acc', { height: 0 });
+    gsap.set(view3, { autoAlpha: 0 });
+    gsap.set(rootParts(), { x: 0, autoAlpha: 1 });
+  }
+
+  // ---------- Tastatur: Esc + Fokus im Dialog halten (Navbar + Overlay) ----------
+  document.addEventListener('keydown', e => {
+    if (menuBtn.getAttribute('aria-expanded') !== 'true') return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    const f = [...document.querySelectorAll('#nav a, #nav button, #menu a, #menu button')]
+      .filter(x => x.offsetParent !== null && getComputedStyle(x).visibility !== 'hidden' && !x.closest('[style*="visibility: hidden"]'));
+    const i = f.indexOf(document.activeElement);
+    if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
+  });
+});
+</script>
+</body>
+</html>

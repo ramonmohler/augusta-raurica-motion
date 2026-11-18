@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teaser Slider – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Kopf: H4 bold + Tertiär-Link (Figma Teaser Slider 3196:11734) ---------- */
+  .ts__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s15); padding-block: var(--s8) var(--s3); }
+  .ts__head h2 { font-size: var(--h4); font-weight: 700; line-height: 1.25; }
+
+  /* ---------- Spur: Karten 594 × 743 bei 1440 px, ohne Abstand; Mobile 1 Karte (393 × 491) ---------- */
+  .ts__viewport { overflow: hidden; touch-action: pan-y; overscroll-behavior-x: contain; cursor: grab; }   /* contain: Wischen löst nicht „Zurück“ im Browser aus */
+  .ts__viewport.is-dragging { cursor: grabbing; }
+  .ts__track { display: flex; width: max-content; will-change: transform; }
+  .tcard { --w: calc(100vw * 594 / 1440); position: relative; flex: none; width: var(--w); height: calc(var(--w) * 743 / 594);
+    display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; color: var(--weiss); background: var(--anth); }
+  @media (max-width: 900px) { .tcard { --w: 100vw; height: calc(var(--w) * 491 / 393); } }
+  .tcard .media { position: absolute; inset: 0; background: var(--anth); }
+  /* Hover-Zoom auf dem Bild-Container: das <img> selbst gehört GSAP (Einblenden) */
+  .tcard .media { transition: transform .9s var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .tcard:hover .media { transform: scale(1.06); } }
+  .tcard:focus-within .media { transform: scale(1.06); }
+  /* Verlauf + Blur hinter dem Text (wie im Design) */
+  .tcard__body { position: relative; z-index: 1; display: grid; gap: var(--s2); padding: var(--s3) 126px var(--s3) var(--s3);
+    background: linear-gradient(to top, rgba(0,0,0,.66), rgba(0,0,0,.32) 60%, rgba(0,0,0,0)); }
+  .tcard__body::after { content: ""; position: absolute; inset: 0; z-index: -1; -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
+    -webkit-mask: linear-gradient(to top, #000 55%, transparent); mask: linear-gradient(to top, #000 55%, transparent); }
+  @media (max-width: 1300px) { .tcard__body { padding-right: var(--s3); } }
+  @media (max-width: 900px) { .tcard__body { padding: var(--s3) var(--m); } }
+  .tcard__head { display: grid; gap: 12px; }
+  .tcard h3 { font-size: var(--h3); line-height: 1.2; }
+  .tcard__meta { display: flex; flex-wrap: wrap; gap: 20px; font-size: var(--btn-s); font-weight: 500; line-height: 1.2; text-transform: uppercase; }
+  .tcard__meta:empty { display: none; }
+  .tcard .btns { gap: 12px; }
+
+  /* ---------- Leiste: Fortschritt 3 px, Pfeile 44 px ---------- */
+  .ts__bar { display: flex; align-items: center; gap: var(--s3); padding-block: var(--s3) var(--s8); }
+  .progress { position: relative; flex: 1; height: 3px; background: var(--anth-a20); overflow: hidden; }
+  .progress span { position: absolute; inset: 0; background: var(--anth); transform-origin: 0 50%; transform: scaleX(.3); }
+  .ts__nav { display: flex; gap: 12px; }
+</style>
+</head>
+<body data-section="Teaser-Komponenten" data-title="Teaser Slider">
+
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i"><use href="#i-down"/></svg></div>
+
+<section class="ts" id="ts" aria-labelledby="ts-h">
+  <div class="ts__head wrap">
+    <h2 id="ts-h">Aktuell in Augusta Raurica</h2>
+    <a class="tlink" href="#"><span>Alle Angebote</span><svg class="i"><use href="#i-arrow"/></svg></a>
+  </div>
+
+  <!-- Ab 3 Teasern wird die Reihe zum Slider (Anforderung Suan). Typen: Seite · Angebot · News · Ausstellung · Event -->
+  <div class="ts__viewport" id="viewport" role="region" aria-roledescription="Karussell" aria-label="Teaser">
+    <ul class="ts__track" id="track" role="list" style="list-style:none;margin:0;padding:0">
+      <li class="tcard" aria-roledescription="Folie" aria-label="1 von 5">
+        <div class="media"><img src="../../shared/img/weekends.jpg" alt="Kinder mit römischen Schilden am Römer Weekend" width="1600" height="1067"></div>
+        <div class="tcard__body">
+          <div class="tcard__head"><h3>Römer Weekends. Drei Wochenenden römisches Leben im Oktober.</h3>
+            <p class="tcard__meta"><span>08.10.2026</span><span>Im Fokus</span></p></div>
+          <div class="btns"><a class="btn btn--light" href="#">Mehr erfahren<svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn--ghost-light" href="#">Tickets<svg class="i"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </li>
+      <li class="tcard" aria-roledescription="Folie" aria-label="2 von 5">
+        <div class="media"><img src="../../shared/img/masken.jpg" alt="Zwei Theatermasken im Freien" width="1600" height="1067"></div>
+        <div class="tcard__body">
+          <div class="tcard__head"><h3>Theater im Theater: Römische Komödie unter freiem Himmel.</h3>
+            <p class="tcard__meta"><span>22.08.2026</span><span>19.30 Uhr</span><span>Event</span></p></div>
+          <div class="btns"><a class="btn btn--light" href="#">Mehr erfahren<svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn--ghost-light" href="#">Tickets<svg class="i"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </li>
+      <li class="tcard" aria-roledescription="Folie" aria-label="3 von 5">
+        <div class="media"><img src="../../shared/img/ausstellung.jpg" alt="Besucherin vor einer Vitrine im Museum" width="1600" height="1067"></div>
+        <div class="tcard__body">
+          <div class="tcard__head"><h3>Neue Ausstellung: Was Scherben über den Alltag erzählen.</h3>
+            <p class="tcard__meta"><span>bis 31.12.2026</span><span>Ausstellung</span></p></div>
+          <div class="btns"><a class="btn btn--light" href="#">Mehr erfahren<svg class="i"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </li>
+      <li class="tcard" aria-roledescription="Folie" aria-label="4 von 5">
+        <div class="media"><img src="../../shared/img/moerser.jpg" alt="Römischer Mörser mit Gewürzen" width="1600" height="1067"></div>
+        <div class="tcard__body">
+          <div class="tcard__head"><h3>Kochen wie die Römer: Workshop für Gruppen.</h3>
+            <p class="tcard__meta"><span>Angebot</span><span>Gruppen</span></p></div>
+          <div class="btns"><a class="btn btn--light" href="#">Mehr erfahren<svg class="i"><use href="#i-arrow"/></svg></a><a class="btn btn--ghost-light" href="#">Buchen<svg class="i"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </li>
+      <li class="tcard" aria-roledescription="Folie" aria-label="5 von 5">
+        <div class="media"><img src="../../shared/img/theater.jpg" alt="Das römische Theater von Augusta Raurica" width="1600" height="1067"></div>
+        <div class="tcard__body">
+          <div class="tcard__head"><h3>Das Theater von Augusta Raurica.</h3>
+            <p class="tcard__meta"></p></div>
+          <div class="btns"><a class="btn btn--light" href="#">Mehr erfahren<svg class="i"><use href="#i-arrow"/></svg></a></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="ts__bar wrap">
+    <div class="progress" aria-hidden="true"><span id="progress"></span></div>
+    <div class="ts__nav">
+      <button type="button" class="round round--prev" id="prev" aria-label="Vorherige Teaser"><svg class="i"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="round" id="next" aria-label="Nächste Teaser"><svg class="i"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Ab drei Teasern wird die Reihe zum Slider. Ziehen mit Maus oder Finger, Schwung läuft aus und rastet an der nächsten Karte ein. Auch horizontales Wischen auf dem Trackpad (oder Shift + Mausrad) bewegt die Spur direkt, ohne zu ziehen; sobald das Wischen aufhört, rastet sie an der nächsten Karte ein. Vertikales Scrollen bleibt bei der Seite. Pfeile und Fortschrittsbalken folgen der Position.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Karten gleiten 80 px von rechts ein, gestaffelt</td><td>Section 80 % im Viewport</td><td>1.1 s · <code>AR.ease.out</code>, 90 ms Stagger</td></tr>
+    <tr><td>Bilder blenden weich ein</td><td>Bild geladen</td><td>0.9 s · <code>AR.lazy()</code></td></tr>
+    <tr><td>Ziehen mit Schwung, Einrasten an Kartenkante</td><td>Drag mit Maus, Wischen mit dem Finger (vertikal scrollt die Seite)</td><td><code>Draggable</code> + <code>inertia</code>, Snap auf Kartenbreite</td></tr>
+    <tr><td>Spur folgt dem Wischen direkt (1 : 1)</td><td>Trackpad horizontal (<code>wheel</code> deltaX), Shift + Mausrad; nur wenn horizontal überwiegt</td><td>direkt gekoppelt, kein Easing</td></tr>
+    <tr><td>Einrasten an der nächsten Karte nach dem Wischen</td><td>120 ms ohne weiteres <code>wheel</code>-Ereignis</td><td>0.5 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Spur fährt zur nächsten Karte</td><td>Pfeil-Klick, Tab-Fokus in Karte</td><td>0.7 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Fortschrittsbalken (scaleX)</td><td>bei jeder Bewegung</td><td>direkt gekoppelt</td></tr>
+    <tr><td>Bild-Zoom 106 %</td><td>Hover / Fokus</td><td>CSS 0.9 s · <code>--ease-out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Karten nur einblenden (kein Weg), Pfeile springen ohne Fahrt, kein Schwung beim Ziehen, nach Trackpad-Wischen rastet die Spur ohne Fahrt ein.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const viewport = document.querySelector('#viewport');
+  const track = document.querySelector('#track');
+  const cards = gsap.utils.toArray('.tcard', track);
+  const bar = document.querySelector('#progress');
+  const prev = document.querySelector('#prev'), next = document.querySelector('#next');
+
+  AR.lazy(track);
+
+  // 1 · Karten gleiten beim ersten Sichtkontakt von rechts ein
+  gsap.from(cards, {
+    x: reduced ? 0 : 80, autoAlpha: 0, duration: 1.1, ease: AR.ease.out, stagger: .09,
+    scrollTrigger: { trigger: viewport, start: 'top 80%', once: true },
+  });
+
+  // 2 · Positionen: jede Kartenkante ist ein Rastpunkt, die letzte Karte endet bündig rechts
+  let points = [], min = 0, index = 0, settle;
+  // Spurbreite aus dem Layout (scrollWidth würde das Einfahren der Karten, x: 80, mitzählen)
+  const trackW = () => cards[cards.length - 1].offsetLeft + cards[cards.length - 1].offsetWidth;
+  const measure = () => {
+    min = Math.min(0, viewport.offsetWidth - trackW());
+    points = cards.map(c => Math.max(min, -c.offsetLeft));
+    points = [...new Set(points)];
+  };
+  const closest = x => points.reduce((a, b) => Math.abs(b - x) < Math.abs(a - x) ? b : a);
+  const x = () => gsap.getProperty(track, 'x');
+
+  // Fortschritt + Pfeil-Zustände aus der aktuellen Position
+  const update = () => {
+    const pos = x();
+    const seen = (viewport.offsetWidth - pos) / trackW();   // sichtbarer Anteil inkl. gescrollter Strecke
+    gsap.set(bar, { scaleX: gsap.utils.clamp(0, 1, seen) });
+    index = points.indexOf(closest(pos));
+    prev.setAttribute('aria-disabled', pos >= -1);
+    next.setAttribute('aria-disabled', pos <= min + 1);
+  };
+
+  // 3 · Ziehen mit Schwung (Draggable + Inertia), rastet an der nächsten Karte ein
+  const [drag] = Draggable.create(track, {
+    type: 'x', trigger: viewport, inertia: !reduced, edgeResistance: .85, dragResistance: 0,
+    bounds: { minX: 0, maxX: 0 }, snap: v => closest(v), minimumMovement: 6,
+    onPress() { clearTimeout(settle); gsap.killTweensOf(track); },   // laufendes Wisch-Einrasten abbrechen
+    onDragStart() { viewport.classList.add('is-dragging'); },
+    onRelease() { viewport.classList.remove('is-dragging'); if (reduced) goTo(points.indexOf(closest(this.x)), true); },
+    onDrag: update, onThrowUpdate: update,
+  });
+
+  // 4 · Pfeile: Fahrt auf dem Bildschirm = ease-in-out
+  function goTo(i, instant, dur = .7, ease = AR.ease.inOut) {
+    index = gsap.utils.clamp(0, points.length - 1, i);
+    gsap.to(track, { x: points[index], duration: reduced || instant ? 0 : dur, ease, onUpdate: update, onComplete: () => { drag.update(); update(); } });
+  }
+  // 5 · Trackpad / Shift + Mausrad: horizontales Wischen bewegt die Spur ohne Ziehen.
+  //     Nur wenn die Geste überwiegend horizontal ist, sonst scrollt die Seite normal weiter.
+  viewport.addEventListener('wheel', e => {
+    let dx = e.deltaX;
+    if (e.shiftKey && !dx) dx = e.deltaY;                       // Shift + Mausrad (Windows / ältere Browser)
+    else if (Math.abs(dx) <= Math.abs(e.deltaY)) return;         // vertikal: Seite scrollen lassen
+    if (e.deltaMode === 1) dx *= 16;                             // Zeilen → Pixel
+    e.preventDefault();                                          // kein Browser-„Zurück“ beim Wischen
+    gsap.killTweensOf(track);
+    gsap.set(track, { x: gsap.utils.clamp(min, 0, x() - dx) });
+    drag.update(); update();
+    // Wischen hat aufgehört (inkl. Trackpad-Nachlauf): an der nächsten Karte einrasten
+    clearTimeout(settle);
+    settle = setTimeout(() => goTo(points.indexOf(closest(x())), reduced, .5, AR.ease.out), 120);
+  }, { passive: false });
+
+  prev.addEventListener('click', () => goTo(index - 1));
+  next.addEventListener('click', () => goTo(index + 1));
+
+  // Tastatur: Fokus in einer Karte ausserhalb des Ausschnitts holt sie herein
+  track.addEventListener('focusin', e => {
+    viewport.scrollLeft = 0;  // Browser-Scroll verhindern, wir bewegen per transform
+    const card = e.target.closest('.tcard');
+    const p = Math.max(min, -card.offsetLeft);
+    const pos = x();
+    if (-p < -pos || -p + card.offsetWidth > -pos + viewport.offsetWidth) goTo(points.indexOf(closest(p)));
+  });
+
+  const layout = () => { measure(); drag.applyBounds({ minX: min, maxX: 0 }); gsap.set(track, { x: points[Math.min(index, points.length - 1)] }); update(); };
+  layout();
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(layout, 150); });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cards – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Cards (Figma 3385:21378 / Set 3004:7806): 2 / 3 / 4 pro Reihe, gefüllt (Gold 20) oder leer (ohne Rahmen), gleich hoch ---------- */
+  .cards-sec { padding-block: var(--s8) 0; }
+  .cards-sec:last-of-type { padding-bottom: var(--s8); }
+  .cards-sec__label { margin-bottom: var(--s15); font-size: var(--small); color: var(--anth-light); }
+  .cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: var(--g); align-items: stretch; }
+  @media (max-width: 1100px) { .cards { --n: 2 !important; } }
+  @media (max-width: 600px) { .cards { --n: 1 !important; } .cardx { min-height: 0; } }
+
+  /* Gleich hoch: Grid streckt alle Karten auf die höchste; Mindesthöhe 340 px */
+  .cardx { position: relative; display: grid; grid-template-rows: auto 1fr auto; min-height: 340px; padding: var(--s15); background: var(--gold-20);
+    transition: background-color .25s ease, box-shadow .25s ease; }
+  /* Leer (Figma Appearance=Invisible): im Ruhezustand weder Fläche noch Rahmen */
+  .cardx--empty { background: transparent; box-shadow: inset 0 0 0 1px transparent; }
+  .cardx__num { font-size: var(--h3); font-weight: 400; line-height: 1; }
+  .cardx__text { margin-top: var(--s2); }
+  .cardx h3 { font-size: var(--h4); font-weight: 500; line-height: 1.35; }
+  .cardx p { margin-top: 12px; font-size: var(--small); }
+  .cardx .tlink { justify-self: start; margin-top: var(--s2); }
+  /* ganze Karte klickbar, Link bleibt das eine Ziel für Tastatur + Screenreader */
+  .cardx .tlink::after { content: ""; position: absolute; inset: 0; }
+  @media (hover: hover) and (pointer: fine) {
+    .cardx:hover { background: var(--gold-40); }
+    /* Figma Invisible/Hover: Kontur 1 px innen, AR Gold transparent 20 (#A9935C @ 20 %) */
+    .cardx--empty:hover { background: transparent; box-shadow: inset 0 0 0 1px rgba(169, 147, 92, .2); }
+    .cardx:hover .tlink svg.i { transform: translateX(4px); }
+  }
+  .cardx:has(.tlink:focus-visible) { outline: 2px solid var(--rot); outline-offset: 3px; }
+  .cardx .tlink:focus-visible { outline: none; }
+  @media (prefers-reduced-motion: reduce) { .cardx { transition-duration: 1ms; } }
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Cards">
+
+<section class="cards-sec wrap" aria-labelledby="c2">
+  <p class="cards-sec__label" id="c2">2 Karten · gefüllt</p>
+  <ul class="cards" style="--n:2" data-cards>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">I</span><div class="cardx__text"><h3>Sammlungszentrum besuchen</h3><p>Über eine Million Fundstücke, sorgfältig gelagert. Führungen für Gruppen nach Vereinbarung.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">II</span><div class="cardx__text"><h3>Leihgaben anfragen</h3><p>Museen und Forschende können Objekte für Ausstellungen und Studien ausleihen.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+  </ul>
+</section>
+
+<section class="cards-sec wrap" aria-labelledby="c3">
+  <p class="cards-sec__label" id="c3">3 Karten · leer</p>
+  <ul class="cards" style="--n:3" data-cards>
+    <li class="cardx cardx--empty"><span class="cardx__num" aria-hidden="true">I</span><div class="cardx__text"><h3>Archiv und Bibliothek</h3><p>Grabungsdokumentation, Pläne und Fachliteratur seit 1878.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx cardx--empty"><span class="cardx__num" aria-hidden="true">II</span><div class="cardx__text"><h3>Konservierung und Restaurierung</h3><p>Wie Metall, Glas und Keramik nach Jahrhunderten im Boden stabilisiert werden. Ein Blick in die Werkstätten und die Arbeit des Teams.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx cardx--empty"><span class="cardx__num" aria-hidden="true">III</span><div class="cardx__text"><h3>Fotoarchiv</h3><p>Bilder für Medien und Publikationen.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+  </ul>
+</section>
+
+<section class="cards-sec wrap" aria-labelledby="c4">
+  <p class="cards-sec__label" id="c4">4 Karten · gefüllt</p>
+  <ul class="cards" style="--n:4" data-cards>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">I</span><div class="cardx__text"><h3>Ausgrabungen Augst</h3><p>Aktuelle Grabungen und Funde.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">II</span><div class="cardx__text"><h3>Ausgrabungen Kaiseraugst</h3><p>Was der Boden dieses Jahr freigibt.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">III</span><div class="cardx__text"><h3>Forschungsteam</h3><p>Archäologinnen, Restauratoren und Fachleute aus der Numismatik.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+    <li class="cardx"><span class="cardx__num" aria-hidden="true">IV</span><div class="cardx__text"><h3>Publikationen</h3><p>Forschungsberichte und Monografien zum Herunterladen.</p></div><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i"><use href="#i-arrow"/></svg></a></li>
+  </ul>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Zwei Varianten: gefüllt (Gold 20) und leer (ohne Rahmen, erst beim Hover erscheint eine goldene Kontur). Alle Karten einer Reihe sind gleich hoch und folgen der höchsten (CSS Grid, Mindesthöhe 340 px). Die Bewegung bleibt zurückhaltend: die Reihe baut sich von links nach rechts auf, Hover verstärkt nur die Fläche bzw. zeigt die Kontur. Tastaturfokus: roter Fokusrahmen um die ganze Karte.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Karten steigen 28 px auf und blenden ein, von links nach rechts</td><td>Reihe 85 % im Viewport</td><td>0.8 s · <code>AR.ease.out</code>, 90 ms Stagger</td></tr>
+    <tr><td>Inhalt der Karte (Ziffer, Text, Link) folgt</td><td>+0.15 s pro Karte, 60 ms Stagger</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Gefüllt: Fläche Gold 20 → Gold 40 · Leer: Kontur erscheint (1 px innen, Gold @ 20 %), im Ruhezustand kein Rahmen</td><td>Hover auf die ganze Karte</td><td>CSS 0.25 s · <code>ease</code></td></tr>
+    <tr><td>Pfeil 4 px nach rechts</td><td>Hover auf die Karte</td><td>CSS 0.2 s · <code>--ease-out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Karten und Inhalt blenden nur ein, kein Weg. Hover-Fläche und Kontur wechseln ohne Übergang.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  gsap.utils.toArray('[data-cards]').forEach(row => {
+    const cards = row.querySelectorAll('.cardx');
+    const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 85%', once: true } });
+
+    // Karten von links nach rechts …
+    tl.from(cards, { y: reduced ? 0 : 28, autoAlpha: 0, duration: .8, ease: AR.ease.out, stagger: .09 });
+
+    // … und pro Karte der Inhalt kurz danach
+    cards.forEach((card, i) => {
+      tl.from(card.querySelectorAll('.cardx__num, .cardx__text, .tlink'),
+        { y: reduced ? 0 : 12, autoAlpha: 0, duration: AR.dur.move, ease: AR.ease.out, stagger: .06 }, .15 + i * .09);
+    });
+  });
+});
+</script>
+</body>
+</html>

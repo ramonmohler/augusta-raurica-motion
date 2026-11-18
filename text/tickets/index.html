@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tickets – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Tabs (Figma „Tabs“): Rahmen Anthrazit, gewählter Reiter gefüllt ---------- */
+  .tabs { position: relative; display: inline-flex; gap: 4px; padding: 4px; margin-bottom: var(--s3); border: 1.5px solid var(--anth-20); border-radius: 999px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs__pill { position: absolute; left: 0; top: 4px; bottom: 4px; border-radius: 999px; background: var(--anth); pointer-events: none; }
+  .tab { position: relative; z-index: 1; flex: none; min-height: 44px; padding: 12px 20px; border: 0; border-radius: 999px; background: none; cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--anth); transition: color var(--dur-hover) ease, background-color var(--dur-hover) ease; }
+  /* gewählt: Hover-Fläche sofort weg, damit sie nicht über der heranfahrenden dunklen Fläche liegt */
+  .tab[aria-selected="true"] { color: var(--weiss); transition: color var(--dur-hover) ease; }
+  /* Hover = heller Button (Figma Button Primary/Bright/Hover): Fläche AR Gold solid 20, keine Unterstreichung */
+  @media (hover: hover) and (pointer: fine) { .tab[aria-selected="false"]:hover { background-color: var(--gold-20); color: var(--anth); } }
+  @media (prefers-reduced-motion: reduce) { .tab { transition-duration: 1ms; } }
+
+  /* ---------- Ticket-Karte (Figma Desktop/Ticket-Card-single 3183:10124): Bild 3:2, Kopf, Perforation, Abriss ---------- */
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--g); }
+  .tix { position: relative; display: grid; grid-template-rows: auto 1fr auto; background: var(--gold-20); transition: background-color var(--dur-hover) ease; }
+  .tix .media { aspect-ratio: 3 / 2; }
+  .tix .media img { transition: transform 600ms var(--ease-out); }
+  .tix__top { padding: var(--s2) var(--s15) var(--s15); display: grid; gap: 12px; align-content: start; }
+  .tix__price { font-size: var(--h2); font-weight: 700; line-height: 1.2; margin-bottom: 8px; }
+  .tix__name { font-size: var(--h4); font-weight: 500; line-height: 1.25; }
+  .tix__info { font-size: var(--small); white-space: pre-line; }
+  .tix__note { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--anth-light); }
+  .tix__cut { position: relative; height: 24px; background: linear-gradient(var(--anth-20), var(--anth-20)) 24px 50% / calc(100% - 48px) 1px no-repeat; }
+  .tix__cut::before, .tix__cut::after { content: ""; position: absolute; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--weiss); }
+  .tix__cut::before { left: -12px; } .tix__cut::after { right: -12px; }
+  .tix__bottom { padding: var(--s15) var(--s15) var(--s2); display: grid; gap: var(--s2); font-size: var(--small); }
+  .tix__bottom ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .tix__bottom li { display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 8px; }
+  .tix__bottom li svg.i { width: 14px; height: 14px; margin-top: 5px; }
+  .tix .tlink::after { content: ""; position: absolute; inset: 0; }          /* ganze Karte klickbar, ein Link im Fokus */
+  .tix:has(.tlink:focus-visible) { outline: 2px solid var(--rot); outline-offset: 3px; }
+  .tix .tlink:focus-visible { outline: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .tix:hover { background: var(--gold-40); }                                /* Figma Hover: Gold 40 */
+    .tix:hover .media img { transform: scale(1.04); }
+    .tix:hover .tlink svg.i { transform: translateX(4px); }
+  }
+  @media (max-width: 1100px) { .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 680px) { .grid3 { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Tickets">
+
+<div class="demo-spacer demo-spacer--short">Scrollen, um die Komponente einzublenden<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+
+<section class="sec wrap" id="tickets" aria-label="Tickets">
+  <div class="tabs" role="tablist" aria-label="Ticketart">
+    <span class="tabs__pill" aria-hidden="true"></span>
+    <button class="tab" type="button" role="tab" id="tab-museum" aria-controls="panel" aria-selected="true" data-tab="museum">Museum &amp; Römerhaus</button>
+    <button class="tab" type="button" role="tab" id="tab-fest" aria-controls="panel" aria-selected="false" tabindex="-1" data-tab="fest">Römerfest Ticket</button>
+    <button class="tab" type="button" role="tab" id="tab-theater" aria-controls="panel" aria-selected="false" tabindex="-1" data-tab="theater">Theater Tickets</button>
+  </div>
+  <div class="grid3" id="panel" role="tabpanel" aria-labelledby="tab-museum"></div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Die Karten kommen gestaffelt von unten. Beim Reiterwechsel gleitet die dunkle Fläche zum neuen Reiter, die alten Karten sinken weg und die neuen steigen nach. „Jetzt buchen“ führt in den Shop (Anforderung Suan), die ganze Karte ist klickbar.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Reiter blenden ein, Karten gleiten 32 px hoch</td><td>Scroll, <code>top 80%</code>, einmal</td><td>0.9 s, 90 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Dunkle Reiter-Fläche gleitet zum gewählten Reiter (x + Breite)</td><td>Klick, ← →</td><td>0.3 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Alte Karten: 12 px nach unten + ausblenden</td><td>Reiterwechsel</td><td>0.18 s, 40 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Neue Karten: 24 px von unten + einblenden</td><td>danach</td><td>0.5 s, 70 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Reiter Hover (nicht gewählt): Fläche Weiss → Gold 20 (wie heller Button), keine Unterstreichung</td><td>Hover</td><td>CSS 0.2 s · <code>ease</code></td></tr>
+    <tr><td>Karte Hover: Hintergrund Gold 20 → Gold 40, Bild 104 %, Pfeil 4 px</td><td>Hover</td><td>CSS 0.2 s / 0.6 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Fläche springt, Karten wechseln mit kurzer Überblendung (0.15 s), kein Versatz. Hover-Farbe wechselt ohne Übergang.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script>
+  /* Inhalt (im CMS gepflegt) */
+  window.TIX = {
+    museum: [
+      { img: 'f-a007e88e', price: 'CHF 18.–', name: 'Einzelticket', info: 'Kinder & Jugendliche (6–17 Jahre): CHF 13.–', feat: [['check', 'Museum und Römerhaus'], ['check', 'Inklusive Audioguide in vier Sprachen'], ['clock', 'Gültig am Besuchstag']] },
+      { img: 'f-eb0788d1', price: 'CHF 55.–', name: 'Familienkarte', info: '2 Erwachsene\nmax. 3 Kinder', feat: [['check', 'Museum und Römerhaus'], ['check', 'Inklusive Familienroute mit Rätselheft'], ['clock', 'Gültig am Besuchstag']] },
+      { img: 'f-de321e7a', price: 'CHF 0.–', name: 'Freier Eintritt', info: 'IV-Bezüger\nKinder unter 6 Jahren', note: '*Nur gegen Vorlage eines gültigen Ausweises', feat: [['check', 'Museum und Römerhaus'], ['check', 'Begleitperson ebenfalls kostenlos'], ['clock', 'Gültig am Besuchstag']] }],
+    fest: [
+      { img: 'f-60db87f9', price: 'CHF 28.–', name: 'Tagesticket', info: 'Kinder & Jugendliche (6–17 Jahre): CHF 14.–', feat: [['check', 'Römerfest Ticketpreise'], ['check', 'Hin- und Rückfahrt im TNW-Gebiet (2. Klasse) am Veranstaltungstag.'], ['clock', 'Ticketpreis pro Festtag']] },
+      { img: 'f-b9f14153', price: 'CHF 70.–', name: 'Familienkarte', info: '2 Erwachsene\nmax. 3 Kinder', feat: [['check', 'Römerfest Ticketpreise'], ['check', 'Hin- und Rückfahrt im TNW-Gebiet (2. Klasse) am Veranstaltungstag.'], ['clock', 'Ticketpreis pro Festtag']] },
+      { img: 'f-08e06c8c', price: 'CHF 45.–', name: 'Zweitagespass', info: 'Samstag und Sonntag', feat: [['check', 'Römerfest Ticketpreise'], ['check', 'Hin- und Rückfahrt im TNW-Gebiet (2. Klasse) an beiden Tagen.'], ['clock', 'Gültig an beiden Festtagen']] }],
+    theater: [
+      { img: 'f-12155ad3', price: 'ab CHF 69.–', name: 'Live in Concert', info: 'Sitzplatz im römischen Theater', feat: [['check', 'Abendkasse ab 18.00 Uhr'], ['check', 'Rollstuhlplätze auf Anfrage'], ['clock', 'Einlass eine Stunde vor Beginn']] },
+      { img: 'f-48400d13', price: 'ab CHF 49.–', name: 'Stehplatz', info: 'Arena vor der Bühne', feat: [['check', 'Abendkasse ab 18.00 Uhr'], ['check', 'Garderobe vor Ort'], ['clock', 'Einlass eine Stunde vor Beginn']] },
+      { img: 'f-b57deaa0', price: 'CHF 15.–', name: 'Theaterführung', info: 'Kinder bis 16 Jahre gratis', feat: [['check', 'Treffpunkt beim Theater'], ['check', 'Dauer 60 Minuten'], ['clock', 'Jeden Sonntag 14.00 Uhr']] }],
+  };
+  window.ticketCard = t => `<article class="tix">
+    <div class="media"><img src="../../shared/img/${t.img}.jpg" alt="" width="1920" height="1280"></div>
+    <div class="tix__top"><p class="tix__price">${t.price}</p><h3 class="tix__name">${t.name}</h3><p class="tix__info">${t.info}</p>${t.note ? `<p class="tix__note">${t.note}</p>` : ''}</div>
+    <div><div class="tix__cut" aria-hidden="true"></div><div class="tix__bottom">
+      <ul>${t.feat.map(([ic, l]) => `<li><svg class="i" aria-hidden="true"><use href="#i-${ic}"/></svg><span>${l}</span></li>`).join('')}</ul>
+      <a class="tlink" href="#shop"><span>Jetzt buchen</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg><span class="sr-only">: ${t.name}</span></a>
+    </div></div></article>`;
+</script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const tablist = document.querySelector('[role="tablist"]');
+  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+  const pill = tablist.querySelector('.tabs__pill');
+  const panel = document.querySelector('#panel');
+  const draw = key => { panel.innerHTML = TIX[key].map(ticketCard).join(''); AR.lazy(panel); return panel.children; };
+
+  // Fläche unter den gewählten Reiter legen (sofort oder animiert)
+  const movePill = (tab, animate) => gsap.to(pill, {
+    x: tab.offsetLeft, width: tab.offsetWidth,
+    duration: animate && !reduced ? AR.dur.ui : 0, ease: AR.ease.inOut,
+  });
+  movePill(tabs[0], false);
+  addEventListener('resize', () => movePill(tabs.find(t => t.getAttribute('aria-selected') === 'true'), false));
+
+  // 1 · Erster Auftritt beim Scrollen
+  const cards = draw('museum');
+  gsap.timeline({ scrollTrigger: { trigger: '#tickets', start: 'top 80%', once: true } })
+    .from(tablist, { autoAlpha: 0, y: reduced ? 0 : 16, duration: AR.dur.move })
+    .from(cards, { autoAlpha: 0, y: reduced ? 0 : 32, duration: AR.dur.reveal, stagger: .09 }, .1);
+
+  // 2 · Reiterwechsel: alte Karten raus, neue Karten rein
+  let swap;
+  function select(tab) {
+    if (tab.getAttribute('aria-selected') === 'true') return;
+    tabs.forEach(t => { const on = t === tab; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; });
+    panel.setAttribute('aria-labelledby', tab.id);
+    movePill(tab, true);
+    // Mobile: Reiterleiste scrollt den gewählten Reiter ins Bild
+    tablist.scrollTo({ left: tab.offsetLeft - (tablist.clientWidth - tab.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth' });
+
+    swap?.kill();
+    swap = gsap.timeline()
+      .to(panel.children, { autoAlpha: 0, y: reduced ? 0 : 12, duration: reduced ? .15 : .18, stagger: reduced ? 0 : .04, ease: AR.ease.out })
+      .add(() => {
+        const next = draw(tab.dataset.tab);
+        gsap.from(next, { autoAlpha: 0, y: reduced ? 0 : 24, duration: reduced ? .15 : .5, stagger: reduced ? 0 : AR.stagger, ease: AR.ease.out });
+      });
+  }
+  tabs.forEach(t => t.addEventListener('click', () => select(t)));
+  tablist.addEventListener('keydown', e => {
+    const i = tabs.indexOf(document.activeElement);
+    if (i < 0 || !['ArrowRight', 'ArrowLeft'].includes(e.key)) return;
+    const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+    n.focus(); select(n);
+  });
+});
+</script>
+</body>
+</html>

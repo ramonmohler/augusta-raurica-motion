@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Gallery – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../lightbox/lightbox.css">
+<style>
+  /* ---------- Image Gallery (Figma 3419:25386) – 4 Spalten, je ein Hoch- und ein Querformat im Wechsel, Mobile 2 Spalten ---------- */
+  .gal { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--g); align-items: start; }
+  .gal__col { display: grid; gap: var(--g); }
+  @media (max-width: 900px) { .gal { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .gal__col { gap: 12px; } }
+</style>
+</head>
+<body data-section="Media" data-title="Image Gallery">
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+<section class="sec wrap" aria-label="Bildergalerie Römerhaus">
+  <div class="gal" id="gal">
+    <div class="gal__col"><button class="g-item" type="button" style="--ar:3 / 4" data-cap="Tepidarium: das lauwarme Bad" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Tepidarium: das lauwarme Bad"><div class="media"><img src="../../shared/img/bad.jpg" alt="Gewölbtes Bad mit orangen Wänden und Steinbecken" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Tepidarium: das lauwarme Bad</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:3 / 2" data-cap="Raum mit Mosaikboden" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Raum mit Mosaikboden und Liegen" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 100%"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+    <div class="gal__col"><button class="g-item" type="button" style="--ar:3 / 2" data-cap="Säulenhalle mit Blumen im Vordergrund" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Säulenhalle mit Blumen im Vordergrund"><div class="media"><img src="../../shared/img/garten.jpg" alt="Säulenhalle des Römerhauses, im Vordergrund Mohnblumen" width="1920" height="1279" loading="lazy" decoding="async"></div><span class="g-cap">Säulenhalle mit Blumen im Vordergrund</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:3 / 4" data-cap="Theatermasken bei den Römerfesten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Theatermasken bei den Römerfesten"><div class="media"><img src="../../shared/img/masken.jpg" alt="Zwei Personen in römischen Gewändern mit Theatermasken" width="1600" height="1149" loading="lazy" decoding="async"></div><span class="g-cap">Theatermasken bei den Römerfesten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+    <div class="gal__col"><button class="g-item" type="button" style="--ar:3 / 4" data-cap="Küche mit Vorratsgefässen" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/kueche.jpg" alt="Römische Küche mit Amphoren und Arbeitstisch" width="889" height="1400" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:3 / 2" data-cap="Innenhof mit Garten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Innenhof mit Garten"><div class="media"><img src="../../shared/img/rh-garten.jpg" alt="Innenhof mit Garten, Vermittlerinnen in römischer Kleidung" width="547" height="365" loading="lazy" decoding="async"></div><span class="g-cap">Innenhof mit Garten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+    <div class="gal__col"><button class="g-item" type="button" style="--ar:3 / 2" data-cap="Speisezimmer mit gedecktem Tisch" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Speisezimmer mit gedecktem Tisch"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Speisezimmer mit gedecktem Tisch und Wandmalereien" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 40%"></div><span class="g-cap">Speisezimmer mit gedecktem Tisch</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:3 / 4" data-cap="Auf der Grabung" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/grabung.jpg" alt="Hände legen mit einem Pinsel einen Fund im Boden frei" width="1600" height="1066" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+  </div>
+</section>
+<div class="demo-spacer">Bild anklicken: Lightbox öffnet sich aus der Kachel.</div>
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Die Bilder öffnen sich beim Scrollen wie ein Fenster (Rahmen wächst von innen auf volle Grösse, gleich wie Single Image), die Spalten 2 und 4 laufen leicht versetzt (Parallax). Hover zeigt Verlauf, Bildlegende und Lupe (Anforderung Suan); ein Klick öffnet die Lightbox, die Bildlegende und der Bildnachweis stehen dort.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Rahmen öffnet sich von innen (<code>clip-path</code> 6 % → 0 %), wie Single Image</td><td>Scroll, Kachel bei 85 % Viewport</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Spalten 2 + 4 laufen 48 px gegen die Scrollrichtung (nur Desktop)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Hover: Bild 105 %, Verlauf 0 → 60 %, Legende + Lupe von unten</td><td>Maus / Tastaturfokus</td><td>CSS 0.2–0.6 s · <code>--ease-out</code></td></tr>
+    <tr><td>Lightbox öffnen / schliessen</td><td>Klick, Enter, Esc</td><td>siehe <a href="../lightbox/">Lightbox</a> · Code in <a href="../lightbox/lightbox.js">lightbox.js</a></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kacheln blenden nur ein (0.4 s), Bild nur Deckkraft, keine Parallax, Lightbox ohne Morph.</td></tr>
+  </table></template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../lightbox/lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const tiles = gsap.utils.toArray('#gal .g-item');
+  AR.lazy();
+
+  // 1 · Reveal wie Single Image: Rahmen öffnet sich von innen (clip-path 6 % → 0 %), Bild blendet per AR.lazy ein
+  tiles.forEach(frame => {
+    gsap.fromTo(frame, reduced ? { autoAlpha: 0 } : { clipPath: 'inset(6% 6% 6% 6%)' }, {
+      ...(reduced ? { autoAlpha: 1, duration: .4 } : { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, clearProps: 'clipPath' }),   // danach entfernen, sonst wird der Fokusrahmen abgeschnitten
+      ease: AR.ease.out,
+      scrollTrigger: { trigger: frame, start: 'top 85%', once: true },
+    });
+  });
+
+  // 2 · Parallax: jede zweite Spalte läuft leicht versetzt (nur ab 901 px, nicht bei Reduced Motion)
+  if (!reduced) gsap.matchMedia().add('(min-width: 901px)', () => {
+    gsap.fromTo('#gal .gal__col:nth-child(even)', { y: 48 }, {
+      y: -48, ease: 'none',
+      scrollTrigger: { trigger: '#gal', start: 'top bottom', end: 'bottom top', scrub: true },
+    });
+  });
+
+  // 3 · Lightbox (gemeinsamer Code in media/lightbox/lightbox.js)
+  ARLightbox(tiles);
+});
+</script>
+</body>
+</html>

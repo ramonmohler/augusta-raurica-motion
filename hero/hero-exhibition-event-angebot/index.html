@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero Exhibition/Event/Angebot – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../shared/navbar.css">
+<style>
+
+  /* ---------- Breadcrumbs auf Bild: Links Weiss 60, aktuelle Seite Weiss ---------- */
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: var(--s1) 0 0; padding: 0; list-style: none; font-size: var(--small); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
+  .crumbs a { color: var(--weiss-a60); text-decoration: none; transition: color var(--dur-hover) ease; }
+  .crumbs svg.i { width: 14px; height: 14px; color: var(--weiss-a60); }
+  .crumbs [aria-current] { color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .crumbs a:hover { color: var(--weiss); } }
+
+  /* ---------- Hero Exhibition / Event / Angebot (1440 × 810 · 1920 × 1080 · Mobile 393 × 699) ---------- */
+  .hero { position: relative; height: min(56.25vw, 100svh); min-height: 600px; overflow: hidden; color: var(--weiss); background: var(--anth); }
+  @media (max-width: 900px) { .hero { height: max(177.8vw, 640px); max-height: none; } }
+  .hero__media { position: absolute; inset: -8% 0; }
+  .hero__img { position: absolute; inset: 0; background: var(--anth); }
+  .hero__img img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__shade { position: absolute; inset: 0 0 auto; height: 50%; background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0)); pointer-events: none; }
+  .hero__foot { position: absolute; inset: auto 0 0; height: 48%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.32) 58%, rgba(0,0,0,.66)); }
+  .hero__foot::before { content: ""; position: absolute; inset: 0; -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px);
+    -webkit-mask-image: linear-gradient(transparent, #000); mask-image: linear-gradient(transparent, #000); }
+  .hero__content { position: absolute; inset: auto 0 0; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: var(--g); padding-block: var(--s3); }
+  .hero__title { font-size: var(--h1); line-height: 1.15; max-width: 16ch; }
+  .hx { width: min(318px, 100%); flex: none; display: grid; gap: var(--s15); justify-items: start; }
+  .hx__tags { display: flex; flex-wrap: wrap; gap: 8px var(--s1); list-style: none; margin: 0; padding: 0; font: 500 12px/1.3 var(--font); letter-spacing: .06em; text-transform: uppercase; }
+  .hx__tags li { display: inline-flex; align-items: center; gap: 6px; }
+  .hx__tags svg.i { width: 14px; height: 14px; }
+  .hx__when { width: 100%; display: flex; flex-wrap: wrap; gap: 4px var(--s1); position: relative; padding-top: var(--s1); font-size: var(--h4); font-weight: 500; line-height: 1.3; }
+  /* Linie oben: eigenes Element-Pseudo, per CSS-Variable --draw (0 → 1) von links gezeichnet */
+  .hx__when::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: var(--weiss-a40); transform-origin: 0 50%; transform: scaleX(var(--draw, 1)); }
+  @media (max-width: 1100px) { .hero__title { font-size: clamp(40px, 1.4rem + 3.6vw, 64px); } }
+  @media (max-width: 900px) {
+    .hero__content { flex-direction: column; align-items: flex-start; padding-block: var(--s2); }
+    .hero__title { font-size: var(--h1); }
+    .crumbs { display: none; }
+  }
+
+  /* ---------- Demo: Typ-Umschalter ---------- */
+  .after { padding-block: var(--s6) var(--s4); display: grid; gap: var(--s2); }
+  .after p { max-width: 60ch; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1.5px solid var(--anth); background: transparent; cursor: pointer;
+    font: 700 var(--btn-s)/1 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease; }
+  .seg button[aria-pressed="true"] { background: var(--anth); color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .seg button:not([aria-pressed="true"]):hover { background: var(--gold-20); } }
+</style>
+</head>
+<body data-section="Hero-Komponenten" data-title="Hero Exhibiton/Event/Angebot">
+
+<section class="hero" id="hero" aria-labelledby="title">
+  <div class="hero__media" id="media">
+    <div class="hero__img media"><img src="../../shared/img/f-ebdad195.jpg" alt="Ausstellung mit Silhouetten römischer Figuren und Funden in einer Vitrine" width="1920" height="1280" fetchpriority="high"></div>
+  </div>
+  <div class="hero__shade"></div>
+  <div class="hero__foot"></div>
+  <div class="hero__content wrap">
+    <div>
+      <h1 class="hero__title" id="title">Silberschatz – Glanz einer Epoche</h1>
+      <ol class="crumbs" aria-label="Brotkrümelnavigation">
+        <li><a href="#">Startseite</a><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li>
+        <li><a href="#">Programm</a><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li>
+        <li aria-current="page" id="crumb">Ausstellungen</li>
+      </ol>
+    </div>
+    <div class="hx" id="aside" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="after wrap" aria-label="Demo-Varianten">
+  <h2>Typ wählen</h2>
+  <p>AR wählt pro Seite den Typ: Ausstellung (Tags, Laufzeit automatisch, Ticket-CTA), Event (Tags, Datum automatisch, Ticket-CTA) oder Angebot (nur Tags). Höchstens drei Tags werden gezeigt.</p>
+  <div class="seg" role="group" aria-label="Typ" id="types">
+    <button type="button" data-type="exhibition" aria-pressed="true">Exhibition</button>
+    <button type="button" data-type="event" aria-pressed="false">Event</button>
+    <button type="button" data-type="angebot" aria-pressed="false">Angebot</button>
+  </div>
+</section>
+<div class="demo-spacer" style="min-height:90vh">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Key Visual pro Ausstellung, Event oder Angebot. Rechts stehen Tags (max. 3), Laufzeit bzw. Datum (automatisch aus den Daten) und der Ticket-CTA, je nach Typ.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Bild zoomt 110 % → 100 % und blendet ein</td><td>Laden</td><td>1.8 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Titel: Zeilen steigen aus der Maske (SplitText)</td><td>Laden, +0.25 s, 80 ms gestaffelt</td><td>1.0 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Breadcrumbs, Tags, Linie mit Laufzeit, CTA blenden auf</td><td>+0.55 s, 70 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Linie über der Laufzeit zeichnet sich von links (scaleX 0 → 1)</td><td>mit dem Block</td><td>0.8 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Typwechsel: Inhalt raus (0.15 s), Bild überblendet, neuer Inhalt rein</td><td>Typ wechselt</td><td>raus 0.15 s · rein 0.3 s / Bild 0.9 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Bild-Parallax, Inhalt blendet beim Wegscrollen leicht aus</td><td>Scroll</td><td><code>scrub: true</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Nur Überblendungen (Deckkraft), kein Zoom, keine Masken, keine Parallax.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../../shared/navbar.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  // Navbar = gemeinsame Komponente (Demo «Navbar»)
+  AR.navbar({ tone: 'bright', solidAfter: '#hero' });
+  const hero = document.querySelector('#hero'), media = document.querySelector('#media');
+  const title = document.querySelector('#title'), aside = document.querySelector('#aside');
+  const ico = n => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+  const fmt = d => d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+  // Inhalte pro Typ (im CMS: Tags, Start/Ende bzw. Datum, CTA). Laufzeit und Datum werden formatiert, nicht getippt.
+  const TYPES = {
+    exhibition: { title: 'Silberschatz – Glanz einer Epoche', crumb: 'Ausstellungen', img: 'f-ebdad195.jpg', alt: 'Ausstellung mit Silhouetten römischer Figuren und Funden in einer Vitrine',
+      tags: [['', 'Sonderausstellung'], ['', 'Museum'], ['', 'Familien'], ['', 'Archäologie']],
+      when: () => `<span>Laufzeit</span><span>${fmt(new Date(2026, 2, 15)).slice(0, 6)} – ${fmt(new Date(2026, 9, 31))}</span>`, cta: 'Tickets kaufen' },
+    event: { title: 'Live in Concert im römischen Theater', crumb: 'Veranstaltungen', img: 'f-12155ad3.jpg', alt: 'Konzert im römischen Theater bei Abendstimmung',
+      tags: [['check', 'Freie Plätze'], ['bank', 'Nur für Mitglieder'], ['', 'Workshop']],
+      when: () => `<span>${fmt(new Date(2026, 3, 18))}, 19.00 Uhr</span>`, cta: 'Tickets kaufen' },
+    angebot: { title: 'Führung durch die Römerstadt', crumb: 'Angebote', img: 'f-21af4782.jpg', alt: 'Familien bei einer Führung im Römerhaus',
+      tags: [['route', 'Führung'], ['access', 'Rollstuhlgängig'], ['', 'Familien']] },
+  };
+  const asideHTML = t => `
+    <ul class="hx__tags" aria-label="Merkmale">${t.tags.slice(0, 3).map(([i, s]) => `<li>${i ? ico(i) : ''}${s}</li>`).join('')}</ul>
+    ${t.when ? `<p class="hx__when">${t.when()}</p>` : ''}
+    ${t.cta ? `<a class="btn btn--light" href="#">${t.cta} ${ico('arrow')}</a>` : ''}`;
+
+  // Titel in Zeilen mit Maske teilen; gibt die Zeilen zurück
+  let split;
+  const splitTitle = () => { split && split.revert(); split = SplitText.create(title, { type: 'lines', mask: 'lines' }); return split.lines; };
+  // Linie über der Laufzeit zeichnet sich von links (CSS-Variable --draw steuert scaleX des ::before)
+  const drawLine = () => { const w = aside.querySelector('.hx__when'); return w ? gsap.fromTo(w, { '--draw': reduced ? 1 : 0 }, { '--draw': 1, duration: .8, ease: AR.ease.out }) : null; };
+
+  // 1 · Intro beim Laden
+  aside.innerHTML = asideHTML(TYPES.exhibition);
+  const tl = gsap.timeline({ defaults: { ease: AR.ease.out } });
+  tl.from('.hero__img img', { scale: reduced ? 1 : 1.1, autoAlpha: 0, duration: reduced ? .6 : 1.8 })
+    .from(splitTitle(), { yPercent: reduced ? 0 : 105, autoAlpha: reduced ? 0 : 1, duration: 1, stagger: .08 }, .25)
+    .from(['.crumbs', ...aside.children], { y: reduced ? 0 : 12, autoAlpha: 0, duration: AR.dur.move, stagger: AR.stagger }, .55)
+    .add(drawLine(), .65);
+
+  // 2 · Typ wechseln
+  let current = 'exhibition', busy;
+  function show(type) {
+    if (type === current) return;
+    current = type;
+    const t = TYPES[type];
+    busy && busy.progress(1);
+    // Bild überblenden
+    const old = media.lastElementChild, next = document.createElement('div');
+    next.className = 'hero__img media';
+    next.innerHTML = `<img src="../../shared/img/${t.img}" alt="${t.alt}" width="1920" height="1280">`;
+    media.append(next);
+    gsap.set(next, { autoAlpha: 0 });
+    gsap.to(next, { autoAlpha: 1, duration: reduced ? .3 : .9, ease: AR.ease.inOut, onComplete: () => old.remove() });
+    if (!reduced) gsap.fromTo(next.querySelector('img'), { scale: 1.06 }, { scale: 1, duration: 1.6, ease: AR.ease.out });
+    // Text raus, tauschen, rein
+    busy = gsap.timeline({ defaults: { ease: AR.ease.out } })
+      .to([...split.lines, ...aside.children], { autoAlpha: 0, y: reduced ? 0 : -8, duration: .15, stagger: .02 })
+      .add(() => {
+        split.revert(); title.textContent = t.title; document.querySelector('#crumb').textContent = t.crumb;
+        aside.innerHTML = asideHTML(t);
+      })
+      .add(() => {
+        gsap.from(splitTitle(), { yPercent: reduced ? 0 : 105, autoAlpha: reduced ? 0 : 1, duration: .7, stagger: .06, ease: AR.ease.out });
+        gsap.from(aside.children, { y: reduced ? 0 : 8, autoAlpha: 0, duration: AR.dur.ui, stagger: .05, delay: .1, ease: AR.ease.out });
+        drawLine()?.delay(.15);
+      });
+  }
+  document.querySelectorAll('#types button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('#types button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    show(b.dataset.type);
+  }));
+
+  // 3 · Scroll
+  if (reduced) return;
+  const scroll = { trigger: hero, start: 'top top', end: 'bottom top', scrub: true };
+  gsap.fromTo(media, { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: scroll });
+  gsap.to('.hero__content', { y: -40, autoAlpha: .2, ease: 'none', scrollTrigger: { ...scroll, end: 'bottom 30%' } });
+});
+</script>
+</body>
+</html>

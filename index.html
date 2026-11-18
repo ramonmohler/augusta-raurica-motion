@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Augusta Raurica – Motion</title>
+<meta name="description" content="Animationsbeispiele (GSAP) zu allen Komponenten des Augusta-Raurica-Webdesigns.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="shared/tokens.css">
+<link rel="stylesheet" href="shared/base.css">
+<style>
+  .top { background: var(--gold-20); padding-block: var(--s4) var(--s5); }
+  .top__logo { width: min(100%, 640px); height: auto; margin-bottom: var(--s5); }
+  .top h1 { font-size: var(--h2); max-width: 18ch; }
+  .top p { margin-top: var(--s15); max-width: 60ch; }
+  .top__meta { display: flex; flex-wrap: wrap; gap: 8px 32px; margin-top: var(--s3); font-size: var(--small); }
+  .top__meta strong { display: block; font-weight: 500; }
+
+  .sections { padding-block: var(--s6) var(--s8); display: grid; gap: var(--s6); }
+  .group { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--g); }
+  .group h2 { grid-column: 1 / span 4; font-size: var(--h3); }
+  .group h2 small { display: block; margin-top: 8px; font-size: var(--small); font-weight: 400; color: var(--anth-light); }
+  .group ul { grid-column: 5 / -1; list-style: none; margin: 0; padding: 0; }
+  .group li { border-top: 1px solid var(--line); }
+  .group li:last-child { border-bottom: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; min-height: 72px; padding-block: 16px; text-decoration: none; }
+  .row__name { font-size: var(--h4); font-weight: 500; line-height: 1.25; }
+  .row__path { display: block; margin-top: 2px; font: 13px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: var(--anth-light); }
+  .row svg.i { width: 20px; height: 20px; transition: transform 250ms var(--ease-out); }
+  .row__name span { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; transition: background-size var(--dur-hover) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .row:hover svg.i { transform: translateX(6px); }
+    .row:hover .row__name span { background-size: 100% 1.5px; }
+  }
+  @media (max-width: 900px) { .group h2, .group ul { grid-column: 1 / -1; } }
+
+  .foot { padding-block: var(--s4); border-top: 1px solid var(--line); font-size: var(--small); color: var(--anth-light); }
+</style>
+</head>
+<body data-overview>
+
+<header class="top">
+  <div class="wrap">
+    <img class="top__logo" src="shared/img/logo-rot.svg" alt="Augusta Raurica" width="1344" height="113">
+    <h1>Animationen der Komponenten</h1>
+    <p>Pro Komponente aus Figma (Status „Erstellt / Ready for Dev“) eine Live-Demo mit GSAP. In jeder Demo zeigt „Code &amp; Notizen“ den Ablauf, die Werte und den Code zum Kopieren.</p>
+    <div class="top__meta">
+      <div><strong>Bibliothek</strong>GSAP 3.13 + ScrollTrigger</div>
+      <div><strong>Tokens</strong>shared/tokens.css · AR.ease / AR.dur</div>
+      <div><strong>Breakpoints</strong>Mobile ≤ 900 · Desktop · Wide ≥ 1680</div>
+    </div>
+  </div>
+</header>
+
+<main class="sections wrap" id="list"></main>
+
+<footer class="foot wrap">Figma: Augusta Raurica Webdesign · Seite „Design“. Korrekturen bitte mit Komponentenname angeben.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="shared/demo.js"></script>
+<script>
+/* Reihenfolge und Namen wie in Figma (Seite „Design“, Spalte „2 · Erstellt / Ready for Dev“). */
+const SECTIONS = [
+  { name: 'Hero-Komponenten', items: [
+    ['Hero 1st level', 'hero/hero-1st-level'],
+    ['Hero Museen', 'hero/hero-museen'],
+    ['Hero-2nd-Level-OhneBild', 'hero/hero-2nd-level-ohne-bild'],
+    ['Hero Article', 'hero/hero-article'],
+    ['Hero Exhibiton/Event/Angebot', 'hero/hero-exhibition-event-angebot'],
+  ] },
+  { name: 'Navigation Components', items: [
+    ['Navbar', 'navigation/navbar'],
+    ['Menü', 'navigation/menue'],
+    ['Footer', 'navigation/footer'],
+  ] },
+  { name: 'Teaser-Komponenten', items: [
+    ['Teaser Slider', 'teaser/teaser-slider'],
+    ['Single/Double Teaser', 'teaser/single-double-teaser'],
+    ['Recommendation/Highlight teaser', 'teaser/recommendation-highlight-teaser'],
+  ] },
+  { name: 'Text (Content)', items: [
+    ['Quote', 'text/quote'],
+    ['Text', 'text/text'],
+    ['Text + Image', 'text/text-image'],
+    ['Tickets', 'text/tickets'],
+    ['Text list/Bullet points', 'text/text-list'],
+    ['Cards', 'text/cards'],
+  ] },
+  { name: 'Interactive & Functional Components', items: [
+    ['Timeline', 'interactive/timeline'],
+    ['FAQ', 'interactive/faq'],
+    ['Search results', 'interactive/search-results'],
+    ['Form', 'interactive/form'],
+    ['Contact/Newsletter', 'interactive/contact-newsletter'],
+    ['Notification bar', 'interactive/notification-bar'],
+  ] },
+  { name: 'Media', items: [
+    ['Image Gallery', 'media/image-gallery'],
+    ['Gallery slider', 'media/gallery-slider'],
+    ['Single Image', 'media/single-image'],
+    ['Lightbox', 'media/lightbox'],
+  ] },
+  { name: 'Barrierefreiheit', items: [
+    ['Accessibility-Panel', 'barrierefreiheit/accessibility-panel'],
+  ] },
+];
+const ico = '<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>';
+document.getElementById('list').innerHTML = SECTIONS.map(s => `
+  <section class="group" aria-labelledby="g-${s.items[0][1].split('/')[0]}">
+    <h2 id="g-${s.items[0][1].split('/')[0]}">${s.name}<small>${s.items.length} ${s.items.length === 1 ? 'Komponente' : 'Komponenten'}</small></h2>
+    <ul>${s.items.map(([n, p]) => `<li><a class="row" href="${p}/"><span><span class="row__name"><span>${n}</span></span><span class="row__path">/${p}/</span></span>${ico}</a></li>`).join('')}</ul>
+  </section>`).join('');
+
+/* Kleines Intro: Logo steigt auf, Zeilen blenden beim Scrollen gestaffelt ein */
+document.addEventListener('DOMContentLoaded', () => {
+  gsap.from('.top__logo', { clipPath: 'inset(0 0 100% 0)', yPercent: AR.reduced ? 0 : 30, duration: 1.1, ease: AR.ease.out });
+  gsap.from('.top h1, .top p, .top__meta', { autoAlpha: 0, y: AR.reduced ? 0 : 16, duration: AR.dur.move, stagger: .08, delay: .25 });
+  AR.reveal('.group h2, .group li', { stagger: .04 });
+});
+</script>
+</body>
+</html>

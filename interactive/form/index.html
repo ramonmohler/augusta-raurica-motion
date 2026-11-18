@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Form (Figma 3348:35197) – Stepper oben, Felder 2-spaltig, Linie unter dem Feld ---------- */
+  .fwrap { padding-block: var(--s8); }
+  .fwrap h2 { margin-bottom: var(--s5); }
+
+  /* Stepper: Kreise 32, Linie dazwischen, Fortschritt füllt die Linie */
+  .stepper { list-style: none; margin: 0 0 var(--s5); padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); position: relative; }
+  .stepper[hidden] { display: none; }
+  .stepper__track { position: absolute; left: 16px; right: 16px; top: 16px; height: 1.5px; background: var(--anth-20); }
+  .stepper__fill { position: absolute; inset: 0; background: var(--anth); transform-origin: 0 50%; transform: scaleX(0); }
+  .step { position: relative; display: grid; justify-items: center; gap: 10px; }
+  .step:first-child { justify-items: start; }
+  .step:last-child { justify-items: end; }
+  .step button { display: grid; justify-items: inherit; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; font: 400 var(--small)/1.4 var(--font); color: var(--anth); }
+  .step button:disabled { cursor: default; }
+  .step__dot { position: relative; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--anth); background: var(--weiss); display: grid; place-items: center;
+    transition: background-color var(--dur-hover) ease, border-color var(--dur-hover) ease, color var(--dur-hover) ease; }
+  .step__dot svg { position: absolute; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .step[data-state="current"] .step__dot { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .step[data-state="done"] .step__dot { border-color: var(--anth-20); }
+  .step[data-state="done"] .step__label { color: var(--anth-light); }
+  @media (hover: hover) and (pointer: fine) { .step[data-state="done"] button:hover .step__dot { border-color: var(--anth); } }
+  /* Hit-Area 44 px */
+  .step button::after { content: ""; position: absolute; inset: -6px; }
+
+  /* Felder: Label oben, Platzhalter, Linie unten (Anthrazit solid light #6C7170 = 4.9:1, erfüllt WCAG 1.4.11) */
+  .fstep { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3) var(--g); }
+  .fstep[hidden] { display: none; }
+  .fstep legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .field { position: relative; display: grid; gap: 8px; align-content: start; }
+  .field--full { grid-column: 1 / -1; }
+  .field label { font-size: var(--small); }
+  .field__line { position: relative; }
+  .field input { width: 100%; height: 44px; padding: 0 0 6px; border: 0; border-bottom: 1px solid var(--anth-light); border-radius: 0; background: transparent; font: 400 var(--copy)/1.5 var(--font); color: var(--anth); outline: none; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--anth-light); }
+  /* Fokus: dunkle Linie wächst von links (CSS, weil Zustand) */
+  .field__line::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--anth); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--dur-ui) var(--ease-out), background-color var(--dur-hover) ease; }
+  .field__line:focus-within::after { transform: scaleX(1); }
+  .field__line:has([aria-invalid="true"])::after { transform: scaleX(1); background: var(--rot); }
+  .field__err { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--rot); min-height: 0; }
+  .field__err:empty { display: none; }
+
+  .select { position: relative; justify-self: stretch; }
+  .select select { appearance: none; -webkit-appearance: none; width: 100%; min-height: 44px; padding: 10px 44px 10px 20px; border-radius: 999px; border: 1.5px solid var(--anth); background: transparent; cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--anth); }
+  .select svg.i { position: absolute; right: 18px; top: 50%; translate: 0 -50%; pointer-events: none; width: 14px; height: 14px; }
+  .field textarea { width: 100%; min-height: 160px; padding: 14px 16px; border: 1.5px solid var(--anth); border-radius: 16px; background: transparent; font: 400 var(--copy)/1.5 var(--font); color: var(--anth); resize: vertical; outline: none; transition: border-color var(--dur-hover) ease; }
+  .field textarea:focus { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+  .field--kids { overflow: hidden; }
+  .field--kids[hidden] { display: none; }
+
+  .factions { display: flex; justify-content: space-between; gap: var(--g); margin-top: var(--s5); }
+  .factions [hidden] { display: none; }
+  .factions .btn--outline svg.i { transform: rotate(180deg); }
+
+  .fok { display: grid; justify-items: start; gap: var(--s15); max-width: 560px; }
+  .fok[hidden] { display: none; }
+  .fok__ic { width: 64px; height: 64px; border-radius: 50%; background: var(--anth); color: var(--weiss); display: grid; place-items: center; }
+  .fok__ic svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (max-width: 900px) {
+    .fstep { grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+    .step__label { font-size: 13px; }
+    .factions { flex-direction: column-reverse; align-items: stretch; }
+    .factions .btn { justify-content: center; }
+  }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="Form">
+
+<section class="fwrap wrap" aria-labelledby="form-h">
+  <h2 id="form-h" tabindex="-1">Mitglied werden</h2>
+
+  <ol class="stepper" id="stepper" aria-label="Fortschritt">
+    <li class="stepper__track" aria-hidden="true"><span class="stepper__fill" id="fill"></span></li>
+    <li class="step" data-state="current"><button type="button" data-go="0" aria-current="step"><span class="step__dot"><svg class="ic-arrow" viewBox="0 0 16 16"><path d="M2 8h12M9 3l5 5-5 5"/></svg><svg class="ic-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__label">Adresse</span></button></li>
+    <li class="step" data-state="todo"><button type="button" data-go="1" disabled><span class="step__dot"><svg class="ic-arrow" viewBox="0 0 16 16"><path d="M2 8h12M9 3l5 5-5 5"/></svg><svg class="ic-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__label">Kontaktdaten</span></button></li>
+    <li class="step" data-state="todo"><button type="button" data-go="2" disabled><span class="step__dot"><svg class="ic-arrow" viewBox="0 0 16 16"><path d="M2 8h12M9 3l5 5-5 5"/></svg><svg class="ic-check" viewBox="0 0 16 16"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__label">Mitgliedschaft</span></button></li>
+  </ol>
+
+  <form id="form" novalidate>
+    <fieldset class="fstep" data-step="0">
+      <legend>Schritt 1 von 3: Adresse</legend>
+      <div class="field field--full"><label for="f-str">Strasse und Nr.*</label><div class="field__line"><input id="f-str" required placeholder="Wo wohnen Sie?" autocomplete="street-address" aria-describedby="e-str"></div><p class="field__err" id="e-str"></p></div>
+      <div class="field"><label for="f-plz">PLZ*</label><div class="field__line"><input id="f-plz" required inputmode="numeric" pattern="[0-9]{4,5}" placeholder="z. B. 4302" autocomplete="postal-code" aria-describedby="e-plz"></div><p class="field__err" id="e-plz"></p></div>
+      <div class="field"><label for="f-ort">Ort*</label><div class="field__line"><input id="f-ort" required placeholder="z. B. Augst" autocomplete="address-level2" aria-describedby="e-ort"></div><p class="field__err" id="e-ort"></p></div>
+    </fieldset>
+
+    <fieldset class="fstep" data-step="1" hidden>
+      <legend>Schritt 2 von 3: Kontaktdaten</legend>
+      <div class="field"><label for="f-vn">Vorname*</label><div class="field__line"><input id="f-vn" required placeholder="Wie heissen Sie?" autocomplete="given-name" aria-describedby="e-vn"></div><p class="field__err" id="e-vn"></p></div>
+      <div class="field"><label for="f-nn">Nachname*</label><div class="field__line"><input id="f-nn" required placeholder="Ihr Nachname" autocomplete="family-name" aria-describedby="e-nn"></div><p class="field__err" id="e-nn"></p></div>
+      <div class="field"><label for="f-mail">E-Mail*</label><div class="field__line"><input id="f-mail" type="email" required placeholder="Unter welcher E-Mail kann ich dich erreichen?" autocomplete="email" aria-describedby="e-mail"></div><p class="field__err" id="e-mail"></p></div>
+      <div class="field"><label for="f-tel">Telefon</label><div class="field__line"><input id="f-tel" type="tel" placeholder="Für Rückfragen (freiwillig)" autocomplete="tel"></div></div>
+    </fieldset>
+
+    <fieldset class="fstep" data-step="2" hidden>
+      <legend>Schritt 3 von 3: Mitgliedschaft</legend>
+      <div class="field"><label for="f-typ">Mitgliedschaft*</label>
+        <div class="select"><select id="f-typ" required aria-describedby="e-typ"><option value="">Bitte auswählen</option><option>Einzel</option><option>Paar</option><option value="familie">Familie</option></select><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+        <p class="field__err" id="e-typ"></p></div>
+      <div class="field field--kids" id="kids" hidden><label for="f-kids">Name und Jahrgang der Kinder</label><textarea id="f-kids" placeholder="Nur bei Familien-Mitgliedschaften"></textarea></div>
+    </fieldset>
+
+    <div class="factions">
+      <button class="btn btn--outline" type="button" id="back" hidden><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg> Zurück</button>
+      <button class="btn" type="submit" id="next">Weiter <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </form>
+
+  <div class="fok" id="ok" role="status" tabindex="-1" hidden>
+    <span class="fok__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path id="okPath" d="m3 8.5 3 3 7-7"/></svg></span>
+    <h3>Vielen Dank!</h3>
+    <p>Wir haben Ihre Anmeldung erhalten und schicken Ihnen die Bestätigung per E-Mail.</p>
+    <button class="btn btn--outline" type="button" id="again">Neues Formular</button>
+  </div>
+</section>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Mehrstufiges Formular (Anforderung AR: Formulare selbst zusammenstellen). Der Stepper zeigt den Fortschritt, Fehler erscheinen direkt am Feld und werden vorgelesen. Felder ohne Eingabe testen die Fehlermeldungen.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Titel, Stepper und Felder gleiten 24 px hoch</td><td>Laden, 70 ms gestaffelt</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Fokus: dunkle Linie wächst von links unter dem Feld</td><td>Fokus</td><td>CSS 0.3 s · <code>--ease-out</code></td></tr>
+    <tr><td>Fehler: Feld zuckt kurz seitlich, Meldung blendet von oben ein, Linie wird rot, Fokus aufs erste Fehlerfeld</td><td>«Weiter» mit leerem/falschem Feld</td><td>Zucken 0.3 s, Meldung 0.2 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Schrittwechsel: alter Schritt gleitet 24 px weg, neuer kommt aus der Gegenrichtung</td><td>«Weiter» / «Zurück» / Klick auf erledigten Schritt</td><td>0.2 s raus + 0.3 s rein · <code>AR.ease.out</code></td></tr>
+    <tr><td>Stepper-Linie füllt sich bis zum aktuellen Schritt, Pfeil wird zum Häkchen</td><td>Schrittwechsel</td><td>0.6 s · <code>AR.ease.inOut</code>, Icons 0.2 s</td></tr>
+    <tr><td>Feld «Kinder» klappt auf</td><td>Auswahl «Familie»</td><td>0.3 s · Höhe + Deckkraft</td></tr>
+    <tr><td>Erfolg: Formular blendet aus, Kreis skaliert von 0.9, Häkchen zeichnet sich</td><td>Absenden</td><td>0.3 s + Strich 0.4 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Zucken und kein seitliches Gleiten; Schritte und Meldungen blenden nur ein (0.2 s), Linie springt.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const form = document.querySelector('#form');
+  const steps = gsap.utils.toArray('.fstep', form);
+  const dots = gsap.utils.toArray('#stepper .step');
+  const fill = document.querySelector('#fill');
+  const back = document.querySelector('#back'), next = document.querySelector('#next');
+  const ok = document.querySelector('#ok');
+  let current = 0, busy = false;
+
+  AR.reveal(['#form-h', '#stepper', ...steps[0].children, '.factions']);
+
+  // ---------- Stepper ----------
+  function paintStepper(i) {
+    dots.forEach((li, k) => {
+      const state = k < i ? 'done' : k === i ? 'current' : 'todo';
+      li.dataset.state = state;
+      const btn = li.querySelector('button');
+      btn.disabled = state === 'todo';
+      state === 'current' ? btn.setAttribute('aria-current', 'step') : btn.removeAttribute('aria-current');
+      // Pfeil ↔ Häkchen kreuzblenden
+      gsap.to(li.querySelector('.ic-arrow'), { autoAlpha: state === 'done' ? 0 : 1, scale: state === 'done' ? .6 : 1, duration: AR.dur.hover, ease: AR.ease.out });
+      gsap.to(li.querySelector('.ic-check'), { autoAlpha: state === 'done' ? 1 : 0, scale: state === 'done' ? 1 : .6, duration: AR.dur.hover, ease: AR.ease.out });
+    });
+    gsap.to(fill, { scaleX: Math.min(i, dots.length - 1) / (dots.length - 1), duration: reduced ? 0 : AR.dur.move, ease: AR.ease.inOut });
+  }
+  gsap.set('#stepper .ic-check', { autoAlpha: 0 });
+
+  // ---------- Validierung ----------
+  const MSG = { valueMissing: 'Bitte füllen Sie dieses Feld aus.', typeMismatch: 'Bitte geben Sie eine gültige E-Mail-Adresse ein, z. B. name@beispiel.ch.', patternMismatch: 'Bitte geben Sie eine Postleitzahl mit 4 oder 5 Ziffern ein.' };
+  function check(el) {
+    const err = document.getElementById(el.getAttribute('aria-describedby'));
+    const key = ['valueMissing', 'typeMismatch', 'patternMismatch'].find(k => el.validity[k]);
+    const wasInvalid = el.getAttribute('aria-invalid') === 'true';
+    el.setAttribute('aria-invalid', !!key);
+    if (!err) return !key;
+    if (key) {
+      err.textContent = MSG[key];
+      if (!wasInvalid) gsap.fromTo(err, { autoAlpha: 0, y: reduced ? 0 : -4 }, { autoAlpha: 1, y: 0, duration: AR.dur.hover, ease: AR.ease.out });
+    } else err.textContent = '';
+    return !key;
+  }
+  form.addEventListener('input', e => { if (e.target.getAttribute('aria-invalid') === 'true') check(e.target); });
+  form.addEventListener('change', e => { if (e.target.getAttribute('aria-invalid') === 'true') check(e.target); });
+
+  function validStep(i) {
+    const fields = [...steps[i].querySelectorAll('input[aria-describedby], select[aria-describedby]')];
+    const bad = fields.filter(f => !check(f));
+    if (!bad.length) return true;
+    if (!reduced) gsap.fromTo(bad.map(f => f.closest('.field')), { x: 0 }, { keyframes: { x: [-6, 6, -4, 4, 0] }, duration: .3, ease: AR.ease.out });
+    bad[0].focus();
+    return false;
+  }
+
+  // ---------- Schrittwechsel ----------
+  function goTo(i) {
+    if (busy || i === current) return;
+    busy = true;
+    const dir = i > current ? 1 : -1;
+    const from = steps[current], to = steps[i];
+    const dist = reduced ? 0 : 24;
+    gsap.timeline({ onComplete: () => { busy = false; to.querySelector('input, select')?.focus({ preventScroll: true }); } })
+      .to(from, { autoAlpha: 0, x: -dir * dist, duration: AR.dur.hover, ease: AR.ease.out })
+      .call(() => { from.hidden = true; to.hidden = false; back.hidden = i === 0; setNext(i); })
+      .fromTo(to, { autoAlpha: 0, x: dir * dist }, { autoAlpha: 1, x: 0, duration: AR.dur.ui, ease: AR.ease.out });
+    current = i;
+    paintStepper(i);
+  }
+  const setNext = i => next.firstChild.textContent = i === steps.length - 1 ? 'Absenden ' : 'Weiter ';
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!validStep(current)) return;
+    current < steps.length - 1 ? goTo(current + 1) : success();
+  });
+  back.addEventListener('click', () => goTo(current - 1));
+  dots.forEach((li, k) => li.querySelector('button').addEventListener('click', () => { if (k < current) goTo(k); }));
+
+  // ---------- Bedingtes Feld: Kinder nur bei «Familie» ----------
+  const kids = document.querySelector('#kids');
+  document.querySelector('#f-typ').addEventListener('change', e => {
+    const show = e.target.value === 'familie';
+    if (show === !kids.hidden) return;
+    if (show) {
+      kids.hidden = false;
+      gsap.fromTo(kids, { height: reduced ? 'auto' : 0, autoAlpha: 0 }, { height: 'auto', autoAlpha: 1, duration: AR.dur.ui, ease: AR.ease.out });
+    } else {
+      gsap.to(kids, { height: reduced ? 'auto' : 0, autoAlpha: 0, duration: .2, ease: AR.ease.out, onComplete: () => { kids.hidden = true; gsap.set(kids, { clearProps: 'height' }); } });
+    }
+  });
+
+  // ---------- Erfolg ----------
+  const okPath = document.querySelector('#okPath');
+  const len = okPath.getTotalLength();
+  function success() {
+    paintStepper(steps.length);
+    gsap.timeline()
+      .to(['#form', '#stepper'], { autoAlpha: 0, y: reduced ? 0 : -8, duration: AR.dur.hover, ease: AR.ease.out })
+      .call(() => { form.hidden = true; document.querySelector('#stepper').hidden = true; ok.hidden = false; ok.focus({ preventScroll: true }); })
+      .fromTo(ok.children, { autoAlpha: 0, y: reduced ? 0 : 12 }, { autoAlpha: 1, y: 0, duration: AR.dur.ui, stagger: .06, ease: AR.ease.out })
+      .fromTo('.fok__ic', { scale: reduced ? 1 : .9 }, { scale: 1, duration: AR.dur.ui, ease: AR.ease.out }, '<')
+      .fromTo(okPath, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: reduced ? 0 : .4, ease: AR.ease.out }, '-=.15');
+  }
+  document.querySelector('#again').addEventListener('click', () => location.reload());
+
+  paintStepper(0);
+});
+</script>
+</body>
+</html>

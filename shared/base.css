@@ -1,0 +1,117 @@
+/* =====================================================================
+   Augusta Raurica – Basis für alle Motion-Demos
+   Reset, Typo, Buttons, Links, Bilder + die Demo-Leiste unten.
+   Regel: Hover- und Klick-Zustände = CSS-Transition (kurz, unterbrechbar).
+          Alles mit Ablauf (Intro, Scroll, Öffnen/Schliessen, Slider) = GSAP.
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--weiss); color: var(--anth); font-family: var(--font); font-size: var(--copy); line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: var(--h1); line-height: 1.15; }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+h4 { font-size: var(--h4); font-weight: 500; }
+:focus-visible { outline: 2px solid var(--rot); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { padding-inline: max(var(--m), env(safe-area-inset-left, 0px)); }
+.sec { padding-block: var(--sec); }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--g); }
+@media (max-width: 900px) { .grid { grid-template-columns: minmax(0, 1fr); } .grid > * { grid-column: 1 / -1 !important; } }
+.eyebrow { font-size: 14px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+.small { font-size: var(--small); }
+svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Buttons (Figma „Buttons“ 3322:16404) ---------- */
+.btn { --bg: var(--anth); --fg: var(--weiss); --bd: var(--anth);
+  position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 14px 24px;
+  border-radius: 999px; border: 1.5px solid var(--bd); background: var(--bg); color: var(--fg);
+  font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; cursor: pointer; white-space: nowrap;
+  transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, transform var(--dur-press) var(--ease-out);
+  -webkit-tap-highlight-color: transparent; }
+.btn--outline { --bg: transparent; --fg: var(--anth); }
+.btn--light { --bg: var(--weiss); --fg: var(--anth); --bd: var(--weiss); }
+.btn--ghost-light { --bg: transparent; --fg: var(--weiss); --bd: var(--weiss); }
+.btn svg.i { transition: transform 250ms var(--ease-out); }
+.btn:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { --bg: var(--black); --fg: var(--weiss); --bd: var(--black); }
+  .btn--outline:hover { --bg: transparent; --fg: var(--black); --bd: var(--black); }
+  .btn--light:hover { --bg: var(--gold-20); --fg: var(--anth); --bd: var(--gold-20); }
+  .btn--ghost-light:hover { --bg: transparent; --fg: var(--gold-20); --bd: var(--gold-20); }
+  .btn:hover svg.i { transform: translateX(4px); }
+}
+.btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+
+/* Runder Pfeil-Button (Figma „Button-Navigation“) */
+.round { width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; border: 1.5px solid currentColor; background: transparent; color: var(--anth); cursor: pointer; padding: 0;
+  transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, opacity var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
+.round:active { transform: scale(.94); }
+.round[aria-disabled="true"] { opacity: .4; cursor: default; }
+.round--light { color: var(--weiss); }
+.round--prev svg { transform: rotate(180deg); }
+@media (hover: hover) and (pointer: fine) {
+  .round:not([aria-disabled="true"]):hover { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .round--light:not([aria-disabled="true"]):hover { background: var(--weiss); border-color: var(--weiss); color: var(--anth); }
+}
+
+/* Tertiär-Link (Figma „In-Text-Link“): Hover nur über den Pfeil, keine Unterstreichung */
+.tlink { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: inherit; font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+.tlink span { padding-block: 4px; }
+.tlink svg.i { transition: transform 250ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .tlink:hover svg.i { transform: translateX(4px); } }
+
+/* Bild mit Platzhalterfläche; AR.lazy() blendet es weich ein */
+.media { position: relative; overflow: hidden; background: var(--gold-20); }
+.media img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (prefers-reduced-motion: reduce) { .btn, .round, .tlink svg.i { transition-duration: 1ms; } }
+
+/* =====================================================================
+   Demo-Leiste (nur für die Demos, nicht Teil der Komponente)
+   ===================================================================== */
+.demo-bar { position: fixed; left: 50%; bottom: 16px; z-index: 1000; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px; padding: 6px; max-width: calc(100vw - 24px); overflow-x: auto; scrollbar-width: none;
+  background: rgba(33, 40, 39, .92); color: var(--weiss); border-radius: 999px; box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); font: 500 13px/1 var(--font); }
+.demo-bar::-webkit-scrollbar { display: none; }
+.demo-bar a, .demo-bar button { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: inherit; cursor: pointer; text-decoration: none; white-space: nowrap; font: inherit; transition: background-color 150ms ease; }
+.demo-bar a:hover, .demo-bar button:hover { background: rgba(255,255,255,.12); }
+.demo-bar [aria-pressed="true"] { background: var(--weiss); color: var(--anth); }
+.demo-bar [aria-pressed="true"]:hover { background: var(--gold-20); }
+.demo-bar[hidden], .demo-tab[hidden] { display: none; }
+.demo-tab { position: fixed; right: 16px; bottom: 16px; z-index: 1000; width: 44px; height: 44px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: rgba(33, 40, 39, .92); color: var(--weiss); box-shadow: 0 8px 32px rgba(0,0,0,.25); }
+.demo-tab svg.i { width: 16px; height: 16px; }
+.demo-bar__title { padding: 0 10px; opacity: .6; white-space: nowrap; }
+.demo-bar__sep { width: 1px; height: 20px; background: rgba(255,255,255,.2); margin: 0 4px; flex: none; }
+.demo-bar svg.i { width: 14px; height: 14px; }
+@media (max-width: 700px) { .demo-bar__title { display: none; } }
+
+.demo-sheet { position: fixed; inset: auto 0 0; z-index: 999; max-height: min(78vh, 760px); overflow: auto; overscroll-behavior: contain;
+  background: var(--anth); color: var(--weiss); padding: 32px max(var(--m), 20px) 96px; border-radius: 16px 16px 0 0; visibility: hidden; font-size: 15px; line-height: 1.55; }
+.demo-sheet h2 { font-size: 20px; margin-bottom: 4px; }
+.demo-sheet__lead { opacity: .7; margin-bottom: 24px; max-width: 72ch; }
+.demo-sheet__cols { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px; }
+@media (max-width: 1000px) { .demo-sheet__cols { grid-template-columns: minmax(0, 1fr); } }
+.demo-sheet h3 { font-size: 13px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; opacity: .6; margin-bottom: 12px; }
+.demo-sheet table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.demo-sheet th, .demo-sheet td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-top: 1px solid rgba(255,255,255,.14); }
+.demo-sheet th { font-weight: 500; opacity: .6; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+.demo-sheet code { font: 13px/1.6 ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+.demo-sheet td code { background: rgba(255,255,255,.08); padding: 1px 5px; border-radius: 4px; }
+.demo-sheet pre { margin: 0; padding: 20px; background: rgba(0,0,0,.35); border-radius: 10px; overflow: auto; tab-size: 2; }
+.demo-sheet pre .c { color: #9AA3A1; }
+.demo-sheet pre .s { color: #E6D3A3; }
+.demo-sheet pre .k { color: #E8A0B0; }
+.demo-sheet__copy { float: right; height: 32px; padding: 0 14px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; font: 500 13px/1 var(--font); }
+.demo-sheet__copy:hover { background: rgba(255,255,255,.1); }
+
+/* Platz zum Scrollen in Scroll-Demos */
+.demo-spacer { display: grid; place-items: center; min-height: 60vh; color: var(--anth-light); font-size: var(--small); text-align: center; padding: var(--m); }
+.demo-spacer--short { min-height: 30vh; }
+.demo-spacer svg.i { width: 20px; height: 20px; margin: 12px auto 0; }

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Text (Figma 3303:16462) – H2 546 · rechts Lead H4/medium + Copy 20, Abstand 24, 1 oder 2 Buttons ---------- */
+  .txt { display: grid; grid-template-columns: minmax(0, 546fr) minmax(0, 660fr); column-gap: 138px; align-items: start; }
+  .txt h2 { font-size: var(--h2); line-height: 1.2; }
+  .txt__body { display: grid; gap: var(--s15); justify-items: start; min-width: 0; }
+  .txt__lead { font-size: var(--h4); font-weight: 500; line-height: 1.25; }
+  .txt__body p { max-width: 66ch; }
+  .txt__body .btns { margin-top: 8px; }
+  .txt--gold { background: var(--gold-20); }
+  @media (max-width: 1100px) { .txt { column-gap: 64px; } }
+  @media (max-width: 900px) { .txt { grid-template-columns: minmax(0, 1fr); row-gap: var(--s15); } }
+  .label { font-size: 13px; color: var(--anth-light); margin-bottom: var(--s2); }
+  /* Zeilen-Maske aus SplitText: Zeilen steigen aus ihrer eigenen Unterkante auf */
+  .txt h2 .line-mask { padding-bottom: .08em; margin-bottom: -.08em; }
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Text">
+
+<div class="demo-spacer demo-spacer--short">Scrollen, um die Komponente einzublenden<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+
+<section class="sec wrap" aria-labelledby="t1">
+  <p class="label">Variante: zwei Buttons</p>
+  <div class="txt" data-txt>
+    <h2 id="t1">Die grösste Römerstadt nördlich der Alpen erleben</h2>
+    <div class="txt__body">
+      <p class="txt__lead">Monumente, Museum und Römerhaus liegen nur wenige Gehminuten voneinander entfernt.</p>
+      <p>Augusta Raurica war vor 2000 Jahren eine blühende Stadt mit Theater, Tempeln und Thermen. Heute zeigen über zwanzig Monumente unter freiem Himmel, wie die Menschen hier gelebt haben. Im Museum und im rekonstruierten Römerhaus wird der Alltag greifbar: von der Küche bis zum Speisezimmer.</p>
+      <div class="btns">
+        <a class="btn" href="#">Besuch planen<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--outline" href="#">Zum Lageplan<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap txt--gold" aria-labelledby="t2">
+  <p class="label">Variante: ein Button, Hintergrund Gold 20</p>
+  <div class="txt" data-txt>
+    <h2 id="t2">Für Schulklassen</h2>
+    <div class="txt__body">
+      <p class="txt__lead">Workshops, Führungen und Materialien für alle Stufen.</p>
+      <p>Schulklassen graben im Grabungscamp, backen Brot nach römischem Rezept oder erkunden die Stadt mit dem Rätselheft. Die Angebote lassen sich mit einem Picknick im Theater kombinieren.</p>
+      <div class="btns">
+        <a class="btn" href="#">Angebote für Schulen<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Ruhige Komponente: Der Titel steigt Zeile für Zeile aus einer Maske auf, danach folgen Lead, Copy und Buttons. Läuft einmal, sobald die Komponente zu 80 % im Bild ist. Buttons: ein oder zwei (Anforderung AR).</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Titelzeilen steigen aus der Maske (yPercent 100 → 0)</td><td>Scroll, <code>top 80%</code>, einmal</td><td>0.9 s, 80 ms pro Zeile · <code>AR.ease.out</code></td></tr>
+    <tr><td>Lead, Copy, Buttons gleiten 24 px hoch und blenden ein</td><td>gleicher Trigger, +0.2 s</td><td>0.9 s, 70 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Button-Hover (Farbe, Pfeil 4 px)</td><td>Hover</td><td>CSS 0.2 s</td></tr>
+    <tr><td>Zeilenumbruch neu berechnen</td><td>Resize / Schrift geladen</td><td><code>SplitText autoSplit</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Zeilen-Split, alles blendet nur ein (0.6 s).</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  gsap.utils.toArray('[data-txt]').forEach(block => {
+    const title = block.querySelector('h2');
+    const rest = block.querySelectorAll('.txt__body > *');
+
+    if (reduced) {
+      gsap.from([title, ...rest], { autoAlpha: 0, duration: .6, ease: 'none', stagger: .05,
+        scrollTrigger: { trigger: block, start: 'top 80%', once: true } });
+      return;
+    }
+
+    gsap.set(rest, { autoAlpha: 0, y: 24 });
+    SplitText.create(title, {
+      type: 'lines', mask: 'lines', linesClass: 'line', autoSplit: true,
+      // onSplit läuft bei jedem Neu-Umbruch; der zurückgegebene Tween wird sauber ersetzt
+      onSplit: self => gsap.timeline({ scrollTrigger: { trigger: block, start: 'top 80%', once: true } })
+        .from(self.lines, { yPercent: 100, duration: AR.dur.reveal, ease: AR.ease.out, stagger: .08 })
+        .to(rest, { autoAlpha: 1, y: 0, duration: AR.dur.reveal, ease: AR.ease.out, stagger: AR.stagger }, .2),
+    });
+  });
+});
+</script>
+</body>
+</html>

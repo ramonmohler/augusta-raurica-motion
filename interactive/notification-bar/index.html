@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notification bar – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Notification bar (Figma 3385:21724) ----------
+     Klein: Padding 16/48, Icon 14, Copy-small · Gross (mit Link): Titel H4/bold, Text, Button, Kreuz
+     Farben: Rot mit Weiss, Gold mit Anthrazit (beide ≥ 4.5 : 1) */
+  .alert { overflow: hidden; }                                      /* Höhe wird beim Ein-/Ausblenden animiert */
+  .alert--rot { background: var(--rot); color: var(--weiss); }
+  .alert--gold { background: var(--gold); color: var(--anth); }
+  .alert__in { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: var(--s2); padding-block: 16px; font-size: var(--small); }
+  .alert__ic { width: 14px; height: 14px; stroke-width: 1.5; }
+  .alert__close { position: relative; width: 24px; height: 24px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; transition: opacity .2s ease; }
+  .alert__close::after { content: ""; position: absolute; inset: -10px; }        /* Trefferfläche 44 px */
+  .alert__close svg.i { width: 14px; height: 14px; stroke-width: 2; }
+  @media (hover: hover) and (pointer: fine) { .alert__close:hover { opacity: .7; } }
+
+  .alert--big .alert__in { grid-template-columns: auto minmax(0, 5fr) minmax(0, 5fr) auto auto; padding-block: var(--s2); }
+  .alert--big .alert__ic { width: 24px; height: 24px; }
+  .alert--big h2 { font-size: var(--h4); font-weight: 700; line-height: 1.25; max-width: 22ch; }
+  .alert--big p { font-size: 14px; max-width: 46ch; }
+  .alert--gold .btn { --bg: var(--anth); --fg: var(--weiss); --bd: var(--anth); }
+
+  @media (max-width: 900px) {
+    .alert__in { grid-template-columns: minmax(0, 1fr) auto; row-gap: 8px; padding-block: 12px 16px; }
+    .alert__ic { grid-row: 1; grid-column: 1; }
+    .alert__close { grid-row: 1; grid-column: 2; }
+    .alert__in > p { grid-column: 1 / -1; }
+    .alert--big .alert__in { grid-template-columns: minmax(0, 1fr) auto; row-gap: 12px; padding-block: 16px 24px; }
+    .alert--big h2, .alert--big p, .alert--big .btn { grid-column: 1 / -1; justify-self: start; }
+    .alert--big .alert__close { grid-row: 1; grid-column: 2; }
+  }
+
+  /* ---------- Demo-Seite ---------- */
+  .bar { background: var(--weiss); border-bottom: 1px solid var(--line); }
+  .bar__in { display: flex; justify-content: center; padding-block: 24px; }
+  .bar__logo { height: 18px; width: auto; }
+  .page { padding-block: var(--s6); display: grid; gap: var(--s15); max-width: 860px; }
+  .page p { font-size: var(--small); color: var(--anth-light); max-width: 60ch; }
+  .variants { display: grid; gap: var(--s1); padding-bottom: var(--s8); }
+  .variants h3 { font-size: 14px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--anth-light); margin-top: var(--s2); }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="Notification bar">
+
+<header class="bar"><div class="bar__in wrap"><img class="bar__logo" src="../../shared/img/logo-anthrazit.svg" alt="Augusta Raurica" width="1344" height="113"></div></header>
+
+<!-- Aktive Hinweise: höchstens 2 gleichzeitig, auf jeder Seite einsetzbar -->
+<div id="alerts">
+  <section class="alert alert--rot js-alert" aria-label="Hinweis">
+    <div class="alert__in wrap">
+      <svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg>
+      <p>Hinweis zur Anreise: Der Parkplatz P1 ist bis Frühling 2027 gesperrt. Die Parkplätze P2 und P3 sind weiterhin zugänglich.</p>
+      <button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+  </section>
+  <section class="alert alert--gold alert--big js-alert" aria-labelledby="a2">
+    <div class="alert__in wrap">
+      <svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg>
+      <h2 id="a2">Römerfest 2026: Tickets jetzt im Vorverkauf</h2>
+      <p>Am 29. und 30. August verwandelt sich Augusta Raurica in eine römische Stadt. Mit dem Vorverkaufsticket gehen Sie ohne Wartezeit hinein.</p>
+      <a class="btn" href="#">Tickets kaufen <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+  </section>
+</div>
+
+<main class="wrap">
+  <div class="page">
+    <h1 tabindex="-1" style="font-size:var(--h2)">Hinweisleiste</h1>
+    <p>Hinweise erscheinen direkt unter der Navbar und schieben die Seite sanft nach unten. Mit dem Kreuz klappen sie zu. Ohne Link ist der Hinweis klein, mit Link wird er automatisch zur grossen Variante mit Titel und Button.</p>
+    <div><button class="btn btn--outline" type="button" id="again">Hinweise wieder anzeigen</button></div>
+  </div>
+
+  <div class="variants" aria-label="Alle Varianten">
+    <h3>Klein · Rot</h3>
+    <section class="alert alert--rot" aria-label="Hinweis"><div class="alert__in" style="padding-inline:var(--s15)"><svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg><p>Hinweis zur Anreise: Der Parkplatz P1 ist bis Frühling 2027 gesperrt. Die Parkplätze P2 und P3 sind weiterhin zugänglich.</p><button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div></section>
+    <h3>Klein · Gold</h3>
+    <section class="alert alert--gold" aria-label="Hinweis"><div class="alert__in" style="padding-inline:var(--s15)"><svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg><p>Hinweis zur Anreise: Der Parkplatz P1 ist bis Frühling 2027 gesperrt. Die Parkplätze P2 und P3 sind weiterhin zugänglich.</p><button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div></section>
+    <h3>Gross mit Link · Rot</h3>
+    <section class="alert alert--rot alert--big" aria-labelledby="v3"><div class="alert__in" style="padding-inline:var(--s15)"><svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg><h2 id="v3">Theater heute wegen Sturm geschlossen</h2><p>Das Konzert «Live in Concert» wird auf Samstag verschoben. Ihre Tickets bleiben gültig.</p><a class="btn btn--light" href="#">Mehr erfahren <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a><button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div></section>
+    <h3>Gross mit Link · Gold</h3>
+    <section class="alert alert--gold alert--big" aria-labelledby="v4"><div class="alert__in" style="padding-inline:var(--s15)"><svg class="i alert__ic" aria-hidden="true"><use href="#i-clock"/></svg><h2 id="v4">Römerfest 2026: Tickets jetzt im Vorverkauf</h2><p>Mit dem Vorverkaufsticket gehen Sie ohne Wartezeit hinein.</p><a class="btn" href="#">Tickets kaufen <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a><button class="alert__close" type="button" aria-label="Hinweis schliessen"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg></button></div></section>
+  </div>
+</main>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Hinweise sind keine Pop-ups: Sie stehen im Seitenfluss unter der Navbar und schieben den Inhalt sanft nach unten. Höchstens 2 sind gleichzeitig aktiv. Mit Link wird automatisch die grosse Variante verwendet. Text, Farbe (Rot/Gold), Link und Icon kommen aus dem CMS.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Leiste klappt auf (Höhe 0 → auto)</td><td>Laden, +0.3 s, 120 ms zwischen zwei Hinweisen</td><td>0.45 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Inhalt gleitet 8 px von oben ein</td><td>+0.1 s nach dem Aufklappen</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Schliessen: Inhalt blendet aus, dann klappt die Leiste zu</td><td>Klick auf Kreuz</td><td>0.15 s + 0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Fokus springt zum nächsten Hinweis (oder zum Inhalt)</td><td>nach dem Schliessen</td><td>–</td></tr>
+    <tr><td>Kreuz-Hover</td><td>Hover</td><td>CSS 0.2 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Aufklappen: Hinweise sind sofort da und blenden nur ein; Schliessen blendet nur aus.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const active = () => gsap.utils.toArray('.js-alert');
+
+  // 1 · Einblenden: Leiste klappt auf, Inhalt gleitet von oben ein
+  function show(alerts, delay = .3) {
+    gsap.set(alerts, { display: '' });
+    const tl = gsap.timeline({ delay, defaults: { ease: AR.ease.out } });
+    alerts.forEach((a, i) => {
+      const at = i * .12;
+      if (reduced) tl.fromTo(a, { autoAlpha: 0 }, { autoAlpha: 1, duration: AR.dur.ui }, at);
+      else tl.fromTo(a, { height: 0 }, { height: 'auto', duration: .45, clearProps: 'height' }, at)
+             .fromTo(a.querySelector('.alert__in'), { y: -8, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .3 }, at + .1);
+    });
+    return tl;
+  }
+  show(active());
+
+  // 2 · Schliessen: Inhalt aus, dann zuklappen; Fokus weitergeben
+  function close(a) {
+    const next = [...document.querySelectorAll('.alert')].filter(x => x !== a && x.offsetParent).find(x => x.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_PRECEDING);
+    const tl = gsap.timeline({ defaults: { ease: AR.ease.out }, onComplete: () => gsap.set(a, { display: 'none' }) });
+    if (reduced) tl.to(a, { autoAlpha: 0, duration: AR.dur.hover });
+    else tl.to(a.querySelector('.alert__in'), { autoAlpha: 0, duration: .15 })
+           .to(a, { height: 0, duration: .3 });
+    (next?.querySelector('.alert__close') || document.querySelector('main h1')).focus?.({ preventScroll: true });
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.alert__close');
+    if (b) close(b.closest('.alert'));
+  });
+
+  // Demo: alle Hinweise wieder anzeigen
+  document.querySelector('#again').addEventListener('click', () => {
+    const all = gsap.utils.toArray('.alert');
+    gsap.set(all, { clearProps: 'all' });
+    gsap.set(all.map(a => a.querySelector('.alert__in')), { clearProps: 'all' });
+    show(active(), 0);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero 1st level – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../shared/navbar.css">
+<style>
+  /* ---------- Hero 1st level (Desktop 1440 × 810 · Wide 1920 × 1080 · Mobile 393 × 699) ---------- */
+  .hero { position: relative; height: min(56.25vw, 100svh); min-height: 520px; overflow: hidden; color: var(--weiss); background: var(--anth); }
+  @media (max-width: 900px) { .hero { height: min(177.8vw, 100svh); } }
+  .hero__slides { position: absolute; inset: -8% 0; }               /* Reserve für Parallax */
+  .hero__slide { position: absolute; inset: 0; background: var(--anth); }
+  .hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .hero__shade { position: absolute; inset: 0 0 auto; height: 50%; background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0)); pointer-events: none; }
+  .hero__foot { position: absolute; inset: auto 0 0; height: 34%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.32) 50%, rgba(0,0,0,.6)); }
+  .hero__foot::before { content: ""; position: absolute; inset: 0; -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px);
+    -webkit-mask-image: linear-gradient(transparent, #000); mask-image: linear-gradient(transparent, #000); }
+  .hero__logo { position: absolute; z-index: 2; left: var(--m); right: var(--m); bottom: var(--s3); margin: 0; transform-origin: 50% 0; }
+  .hero__logo img { width: 100%; height: auto; }
+  .hero__mask { display: block; overflow: hidden; }   /* Logo steigt aus dieser Kante auf */
+
+  .after { padding-block: var(--sec); }
+  .after p { max-width: 60ch; }
+</style>
+</head>
+<body data-section="Hero-Komponenten" data-title="Hero 1st level">
+
+<section class="hero" id="hero" aria-label="Augusta Raurica">
+  <div class="hero__slides" id="slides">
+    <div class="hero__slide media"><img src="../../shared/img/hero.jpg" alt="Kind in römischer Rüstung mit rotem Schild am Römerfest" width="1920" height="1080" fetchpriority="high"></div>
+    <div class="hero__slide media"><img src="../../shared/img/theater.jpg" alt="Römisches Theater von Augusta Raurica" width="1920" height="1080"></div>
+    <div class="hero__slide media"><img src="../../shared/img/tierpark.jpg" alt="Tiere im Römischen Haustierpark" width="1920" height="1080"></div>
+  </div>
+  <div class="hero__shade"></div>
+  <div class="hero__foot"></div>
+  <h1 class="hero__logo" id="logo"><span class="hero__mask"><img src="../../shared/img/logo-weiss.svg" alt="Augusta Raurica" width="1344" height="113"></span></h1>
+</section>
+
+<section class="after wrap">
+  <h2>Weiter scrollen</h2>
+  <p>Desktop: Beim Scrollen wandert das Logo in die Navbar. Mobil: Das Logo blendet etwa in der Mitte des Viewports aus, die Navbar zeigt das AR-Kürzel. Das Bild bewegt sich mit Parallax langsamer als die Seite, und die Navbar wird weiss, sobald der Hero verlassen ist.</p>
+</section>
+<div class="demo-spacer" style="min-height:120vh">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Bilder blenden ineinander über (Anforderung AR: mehrere Bilder mit Überblendung, alternativ Video/GIF). Das Logo steigt beim Laden aus der Unterkante auf und wandert beim Scrollen in die Navbar.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Bild zoomt von 112 % auf 100 %</td><td>Laden</td><td>2.2 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Logo steigt aus der Kante auf (Clip + 30 % y)</td><td>Laden, +0.15 s</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Navbar (Komponente <code>AR.navbar</code>) blendet von oben ein</td><td>Laden, +0.4 s, 50 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Überblendung zum nächsten Bild + langsamer Zoom (ohne Punkte-Indikator)</td><td>alle 6 s</td><td>1.6 s · <code>AR.ease.inOut</code>, Zoom 7 s linear</td></tr>
+    <tr><td>Bild-Parallax (−8 % → +8 %)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code></td></tr>
+    <tr><td>Desktop: Logo wandert in die Navbar</td><td>Scroll über 60 % der Hero-Höhe</td><td><code>scrub: 0.3</code>, linear</td></tr>
+    <tr><td>Mobile: Logo blendet aus (Deckkraft, 16 px nach oben, 96 %)</td><td>Logo-Mitte von 75 % bis 50 % der Viewport-Höhe</td><td><code>scrub: 0.3</code></td></tr>
+    <tr><td>Navbar wird weiss</td><td>Hero verlässt den Viewport oben</td><td>CSS 0.25 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Zoom, keine Parallax, kein Autoplay (erstes Bild bleibt), Logo wandert nicht: es blendet beim Scrollen nur aus, das Logo in der Navbar ein.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../../shared/navbar.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const hero = document.querySelector('#hero');
+  const slides = gsap.utils.toArray('#slides .hero__slide');
+  const logo = document.querySelector('#logo');
+
+  // Navbar = gemeinsame Komponente (Demo «Navbar»). home: volles Logo erscheint erst, wenn das Hero-Logo ankommt.
+  const nav = AR.navbar({ tone: 'bright', solidAfter: hero, home: true, delay: .4 });
+  const slot = nav.logo;
+
+  // 1 · Intro beim Laden
+  gsap.set(slides.slice(1), { autoAlpha: 0 });
+  gsap.timeline({ defaults: { ease: AR.ease.out } })
+    .from(slides[0].querySelector('img'), { scale: reduced ? 1 : 1.12, autoAlpha: 0, duration: reduced ? .6 : 2.2 })
+    .from('.hero__mask img', { yPercent: reduced ? 0 : 30, clipPath: 'inset(0 0 100% 0)', autoAlpha: reduced ? 0 : 1, duration: 1.1 }, .15);
+
+  // 2 · Bilder überblenden (Dissolve) mit langsamem Zoom, alle 6 s – ohne Indikator
+  let current = 0;
+  function show(next) {
+    const from = slides[current], to = slides[next];
+    gsap.set(to, { zIndex: 1 }); gsap.set(from, { zIndex: 0 });
+    gsap.to(to, { autoAlpha: 1, duration: 1.6, ease: AR.ease.inOut, onComplete: () => gsap.set(from, { autoAlpha: 0 }) });
+    gsap.fromTo(to.querySelector('img'), { scale: 1.08 }, { scale: 1, duration: 7, ease: 'none' });
+    current = next;
+  }
+  if (!reduced) setInterval(() => { if (!document.hidden) show((current + 1) % slides.length); }, 6000);
+
+  // 3 · Scroll
+  const mm = gsap.matchMedia();
+  if (!reduced) gsap.fromTo('#slides', { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+
+  // Desktop: Logo wandert in die Navbar. y wächst mit der Scrollstrecke,
+  // so bewegt sich das Logo im Viewport linear von der Hero-Unterkante in den Slot.
+  mm.add('(min-width: 901px)', () => {
+    if (reduced) {
+      ScrollTrigger.create({ trigger: hero, start: 'top top', end: '+=200',
+        onLeave: () => { gsap.to(slot, { autoAlpha: 1 }); gsap.to(logo, { autoAlpha: 0 }); },
+        onEnterBack: () => { gsap.to(slot, { autoAlpha: 0 }); gsap.to(logo, { autoAlpha: 1 }); } });
+      return;
+    }
+    const dist = () => hero.offsetHeight * .6;
+    gsap.to(logo, {
+      ease: 'none',
+      x: () => { const l = logo.getBoundingClientRect(), s = slot.getBoundingClientRect(); return (s.left + s.width / 2) - (l.left + l.width / 2); },
+      y: () => slot.getBoundingClientRect().top - logo.getBoundingClientRect().top + dist(),
+      scale: () => slot.offsetWidth / logo.offsetWidth,
+      scrollTrigger: {
+        trigger: hero, start: 'top top', end: () => '+=' + dist(), scrub: .3, invalidateOnRefresh: true,
+        // am Ende übernimmt das Logo in der Navbar
+        onLeave: () => { gsap.set(slot, { autoAlpha: 1 }); gsap.set(logo, { autoAlpha: 0 }); },
+        onEnterBack: () => { gsap.set(slot, { autoAlpha: 0 }); gsap.set(logo, { autoAlpha: 1 }); },
+      },
+    });
+    return () => gsap.set([logo, slot], { clearProps: 'all' });
+  });
+
+  // Mobile: Logo blendet in der Mitte des Viewports aus (Navbar zeigt das AR-Kürzel)
+  mm.add('(max-width: 900px)', () => {
+    gsap.to(logo, { autoAlpha: 0, y: reduced ? 0 : -16, scale: reduced ? 1 : .96, ease: 'none',
+      scrollTrigger: { trigger: logo, start: 'center 75%', end: 'center 50%', scrub: .3 } });
+    return () => gsap.set(logo, { clearProps: 'all' });
+  });
+});
+</script>
+</body>
+</html>

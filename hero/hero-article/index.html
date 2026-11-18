@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero Article – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../shared/navbar.css">
+<style>
+  /* Lesefortschritt unter der Navbar */
+  .progress { position: absolute; inset: auto 0 0; height: 2px; background: var(--rot); transform-origin: 0 50%; transform: scaleX(0); }
+
+  /* ---------- Breadcrumbs auf Weiss ---------- */
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: var(--small); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 8px; }
+  .crumbs a { color: var(--anth-light); text-decoration: none; transition: color var(--dur-hover) ease; }
+  .crumbs svg.i { width: 14px; height: 14px; color: var(--anth-light); }
+  .crumbs [aria-current] { color: var(--anth); }
+  @media (hover: hover) and (pointer: fine) { .crumbs a:hover { color: var(--anth); } }
+
+  /* ---------- Hero News-Artikel ---------- */
+  .art { padding-top: calc(94px + 32px); }
+  .art__in { display: grid; gap: var(--s15); padding-block: var(--s3); }
+  .art h1 { font-size: var(--h1); line-height: 1.15; max-width: 888px; }
+  .art__lead { max-width: 888px; }
+  .art__meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s1) var(--s2); margin-top: var(--s1); }
+  .meta { display: flex; align-items: center; gap: var(--s15); font: 700 12px/1.2 var(--font); letter-spacing: .06em; text-transform: uppercase; }
+  .meta span { display: inline-flex; align-items: center; gap: 6px; }
+  .meta svg.i { width: 14px; height: 14px; }
+  .tags { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--s15); list-style: none; margin: 0; padding: 0; font: 500 12px/1.2 var(--font); letter-spacing: .06em; text-transform: uppercase; color: var(--anth-light); }
+  .tags a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; transition: color var(--dur-hover) ease; }
+  .tags [hidden] { display: none; }
+  .tags__more { min-height: 44px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--anth); text-decoration: underline; text-underline-offset: 4px; }
+  @media (hover: hover) and (pointer: fine) { .tags a:hover { color: var(--anth); } }
+  .art__media { position: relative; height: min(66vw, 960px); overflow: hidden; background: #111; }
+  .art__media .media { position: absolute; inset: -8% 0; background: #111; }
+  @media (min-width: 1680px) { .art__media { height: 1280px; } }
+  @media (max-width: 900px) { .art { padding-top: calc(64px + 24px); } .art__in { padding-block: var(--s2); } .art__media { height: 100vw; } .art__meta { flex-direction: column; align-items: flex-start; } }
+
+  .body { padding-block: var(--s6); display: grid; gap: var(--s2); }
+  .body p { max-width: 66ch; }
+</style>
+</head>
+<body data-section="Hero-Komponenten" data-title="Hero Article">
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<article>
+  <header class="art" id="art">
+    <div class="art__in wrap">
+      <ol class="crumbs" aria-label="Brotkrümelnavigation">
+        <li><a href="#">Startseite</a><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li>
+        <li><a href="#">Wissenswertes</a><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li>
+        <li aria-current="page">News</li>
+      </ol>
+      <h1 id="title">Römischer Silberschatz bei Grabungen in Kaiseraugst entdeckt</h1>
+      <p class="art__lead">Bei Rettungsgrabungen ist das Team von Augusta Raurica auf über 200 Münzen und Silbergefässe gestossen – einer der bedeutendsten Funde der letzten Jahrzehnte.</p>
+      <div class="art__meta">
+        <p class="meta"><time datetime="2026-10-26">26.10.2026</time><span><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>4 Min. Lesezeit</span></p>
+        <ul class="tags" id="tags" aria-label="Themen">
+          <li><a href="#">Archäologie</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Ausstellung</a></li>
+          <li hidden><a href="#">Silberschatz</a></li>
+          <li hidden><a href="#">Kaiseraugst</a></li>
+          <li><button type="button" class="tags__more" id="more" aria-expanded="false" aria-controls="tags">+2 weitere</button></li>
+        </ul>
+      </div>
+    </div>
+    <figure class="art__media" id="media">
+      <div class="media"><img src="../../shared/img/f-f6341faa.jpg" alt="Silberschatz: Teller und Platten aus Silber auf schwarzem Grund" width="1920" height="1301" fetchpriority="high"></div>
+    </figure>
+  </header>
+
+  <div class="body wrap">
+    <p>Der Lesefortschritt unter der Navbar zeigt beim Scrollen, wie viel vom Artikel schon gelesen ist. Er ist an die Scroll-Position gekoppelt und braucht deshalb kein Easing.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Mattis sit phasellus mollis sit aliquam sit nullam neque ultrices. Bei Rettungsgrabungen in Kaiseraugst kamen Teller, Platten und Löffel aus Silber zum Vorschein.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipiscing elit. Mattis sit phasellus mollis sit aliquam sit nullam neque ultrices. Die Funde werden nun im Sammlungszentrum gereinigt und dokumentiert.</p>
+  </div>
+</article>
+<div class="demo-spacer">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Einstieg für News und Artikel. Höchstens drei Tags sichtbar, weitere sind versteckt und lassen sich aufklappen (Anforderung). Ein Lesefortschritt unter der Navbar zeigt die Position im Artikel.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Breadcrumbs blenden auf</td><td>Laden</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Titel: Zeilen steigen aus der Maske (SplitText)</td><td>Laden, +0.1 s, 80 ms gestaffelt</td><td>1.0 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Lead, Datum/Lesezeit, Tags blenden auf (y 12 → 0)</td><td>+0.5 s, 50 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild öffnet sich von oben, zoomt 112 % → 100 %</td><td>+0.4 s</td><td>1.2 s · <code>AR.ease.inOut</code> / 1.8 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Weitere Tags klappen auf / zu</td><td>Klick auf „+2 weitere“</td><td>0.25 s · <code>AR.ease.out</code>, 40 ms gestaffelt</td></tr>
+    <tr><td>Lesefortschritt (scaleX 0 → 1)</td><td>Scroll über den Artikel</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Bild-Parallax (−8 % → +8 %)</td><td>Scroll</td><td><code>scrub: true</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Nur Deckkraft, keine Masken, kein Zoom, keine Parallax. Der Lesefortschritt bleibt (zeigt Information).</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../../shared/navbar.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  // Navbar = gemeinsame Komponente (Demo «Navbar»)
+  AR.navbar({ tone: 'dark' });
+  document.querySelector('#nav').append(document.querySelector('#progress'));   // Lesefortschritt sitzt unter der Navbar
+  const media = document.querySelector('#media');
+  const y = reduced ? 0 : 12;
+
+  // 1 · Intro beim Laden
+  const tl = gsap.timeline({ defaults: { ease: AR.ease.out } });
+  tl.from('.crumbs', { y, autoAlpha: 0, duration: AR.dur.move });
+  SplitText.create('#title', {
+    type: 'lines', mask: 'lines', autoSplit: true,
+    onSplit: self => tl.from(self.lines, { yPercent: reduced ? 0 : 105, autoAlpha: reduced ? 0 : 1, duration: 1, stagger: .08 }, .1),
+  });
+  tl.from('.art__lead, .meta > *, .tags > li:not([hidden])', { y, autoAlpha: 0, duration: AR.dur.move, stagger: .05 }, .5)
+    .fromTo(media, { clipPath: reduced ? 'inset(0 0 0 0)' : 'inset(0 0 100% 0)', autoAlpha: reduced ? 0 : 1 },
+      { clipPath: 'inset(0 0 0% 0)', autoAlpha: 1, duration: reduced ? .6 : 1.2, ease: AR.ease.inOut }, .4)
+    .from(media.querySelector('img'), { scale: reduced ? 1 : 1.12, duration: 1.8 }, .4);
+
+  // 2 · Tags: max. 3 sichtbar, Rest auf Klick
+  const more = document.querySelector('#more');
+  const hidden = [...document.querySelectorAll('#tags li[hidden]')];
+  more.addEventListener('click', () => {
+    const open = more.getAttribute('aria-expanded') !== 'true';
+    more.setAttribute('aria-expanded', open);
+    if (open) {
+      hidden.forEach(li => li.hidden = false);
+      more.textContent = 'Weniger';
+      gsap.fromTo(hidden, { autoAlpha: 0, x: reduced ? 0 : -8 }, { autoAlpha: 1, x: 0, duration: .25, stagger: .04, ease: AR.ease.out });
+    } else {
+      gsap.to(hidden, { autoAlpha: 0, duration: .15, ease: AR.ease.out, onComplete: () => {
+        hidden.forEach(li => li.hidden = true); more.textContent = `+${hidden.length} weitere`;
+      } });
+    }
+  });
+
+  // 3 · Scroll: Lesefortschritt + Parallax
+  gsap.to('#progress', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: 'article', start: 'top top', end: 'bottom bottom', scrub: true } });
+  if (!reduced) gsap.fromTo(media.querySelector('.media'), { yPercent: -8 }, {
+    yPercent: 8, ease: 'none', scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: true },
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Single Image – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../lightbox/lightbox.css">
+<style>
+  /* ---------- Single Image (Figma 3455:37680) – Rand 48, 1344 × 896 (3 : 2), Wide 1728 × 1152, Mobile 353 × 235 ---------- */
+  .single .g-item { --ar: 3 / 2; }
+  /* Bild ist 12 % höher als der Rahmen: Reserve für die Parallax */
+  .single .g-item .media img { position: absolute; left: 0; top: -6%; height: 112%; }
+  .variant { font-size: var(--small); color: var(--anth-light); margin-bottom: var(--s1); }
+</style>
+</head>
+<body data-section="Media" data-title="Single Image">
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+<section class="single sec wrap" aria-label="Einzelbild mit Bildlegende">
+  <p class="variant">Variante: mit Bildlegende</p>
+  <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Tepidarium: das lauwarme Bad" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Tepidarium: das lauwarme Bad"><div class="media"><img src="../../shared/img/bad.jpg" alt="Gewölbtes Bad mit orangen Wänden und Steinbecken" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Tepidarium: das lauwarme Bad</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+</section>
+<section class="single sec wrap" aria-label="Einzelbild ohne Bildlegende">
+  <p class="variant">Variante: ohne Bildlegende</p>
+  <button class="g-item" type="button" style="--ar:3 / 2" data-credit="© Augusta Raurica" aria-label="Bild vergrössern"><div class="media"><img src="../../shared/img/grabung.jpg" alt="Hände legen mit einem Pinsel einen Fund im Boden frei" width="1600" height="1066" loading="lazy" decoding="async"></div><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+</section>
+<div class="demo-spacer">Bild anklicken: Lightbox öffnet sich aus dem Bild.</div>
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Das Bild öffnet sich beim Scrollen wie ein Fenster (Rahmen wächst von innen auf volle Grösse) und bewegt sich danach leicht langsamer als die Seite. Hover zeigt Verlauf, Bildlegende (falls vorhanden) und Lupe; ein Klick öffnet die Lightbox.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Rahmen öffnet sich (<code>clip-path</code> 6 % → 0 %)</td><td>Scroll, Bild bei 85 % Viewport</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild-Parallax im Rahmen (−5 % → +5 %)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Hover: Bild 105 %, Verlauf, Legende + Lupe</td><td>Maus / Fokus</td><td>CSS (siehe Image Gallery)</td></tr>
+    <tr><td>Lightbox öffnen / schliessen (ohne Zähler und Pfeile)</td><td>Klick, Enter, Esc</td><td>siehe <a href="../lightbox/">Lightbox</a> · Code in <a href="../lightbox/lightbox.js">lightbox.js</a></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Bild blendet nur ein (0.4 s), keine Parallax, Lightbox ohne Morph.</td></tr>
+  </table></template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../lightbox/lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  AR.lazy();
+
+  gsap.utils.toArray('.single .g-item').forEach(frame => {
+    // 1 · Reveal: Rahmen öffnet sich von innen
+    gsap.fromTo(frame, reduced ? { autoAlpha: 0 } : { clipPath: 'inset(6% 6% 6% 6%)' }, {
+      ...(reduced ? { autoAlpha: 1, duration: .4 } : { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, clearProps: 'clipPath' }),
+      ease: AR.ease.out,
+      scrollTrigger: { trigger: frame, start: 'top 85%', once: true },
+    });
+
+    // 2 · Parallax: Bild bewegt sich im Rahmen langsamer als die Seite
+    if (!reduced) gsap.fromTo(frame.querySelector('img'), { yPercent: -5 }, {
+      yPercent: 5, ease: 'none',
+      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true },
+    });
+
+    // 3 · Jedes Einzelbild hat seine eigene Lightbox (1 Bild, ohne Zähler und Pfeile)
+    ARLightbox([frame]);
+  });
+});
+</script>
+</body>
+</html>

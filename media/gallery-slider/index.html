@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery slider – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../lightbox/lightbox.css">
+<style>
+  /* ---------- Gallery slider (Figma 3455:37464) – Bilder 432 breit (3 sichtbar + Anschnitt), unten bündig, Abstand 24;
+     darunter Fortschrittslinie Anthrazit 20 mit Balken Anthrazit + Button-Navigation ---------- */
+  .gs { overflow: hidden; }
+  .gs__viewport { padding-inline: var(--m); }
+  .gs__track { display: flex; align-items: flex-end; gap: var(--g); width: max-content; touch-action: pan-y; cursor: grab; }
+  .gs__track:active { cursor: grabbing; }
+  .gs__item { --w: calc((100vw - 2 * var(--m) - 2 * var(--g)) / 3); width: var(--w); flex: none; }
+  @media (max-width: 900px) { .gs__item { --w: 78vw; } }
+  .gs__bar { display: flex; align-items: center; gap: var(--s15); margin-top: var(--s3); }
+  .gs__progress { position: relative; flex: 1; height: 2px; background: var(--anth-a20); overflow: hidden; }
+  .gs__thumb { position: absolute; inset: 0 auto 0 0; background: var(--anth); }
+  .gs__nav { display: flex; gap: 10px; }
+  .gs__nav .round { width: 38px; height: 38px; }
+  .gs__nav .round svg.i { width: 14px; height: 14px; }
+  @media (max-width: 900px) { .gs__nav .round { width: 44px; height: 44px; } }
+</style>
+</head>
+<body data-section="Media" data-title="Gallery slider">
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+<section class="gs sec" id="gs" aria-roledescription="Karussell" aria-label="Bildergalerie Römerhaus">
+  <div class="gs__viewport">
+    <div class="gs__track" id="track">
+      <button class="g-item gs__item" type="button" style="--ar:4 / 5" data-cap="Theatermasken bei den Römerfesten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Theatermasken bei den Römerfesten"><div class="media"><img src="../../shared/img/masken.jpg" alt="Zwei Personen in römischen Gewändern mit Theatermasken" width="1600" height="1149" loading="lazy" decoding="async"></div><span class="g-cap">Theatermasken bei den Römerfesten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:3 / 2" data-cap="Säulenhalle mit Blumen im Vordergrund" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Säulenhalle mit Blumen im Vordergrund"><div class="media"><img src="../../shared/img/garten.jpg" alt="Säulenhalle des Römerhauses, im Vordergrund Mohnblumen" width="1920" height="1279" loading="lazy" decoding="async"></div><span class="g-cap">Säulenhalle mit Blumen im Vordergrund</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:4 / 5" data-cap="Auf der Grabung" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/grabung.jpg" alt="Hände legen mit einem Pinsel einen Fund im Boden frei" width="1600" height="1066" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:5 / 4" data-cap="Küche mit Vorratsgefässen" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/kueche.jpg" alt="Römische Küche mit Amphoren und Arbeitstisch" width="889" height="1400" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:3 / 2" data-cap="Raum mit Mosaikboden" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Raum mit Mosaikboden und Liegen" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 100%"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:5 / 4" data-cap="Tepidarium: das lauwarme Bad" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Tepidarium: das lauwarme Bad"><div class="media"><img src="../../shared/img/bad.jpg" alt="Gewölbtes Bad mit orangen Wänden und Steinbecken" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Tepidarium: das lauwarme Bad</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:3 / 2" data-cap="Innenhof mit Garten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Innenhof mit Garten"><div class="media"><img src="../../shared/img/rh-garten.jpg" alt="Innenhof mit Garten, Vermittlerinnen in römischer Kleidung" width="547" height="365" loading="lazy" decoding="async"></div><span class="g-cap">Innenhof mit Garten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+      <button class="g-item gs__item" type="button" style="--ar:4 / 5" data-cap="Speisezimmer mit gedecktem Tisch" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Speisezimmer mit gedecktem Tisch"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Speisezimmer mit gedecktem Tisch und Wandmalereien" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 40%"></div><span class="g-cap">Speisezimmer mit gedecktem Tisch</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    </div>
+  </div>
+  <div class="gs__bar wrap">
+    <div class="gs__progress" aria-hidden="true"><span class="gs__thumb" id="thumb"></span></div>
+    <div class="gs__nav">
+      <button type="button" class="round round--prev" id="prev" aria-label="Vorheriges Bild"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="round" id="next" aria-label="Nächstes Bild"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+<div class="demo-spacer">Ziehen, wischen, Trackpad oder Pfeile. Bild anklicken öffnet die Lightbox.</div>
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Die Bilder fahren beim ersten Sichtbarwerden von rechts herein. Der Slider lässt sich ziehen (mit Schwung und Einrasten an der nächsten Bildkante), per Trackpad schieben oder mit den Pfeilen bewegen; der Balken zeigt Position und sichtbaren Anteil. Klick ohne Ziehen öffnet die Lightbox.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Bilder kommen 60 px von rechts und blenden ein</td><td>Scroll, Slider bei 80 % Viewport</td><td>0.9 s · <code>AR.ease.out</code>, 80 ms gestaffelt</td></tr>
+    <tr><td>Fortschrittsbalken wächst von links</td><td>gleichzeitig, +0.3 s</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Ziehen mit Schwung, rastet an Bildkante ein</td><td>Maus / Touch (<code>Draggable</code> + <code>InertiaPlugin</code>)</td><td>Schwung physikalisch, max. 1 s</td></tr>
+    <tr><td>Pfeil-Buttons / Pfeiltasten: ein Bild weiter</td><td>Klick, ← →</td><td>0.6 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Trackpad horizontal</td><td>Wheel <code>deltaX</code></td><td>0.4 s · <code>AR.ease.out</code> (<code>quickTo</code>)</td></tr>
+    <tr><td>Tab auf ein verdecktes Bild schiebt es ins Bild</td><td>Tastaturfokus</td><td>0.6 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Hover: Bild 105 %, Verlauf, Legende + Lupe</td><td>Maus / Fokus</td><td>CSS (siehe Image Gallery)</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Bilder blenden nur ein, kein Schwung, Buttons springen mit kurzer Überblendung (0.2 s).</td></tr>
+  </table></template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../lightbox/lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const track = document.querySelector('#track');
+  const items = gsap.utils.toArray('.gs__item', track);
+  const thumb = document.querySelector('#thumb');
+  const prev = document.querySelector('#prev'), next = document.querySelector('#next');
+  AR.lazy();
+
+  // Masse: Einrastpunkte = linke Kante jedes Bildes, begrenzt auf das Ende des Tracks
+  let maxX = 0, snaps = [];
+  function measure() {
+    maxX = Math.max(0, track.scrollWidth - track.parentElement.clientWidth + parseFloat(getComputedStyle(track.parentElement).paddingLeft) * 2);
+    snaps = [...new Set(items.map(el => -Math.min(left(el), maxX)))];
+    drag.applyBounds({ minX: -maxX, maxX: 0 });
+    gsap.set(thumb, { width: `${Math.min(1, track.parentElement.clientWidth / track.scrollWidth) * 100}%` });
+    update();
+  }
+  const x = () => gsap.getProperty(track, 'x');
+  const left = el => el.offsetLeft - track.offsetLeft;          // Position im Track
+  const nearest = v => gsap.utils.snap(snaps, v);
+  function update() {
+    const p = maxX ? -x() / maxX : 0;
+    gsap.set(thumb, { xPercent: p * (100 / (parseFloat(thumb.style.width) / 100) - 100) });
+    prev.setAttribute('aria-disabled', p <= .001);
+    next.setAttribute('aria-disabled', p >= .999);
+  }
+
+  // 1 · Ziehen mit Schwung (Klick ohne Ziehen bleibt ein Klick → Lightbox)
+  const drag = Draggable.create(track, {
+    type: 'x', inertia: !reduced, dragClickables: true, edgeResistance: .85, minimumMovement: 6,
+    snap: v => nearest(v),
+    onDragStart: () => items.forEach(el => el.dataset.dragged = '1'),
+    onRelease: () => setTimeout(() => items.forEach(el => delete el.dataset.dragged), 50),
+    onDrag: update, onThrowUpdate: update,
+  })[0];
+
+  // 2 · Pfeile / Tasten: ein Bild weiter
+  function goTo(target) {
+    target = gsap.utils.clamp(-maxX, 0, target);
+    gsap.to(track, reduced
+      ? { x: target, duration: .2, ease: AR.ease.out, onUpdate: update, onComplete: () => drag.update() }
+      : { x: target, duration: AR.dur.move, ease: AR.ease.inOut, onUpdate: update, onComplete: () => drag.update() });
+  }
+  function step(dir) {
+    const i = snaps.indexOf(nearest(x()));
+    goTo(snaps[gsap.utils.clamp(0, snaps.length - 1, i + dir)]);
+  }
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+  document.querySelector('#gs').addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+  // verdecktes Bild per Tab fokussiert → ins Bild schieben
+  items.forEach(el => el.addEventListener('focus', () => {
+    if (!el.matches(':focus-visible')) return;                 // nur Tastatur, nicht beim Klick
+    const r = el.getBoundingClientRect();
+    if (r.left < 0 || r.right > innerWidth) goTo(-Math.min(left(el), maxX));
+  }));
+
+  // 3 · Trackpad: horizontales Wischen schiebt den Track
+  const toX = gsap.quickTo(track, 'x', { duration: .4, ease: AR.ease.out, onUpdate: update, onComplete: () => drag.update() });
+  track.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    toX(gsap.utils.clamp(-maxX, 0, x() - e.deltaX));
+  }, { passive: false });
+
+  measure();
+  addEventListener('resize', () => { measure(); goTo(nearest(x())); });
+
+  // 4 · Reveal: Bilder fahren von rechts herein, Balken wächst
+  gsap.from(items, { x: reduced ? 0 : 60, autoAlpha: 0, duration: AR.dur.reveal, ease: AR.ease.out, stagger: .08,
+    scrollTrigger: { trigger: '#gs', start: 'top 80%', once: true } });
+  gsap.from('.gs__progress', { scaleX: 0, transformOrigin: '0 50%', duration: AR.dur.reveal, ease: AR.ease.out, delay: .3,
+    scrollTrigger: { trigger: '#gs', start: 'top 80%', once: true } });
+
+  // 5 · Lightbox (gemeinsamer Code in media/lightbox/lightbox.js)
+  ARLightbox(items);
+});
+</script>
+</body>
+</html>

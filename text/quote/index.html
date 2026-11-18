@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Quote (Figma 3303:15785): Zitat Rot, Versalien, H3; optional kleines Bild links ---------- */
+  .quote { padding-block: var(--s8); }
+  .quote__label { margin-bottom: var(--s15); font-size: var(--small); color: var(--anth-light); grid-column: 1 / -1; }
+  .quote__img { grid-column: 2 / span 1; align-self: start; aspect-ratio: 1; }
+  /* wie Single Image: Bild ist 12 % höher als der Rahmen, Reserve für die Parallax */
+  .quote__img img { position: absolute; left: 0; top: -6%; height: 112%; }
+  .quote__body { grid-column: 4 / span 8; }
+  .quote--plain .quote__body { grid-column: 2 / span 9; }
+  @media (max-width: 1100px) { .quote__img { grid-column: 1 / span 2; } .quote__body { grid-column: 3 / span 10; } .quote--plain .quote__body { grid-column: 1 / span 11; } }
+  @media (max-width: 900px) { .quote__img { width: 96px; } }
+  .quote blockquote { margin: 0; }
+  .quote blockquote p { color: var(--rot); font-size: var(--h3); font-weight: 700; line-height: 1.2; text-transform: uppercase; letter-spacing: .01em; text-wrap: pretty; }
+  .quote figcaption { margin-top: var(--s15); font-size: var(--small); line-height: 1.5; }
+  .quote figcaption span { display: block; }
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Quote">
+
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i"><use href="#i-down"/></svg></div>
+
+<section class="quote wrap" aria-label="Zitat mit Bild">
+  <figure class="grid">
+    <p class="quote__label">Mit Bild</p>
+    <div class="quote__img media"><img src="../../shared/img/bad.jpg" alt="Bad im Römerhaus" width="400" height="400" loading="lazy" decoding="async"></div>
+    <div class="quote__body">
+      <blockquote><p>«Wer durch Augusta Raurica geht, läuft über zweitausend Jahre Alltag. Jede Grabung erzählt uns, wie nah uns die Menschen damals waren.»</p></blockquote>
+      <figcaption><span>Dr. Anna Muster,</span><span>Leiterin Ausgrabungen Augst</span></figcaption>
+    </div>
+  </figure>
+</section>
+
+<section class="quote quote--plain wrap" aria-label="Zitat ohne Bild">
+  <figure class="grid">
+    <p class="quote__label">Ohne Bild</p>
+    <div class="quote__body">
+      <blockquote><p>«Das Theater war für die Römer mehr als Unterhaltung: Hier traf sich die ganze Stadt, und genau das spürt man noch heute an einem Sommerabend.»</p></blockquote>
+      <figcaption><span>Peter Beispiel,</span><span>Besucher am Römerfest</span></figcaption>
+    </div>
+  </figure>
+</section>
+
+<div class="demo-spacer">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Das Zitat baut sich Zeile für Zeile auf: jede Zeile steigt aus ihrer eigenen Unterkante, wie gesetzt. Das Bild lädt wie bei Single Image: der Rahmen öffnet sich von innen, das Foto blendet ein und bewegt sich danach leicht langsamer als die Seite. Die Quellenangabe folgt zum Schluss. Die Zeilen werden bei jeder Breite neu berechnet (SplitText <code>autoSplit</code>).</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Bild: Rahmen öffnet sich (<code>clip-path</code> 6 % → 0 %), wie Single Image</td><td>Scroll, Bild bei 85 % Viewport</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild-Parallax im Rahmen (−5 % → +5 %)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Zitat-Zeilen steigen aus der Zeilenmaske (yPercent 100 → 0)</td><td>gleichzeitig, 80 ms pro Zeile</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Quelle blendet von unten ein (12 px)</td><td>nach der letzten Zeile −0.4 s</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Zeilen-Split, Zitat und Quelle blenden nur nacheinander ein. Bild blendet nur ein (0.4 s), keine Parallax.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  AR.lazy();
+
+  // Bild: gleiches Laden wie media/single-image
+  gsap.utils.toArray('.quote__img').forEach(frame => {
+    // 1 · Reveal: Rahmen öffnet sich von innen
+    gsap.fromTo(frame, reduced ? { autoAlpha: 0 } : { clipPath: 'inset(6% 6% 6% 6%)' }, {
+      ...(reduced ? { autoAlpha: 1, duration: .4 } : { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, clearProps: 'clipPath' }),
+      ease: AR.ease.out,
+      scrollTrigger: { trigger: frame, start: 'top 85%', once: true },
+    });
+
+    // 2 · Parallax: Bild bewegt sich im Rahmen langsamer als die Seite
+    if (!reduced) gsap.fromTo(frame.querySelector('img'), { yPercent: -5 }, {
+      yPercent: 5, ease: 'none',
+      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true },
+    });
+  });
+
+  gsap.utils.toArray('.quote').forEach(quote => {
+    const text = quote.querySelector('blockquote p');
+    const caption = quote.querySelector('figcaption');
+    let played = false;
+    const st = { trigger: quote.querySelector('.quote__body'), start: 'top 80%', once: true, onEnter: () => { played = true; } };
+
+    if (reduced) {
+      gsap.from([text, caption], { autoAlpha: 0, duration: AR.dur.move, stagger: .15, scrollTrigger: st });
+      return;
+    }
+
+    // Zeilen bei jeder Breite neu teilen; die Animation wird dabei mitgeführt
+    SplitText.create(text, {
+      type: 'lines', mask: 'lines', autoSplit: true, aria: 'auto',
+      onSplit(self) {
+        const tl = gsap.timeline({ scrollTrigger: st });
+        tl.from(self.lines, { yPercent: 100, duration: .9, ease: AR.ease.out, stagger: .08 }, 0)
+          .from(caption, { y: 12, autoAlpha: 0, duration: AR.dur.move, ease: AR.ease.out }, '-=.4');
+        if (played) tl.progress(1);   // nach Grössenänderung nicht nochmals abspielen
+        return tl;                    // SplitText räumt die Timeline beim Neu-Teilen selbst auf
+      },
+    });
+  });
+});
+</script>
+</body>
+</html>

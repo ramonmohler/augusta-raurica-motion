@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recommendation/Highlight teaser – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Recommendation/Highlight teaser (Figma 3303:15559): 1440 × 960, Mobile volle Viewport-Höhe ---------- */
+  .aud { position: relative; height: calc(100vw * 960 / 1440); min-height: 560px; overflow: hidden; display: flex; align-items: center; background: var(--anth); color: var(--weiss); }
+  @media (max-width: 900px) { .aud { height: 100svh; min-height: 0; align-items: flex-end; padding-bottom: var(--s3); } }
+
+  /* Bild-Ebenen: jede neue Ebene schiebt sich von unten über die vorherige */
+  .aud__layers { position: absolute; inset: 0; isolation: isolate; }   /* eigener Stapel: Ebenen bleiben immer unter Panel + Liste */
+  .aud__layer { position: absolute; inset: 0; overflow: hidden; }
+  .aud__layer .media { position: absolute; inset: 0; background: transparent; }
+
+  /* Panel links: Verlauf Schwarz → transparent + Blur (Desktop 504 px breit), Mobile unten */
+  .aud__side { position: absolute; z-index: 1; inset: 0 auto 0 0; width: calc(100vw * 504 / 1440); min-width: 360px; pointer-events: none; }
+  .aud__side::before { content: ""; position: absolute; inset: 0; -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
+    -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent); mask-image: linear-gradient(90deg, #000 45%, transparent); }
+  .aud__side::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.32) 55%, rgba(0,0,0,0)); }
+  @media (max-width: 900px) {
+    .aud__side { width: 100%; min-width: 0; inset: auto 0 0 0; height: 70%; }
+    .aud__side::before { -webkit-mask-image: linear-gradient(0deg, #000 45%, transparent); mask-image: linear-gradient(0deg, #000 45%, transparent); }
+    .aud__side::after { background: linear-gradient(0deg, rgba(0,0,0,.66), rgba(0,0,0,.32) 55%, rgba(0,0,0,0)); }
+  }
+
+  .aud__body { position: relative; z-index: 2; width: 100%; }
+  .aud__eyebrow { font-size: var(--small); font-weight: 500; line-height: 1.5; text-transform: uppercase; }
+  .aud__list { list-style: none; margin: var(--s125) 0 0; padding: 0; display: grid; gap: 4px; justify-items: start; }
+  /* Nicht gewählt = AR Weiss transparent 60, gewählt = Weiss */
+  .aud__list a { display: inline-block; padding-block: 2px; font-size: var(--h2); font-weight: 700; line-height: 1.2; text-decoration: none; color: var(--weiss-a60); transition: color .3s ease; }
+  .aud__list a[aria-current="true"] { color: var(--weiss); }
+  .aud__list a:focus-visible { outline-color: var(--weiss); }
+
+  .label { padding: var(--s4) var(--m) var(--s2); font-size: var(--small); color: var(--anth-light); }
+</style>
+</head>
+<body data-section="Teaser-Komponenten" data-title="Recommendation/Highlight teaser">
+
+<p class="label">Desktop: Hover oder Tab über die Einträge · Mobile: scrollen</p>
+<section class="aud" aria-labelledby="rec-h" data-aud>
+  <div class="aud__layers">
+  <div class="aud__layer"><div class="media"><img src="../../shared/img/erwachsene.jpg" alt="" width="1920" height="1286"></div></div>
+  <div class="aud__layer"><div class="media"><img src="../../shared/img/kinder.jpg" alt="" width="1920" height="1280" style="object-position:40% 40%"></div></div>
+  <div class="aud__layer"><div class="media"><img src="../../shared/img/familie.jpg" alt="" width="1920" height="1280" style="object-position:55% 40%"></div></div>
+  <div class="aud__layer"><div class="media"><img src="../../shared/img/gruppen.jpg" alt="" width="1920" height="1280"></div></div>
+  </div>
+  <div class="aud__side" aria-hidden="true"></div>
+  <div class="aud__body wrap">
+    <p class="aud__eyebrow" id="rec-h">Programm für alle, überall</p>
+    <ul class="aud__list">
+      <li><a href="#">Für Erwachsene</a></li>
+      <li><a href="#">Für Schulen</a></li>
+      <li><a href="#">Für Familien</a></li>
+      <li><a href="#">Für Gruppen</a></li>
+    </ul>
+  </div>
+</section>
+
+<div class="demo-spacer">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Eine Variante (Recommendation). Hover (oder Tastatur-Fokus) auf einen Eintrag: das passende Bild schiebt sich von unten über das vorherige, das Bild selbst läuft dabei leicht gegenläufig. Klick führt auf die Unterseite. Mobile: Komponente füllt den Viewport, wird beim Scrollen festgehalten, bis alle Einträge durch sind; danach scrollt die Seite normal weiter.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Eyebrow und Einträge blenden von unten ein</td><td>Section 88 % im Viewport</td><td>0.9 s · <code>AR.ease.out</code>, 70 ms Stagger</td></tr>
+    <tr><td>Neue Bild-Ebene fährt von unten (yPercent 100 → 0)</td><td>Desktop: Hover / Fokus</td><td>0.9 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Bild in der Ebene gegenläufig (−28 % → 0, 108 % → 100 %)</td><td>gleichzeitig</td><td>0.9 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Eintrag Weiss 60 → Weiss</td><td>gleichzeitig</td><td>CSS 0.3 s</td></tr>
+    <tr><td>Mobile: Section wird gepinnt, Scroll schaltet Eintrag für Eintrag weiter (mit Einrasten)</td><td>Scroll, ≤ 900 px</td><td><code>pin: true</code>, 60 % Viewport pro Eintrag</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Bilder überblenden statt schieben (0.3 s), kein Pinning auf Mobile: der Eintrag in der Bildschirmmitte wird aktiv.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  gsap.utils.toArray('[data-aud]').forEach(section => {
+    const layers = gsap.utils.toArray('.aud__layer', section);
+    const links = gsap.utils.toArray('.aud__list a', section);
+    let active = 0, z = 1;
+
+    // Startzustand: erste Ebene sichtbar, alle anderen unterhalb
+    gsap.set(layers, { zIndex: 0, yPercent: reduced ? 0 : 100, autoAlpha: reduced ? 0 : 1 });
+    gsap.set(layers[0], { zIndex: 1, yPercent: 0, autoAlpha: 1 });
+    links[0].setAttribute('aria-current', 'true');
+
+    function show(i) {
+      if (i === active || !layers[i]) return;
+      links.forEach((a, j) => a.setAttribute('aria-current', j === i));
+      const layer = layers[i], img = layer.querySelector('img');
+      gsap.killTweensOf([layer, img]);
+      gsap.set(layer, { zIndex: ++z });
+      if (reduced) {
+        gsap.fromTo(layer, { autoAlpha: 0 }, { autoAlpha: 1, duration: AR.dur.ui, ease: AR.ease.out });
+      } else {
+        // Ebene fährt herein, Bild läuft gegenläufig → wirkt wie ein Fenster, das sich öffnet
+        gsap.fromTo(layer, { yPercent: 100 }, { yPercent: 0, duration: .9, ease: AR.ease.inOut });
+        gsap.fromTo(img, { yPercent: -28, scale: 1.08 }, { yPercent: 0, scale: 1, duration: .9, ease: AR.ease.inOut });
+      }
+      active = i;
+    }
+
+    // 1 · Einträge erscheinen
+    AR.reveal(section.querySelectorAll('.aud__eyebrow, .aud__list li'));
+
+    const mm = gsap.matchMedia();
+    // 2 · Desktop: Hover und Tastatur-Fokus
+    mm.add('(min-width: 901px)', () => {
+      const on = links.map((a, i) => () => show(i));
+      links.forEach((a, i) => { a.addEventListener('pointerenter', on[i]); a.addEventListener('focus', on[i]); });
+      return () => links.forEach((a, i) => { a.removeEventListener('pointerenter', on[i]); a.removeEventListener('focus', on[i]); });
+    });
+
+    // 3 · Mobile: volle Höhe, Scroll wird festgehalten und schaltet durch die Einträge
+    mm.add('(max-width: 900px)', () => {
+      links.forEach((a, i) => a.addEventListener('focus', () => show(i)));
+      if (reduced) {
+        links.forEach((a, i) => ScrollTrigger.create({ trigger: a, start: 'top 55%', end: 'bottom 45%', onToggle: s => s.isActive && show(i) }));
+        return;
+      }
+      const steps = links.length - 1;
+      ScrollTrigger.create({
+        trigger: section, start: 'top top', end: () => '+=' + innerHeight * .6 * steps,
+        pin: true, anticipatePin: 1,
+        snap: { snapTo: 1 / steps, duration: { min: .2, max: .5 }, ease: AR.ease.out },
+        onUpdate: s => show(Math.round(s.progress * steps)),
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>

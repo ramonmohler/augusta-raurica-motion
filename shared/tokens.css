@@ -1,0 +1,61 @@
+/* =====================================================================
+   Augusta Raurica – Design-Tokens für die Motion-Demos
+   Quelle: Figma „Augusta Raurica Webdesign“, Variablen-Sammlungen „Farben“ und „rem“
+   (Modi Mobile ≤ 900 px · Desktop · Wide ≥ 1680 px).
+   Die Bewegungs-Tokens (--ease-*, --dur-*) gibt es identisch in shared/demo.js als AR.ease / AR.dur.
+   ===================================================================== */
+
+/* Cera Pro wird nur lokal geladen (installierte Schrift). Ohne Webfont-Lizenz liegt keine Schriftdatei im Repo;
+   dann greift Outfit als Ersatz. Mit Lizenz: Dateien nach shared/fonts/ legen und die url()-Zeilen ergänzen. */
+@font-face { font-family: "Cera Pro"; src: local("Cera Pro Regular"), local("CeraPro-Regular"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Cera Pro"; src: local("Cera Pro Medium"), local("CeraPro-Medium"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Cera Pro"; src: local("Cera Pro Bold"), local("CeraPro-Bold"); font-weight: 700; font-display: swap; }
+
+:root {
+  color-scheme: light;
+
+  /* ---------- Farben (Sammlung „Farben“) ---------- */
+  --anth: #212827;          /* AR Anthrazit */
+  --rot: #A65163;           /* AR Rot */
+  --gold: #A9935C;          /* AR Gold */
+  --gold-20: #EEE9DE;       /* AR Gold 20 solid */
+  --gold-40: #DDD4BE;       /* AR Gold 40 solid */
+  --anth-20: #D3D4D4;       /* AR Anthrazit 20 solid */
+  --anth-light: #6C7170;    /* AR Anthrazit solid light */
+  --anth-a20: rgba(33, 40, 39, .2);
+  --anth-a66: rgba(33, 40, 39, .66); /* AR Anthrazit transparent light */
+  --weiss: #FFFFFF;
+  --weiss-a40: rgba(255, 255, 255, .4);
+  --weiss-a60: rgba(255, 255, 255, .6); /* AR Weiss transparent 60 */
+  --black: #000000;
+  --line: var(--anth-a20);
+
+  /* ---------- Typografie ---------- */
+  --font: "Cera Pro", "Outfit", "Helvetica Neue", Arial, sans-serif;
+  --h1: 80px; --h2: 48px; --h3: 32px; --h4: 24px; --copy: 20px; --small: 16px; --btn: 16px; --btn-s: 14px; --menu: 20px;
+
+  /* ---------- Abstände + Grid ---------- */
+  --s1: 16px; --s125: 20px; --s15: 24px; --s2: 32px; --s25: 40px; --s3: 48px; --s4: 64px; --s5: 80px; --s6: 96px; --s8: 128px;
+  --m: 48px;   /* Seitenrand */
+  --g: 24px;   /* Gutter (12 Spalten) */
+  --sec: var(--s8);
+
+  /* ---------- Bewegung ---------- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);       /* Ein-/Ausblenden, Reveals          → AR.ease.out */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);   /* Bewegung auf dem Bildschirm       → AR.ease.inOut */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);    /* Panels, Overlays, Menü           → AR.ease.drawer */
+  --dur-press: 160ms;   /* Klick-Feedback */
+  --dur-hover: 200ms;   /* Hover, Farbe */
+  --dur-ui: 300ms;      /* Dropdown, Tabs, Akkordeon */
+  --dur-move: 600ms;    /* Slider, Panels */
+  --dur-reveal: 900ms;  /* Scroll-Reveals */
+}
+@media (max-width: 900px) {
+  :root { --h1: 48px; --h2: 32px; --h3: 24px; --h4: 20px; --copy: 17px; --small: 15px; --menu: 16px;
+    --s125: 16px; --s15: 20px; --s2: 24px; --s25: 28px; --s3: 32px; --s4: 40px; --s5: 48px; --s6: 56px; --s8: 64px;
+    --m: 20px; --g: 20px; }
+}
+@media (min-width: 1680px) {
+  :root { --h1: 96px; --h2: 56px; --h3: 40px; --h4: 28px;
+    --s3: 56px; --s4: 72px; --s5: 96px; --s6: 112px; --s8: 160px; --m: 96px; }
+}

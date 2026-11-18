@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lightbox – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="lightbox.css">
+<style>
+  /* Vorschau-Raster nur für die Demo; die Lightbox selbst steht in lightbox.css */
+  .lbd__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--g); }
+  @media (max-width: 900px) { .lbd__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  .lbd__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--s15); margin-bottom: var(--s3); }
+  .lbd__head p { max-width: 52ch; font-size: var(--small); }
+</style>
+</head>
+<body data-section="Media" data-title="Lightbox">
+<section class="lbd sec wrap" aria-label="Lightbox-Demo">
+  <div class="lbd__head">
+    <div><h2>Lightbox</h2><p>Bild anklicken oder mit Tab + Enter öffnen. Wechseln mit Pfeilen, Pfeiltasten oder Wischen, schliessen mit Esc, Kreuz oder Klick neben das Bild.</p></div>
+    <button type="button" class="btn" id="openFirst">Lightbox öffnen</button>
+  </div>
+  <div class="lbd__grid" id="grid">
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Tepidarium: das lauwarme Bad" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Tepidarium: das lauwarme Bad"><div class="media"><img src="../../shared/img/bad.jpg" alt="Gewölbtes Bad mit orangen Wänden und Steinbecken" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Tepidarium: das lauwarme Bad</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Raum mit Mosaikboden" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Raum mit Mosaikboden und Liegen" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 100%"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Säulenhalle mit Blumen im Vordergrund" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Säulenhalle mit Blumen im Vordergrund"><div class="media"><img src="../../shared/img/garten.jpg" alt="Säulenhalle des Römerhauses, im Vordergrund Mohnblumen" width="1920" height="1279" loading="lazy" decoding="async"></div><span class="g-cap">Säulenhalle mit Blumen im Vordergrund</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Theatermasken bei den Römerfesten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Theatermasken bei den Römerfesten"><div class="media"><img src="../../shared/img/masken.jpg" alt="Zwei Personen in römischen Gewändern mit Theatermasken" width="1600" height="1149" loading="lazy" decoding="async"></div><span class="g-cap">Theatermasken bei den Römerfesten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Küche mit Vorratsgefässen" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/kueche.jpg" alt="Römische Küche mit Amphoren und Arbeitstisch" width="889" height="1400" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Innenhof mit Garten" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Innenhof mit Garten"><div class="media"><img src="../../shared/img/rh-garten.jpg" alt="Innenhof mit Garten, Vermittlerinnen in römischer Kleidung" width="547" height="365" loading="lazy" decoding="async"></div><span class="g-cap">Innenhof mit Garten</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Speisezimmer mit gedecktem Tisch" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Speisezimmer mit gedecktem Tisch"><div class="media"><img src="../../shared/img/speisezimmer.jpg" alt="Speisezimmer mit gedecktem Tisch und Wandmalereien" width="1920" height="1280" loading="lazy" decoding="async" style="object-position:50% 40%"></div><span class="g-cap">Speisezimmer mit gedecktem Tisch</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+    <button class="g-item" type="button" style="--ar:3 / 2" data-cap="Auf der Grabung" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/grabung.jpg" alt="Hände legen mit einem Pinsel einen Fund im Boden frei" width="1600" height="1066" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span><span class="g-copy" aria-hidden="true">©</span></button>
+  </div>
+</section>
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Eine Lightbox für alle Bilder der Website (Image Gallery, Gallery slider, Single Image). Das Bild wächst aus seiner Kachel: aus dem zugeschnittenen Ausschnitt wird das ganze Bild. Zähler, Bildlegende mit © und Pfeile folgen kurz danach. Der vollständige Code steht in <a href="lightbox.js">lightbox.js</a> und <a href="lightbox.css">lightbox.css</a>.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Hintergrund Anthrazit blendet ein</td><td>Öffnen</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild wächst aus der Kachel (Position, Grösse, Ausschnitt per <code>clip-path</code>)</td><td>Öffnen</td><td>0.5 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Zähler, Legende, Buttons von 8 px unten</td><td>Öffnen, +0.2 s</td><td>0.3 s · <code>AR.ease.out</code>, 50 ms gestaffelt</td></tr>
+    <tr><td>Bildwechsel: alt 40 px weg, neu aus Gegenrichtung</td><td>Pfeile, ← →, Wischen ab 60 px</td><td>0.18 s + 0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Ziehen unter 60 px federt zurück</td><td>Loslassen</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Schliessen: Bild schrumpft in die Kachel (oder blendet aus, falls Kachel nicht sichtbar)</td><td>Esc, Kreuz, Klick daneben</td><td>0.4 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Barrierefreiheit</td><td colspan="2"><code>&lt;dialog&gt;</code> mit <code>showModal()</code>, Startfokus auf „Schliessen“, Fokus zurück auf die Kachel, Zähler als <code>aria-live</code>, Alt-Text im grossen Bild.</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Morph und kein Verschieben, nur Überblenden (0.2–0.3 s).</td></tr>
+  </table></template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  AR.lazy();
+  AR.reveal('#grid .g-item', { stagger: .05 });
+
+  // Alle Kacheln teilen eine Lightbox → Zähler „1 / 8“, Pfeile wechseln durch alle Bilder
+  const lightbox = ARLightbox(document.querySelectorAll('#grid .g-item'));
+  document.querySelector('#openFirst').addEventListener('click', () => lightbox.open(0, document.querySelector('#openFirst')));
+});
+</script>
+</body>
+</html>

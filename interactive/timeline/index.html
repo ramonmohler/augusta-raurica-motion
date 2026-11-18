@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Timeline (Figma 3348:29256) – Kopf H2 + Dropdown, Kacheln: links 4:5, rechts abwechselnd 3:2 / 5:4, unten bündig ---------- */
+  .day { overflow-x: clip; }
+  .day__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s15); margin-bottom: var(--s4); }
+  .day__head h2 { font-size: var(--h2); line-height: 1.2; }
+  @media (max-width: 900px) { .day__head { flex-direction: column; align-items: flex-start; margin-bottom: var(--s2); } }
+
+  /* Dropdown Zielgruppe */
+  .dd { position: relative; flex: none; }
+  .dd__btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; border: 1.5px solid var(--anth); border-radius: 999px; background: var(--weiss); cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease; }
+  .dd__btn svg.i { transition: transform var(--dur-ui) var(--ease-out); }
+  .dd__btn[aria-expanded="true"] svg.i { transform: rotate(180deg); }
+  .dd__btn.has-val { background: var(--anth); color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .dd__btn:hover { background: var(--black); border-color: var(--black); color: var(--weiss); } }
+  .dd__menu { position: absolute; z-index: 20; top: calc(100% + 8px); right: 0; min-width: 220px; margin: 0; padding: 8px 4px; list-style: none; border: 1.5px solid var(--black); border-radius: 16px; background: var(--weiss);
+    transform-origin: 100% 0; visibility: hidden; }
+  @media (max-width: 900px) { .dd__menu { right: auto; left: 0; transform-origin: 0 0; } }
+  .dd__opt { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 10px 12px; border: 0; background: none; cursor: pointer; text-align: left; font: 400 16px/1.5 var(--font); color: var(--anth); }
+  .dd__opt[aria-checked="true"] { font-weight: 700; }
+  .dd__opt svg.i { opacity: 0; }
+  .dd__opt[aria-checked="true"] svg.i { opacity: 1; }
+  .dd__opt:focus-visible { outline-offset: -2px; }
+  @media (hover: hover) and (pointer: fine) { .dd__opt:hover { background: var(--gold-20); } }
+
+  /* Bühne mit absolut gesetzten Kacheln; x und clip-path setzt GSAP */
+  .dp__wrap { --tw: 432px; position: relative; }
+  .dp { position: relative; height: calc(var(--tw) * 1.25); touch-action: pan-y; outline: none; }
+  .dp:focus-visible { outline: 2px solid var(--rot); outline-offset: 8px; }
+  .dp__rail { position: absolute; inset: 0; }
+  .dp__tile { position: absolute; left: 0; top: 0; width: var(--tw); height: 100%; padding: 0; border: 0; cursor: pointer; overflow: hidden; background: var(--gold-20); }
+  .dp__tile img { width: 100%; height: 100%; object-fit: cover; transition: scale 600ms var(--ease-out); }
+  .dp__tile[aria-current="step"] { cursor: default; }
+  @media (hover: hover) and (pointer: fine) { .dp__tile:not([aria-current="step"]):hover img { scale: 1.05; } }
+  .dp__tile:focus-visible { outline-offset: -4px; outline-color: var(--weiss); }
+  .dp__info { position: absolute; z-index: 2; left: calc(var(--tw) + var(--g)); top: 0; width: var(--tw); pointer-events: none; }
+  .dp__time { display: flex; align-items: flex-start; gap: 8px; font-size: var(--h1); font-weight: 400; line-height: 1; }
+  .dp__time small { font-size: var(--small); color: var(--anth-light); margin-top: .5em; }
+  .dp__tag { display: inline-flex; align-items: center; gap: 4px; margin-top: var(--s15); font-size: var(--btn-s); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+  .dp__tag[hidden] { display: none; }
+  .dp__text { margin-top: 8px; padding-right: var(--s15); font-size: var(--h4); font-weight: 700; line-height: 1.25;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+  .dp__line { display: block; }
+  @media (max-width: 900px) {
+    .dp__info { position: relative; left: 0; width: auto; margin-top: var(--s15); }
+    .dp__time { font-size: 56px; }
+  }
+
+  .day__bar { display: flex; align-items: center; gap: var(--s15); margin-top: var(--s4); }
+  .progress { position: relative; flex: 1; height: 2px; background: var(--anth-20); overflow: hidden; }
+  .progress span { position: absolute; inset: 0 auto 0 0; background: var(--anth); }
+  .day__nav { display: flex; gap: 10px; }
+  .label { font-size: 13px; color: var(--anth-light); margin-bottom: var(--s2); }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="Timeline">
+
+<div class="demo-spacer demo-spacer--short">Scrollen, um die Komponente einzublenden. Vorauswahl testen: <a href="?gruppe=schulen">?gruppe=schulen</a><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+
+<section class="sec wrap day" id="day" aria-labelledby="dayTitle">
+  <div class="day__head">
+    <h2 id="dayTitle">Ein Tag in Augusta Raurica</h2>
+    <div class="dd">
+      <button type="button" class="dd__btn" id="ddBtn" aria-haspopup="true" aria-expanded="false" aria-controls="ddMenu"><span>Bitte auswählen</span><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button>
+      <ul class="dd__menu" id="ddMenu" role="menu" aria-labelledby="ddBtn"></ul>
+    </div>
+  </div>
+  <div class="dp__wrap">
+  <div class="dp" id="dp" tabindex="0" role="group" aria-roledescription="Karussell" aria-label="Tagesablauf, mit Pfeiltasten wechseln">
+    <div class="dp__rail" id="rail"></div>
+  </div>
+    <div class="dp__info" id="info" aria-live="polite">
+      <p class="dp__time"><span class="dp__line js-time"></span><small class="dp__line js-unit">Uhr</small></p>
+      <p class="dp__tag dp__line js-tagline"><svg class="i" aria-hidden="true"><use href="#i-image"/></svg><span class="js-tag"></span></p>
+      <p class="dp__text dp__line js-text"></p>
+    </div>
+  </div>
+  <div class="day__bar">
+    <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+    <div class="day__nav">
+      <button type="button" class="round round--prev" id="prev" aria-label="Vorheriger Programmpunkt"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="round" id="next" aria-label="Nächster Programmpunkt"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Ein Programmpunkt pro Kachel. Die linke Kachel ist immer hochkant (4:5), die folgenden wechseln zwischen 3:2 und 5:4 und sind unten bündig (Anforderung Suan). Beim Weiterschalten wächst die nächste Kachel nach oben auf und rückt nach links. Über das Dropdown wechselt die Zielgruppe; eine Vorauswahl ist per Einstellung möglich (hier über <code>?gruppe=schulen</code>). Statt Uhrzeit kann eine Jahreszahl stehen, Tag ist optional (max. einer).</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Titel, Dropdown, Kacheln (60 px von rechts) und Text blenden ein</td><td>Scroll, <code>top 75%</code>, einmal</td><td>0.9 s, 90 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Kacheln rücken eine Position weiter (x), nächste Kachel wächst nach oben auf (clip-path), Bild bleibt ruhig (y = Hälfte des Zuschnitts)</td><td>Pfeile, ← →, Klick auf Kachel, Wischen, Trackpad seitlich</td><td>0.8 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Text: raus nach oben (10 px), neu von unten (16 px)</td><td>gleichzeitig</td><td>raus 0.16 s, rein 0.45 s, 70 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Fortschrittsbalken rückt nach</td><td>gleichzeitig</td><td>0.8 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Am Anfang/Ende: Federn um 18 px</td><td>Pfeil ins Leere, Wischen am Rand</td><td>0.42 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Wischen: Kacheln folgen dem Finger (45 %, am Rand 20 %)</td><td>Ziehen</td><td>direkt, zurück 0.4 s</td></tr>
+    <tr><td>Dropdown auf: 97 % → 100 %, von der Ecke beim Button</td><td>Klick</td><td>0.2 s · <code>AR.ease.out</code>, zu 0.15 s</td></tr>
+    <tr><td>Zielgruppe wechseln: Kacheln sinken weg, neue steigen gestaffelt auf</td><td>Auswahl im Dropdown</td><td>raus 0.2 s, rein 0.6 s, 70 ms · <code>AR.ease.out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kacheln springen an ihre Position, Text und Gruppenwechsel nur mit kurzer Überblendung (0.2 s), kein Federn.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Observer.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script>
+  /* Inhalt pro Zielgruppe (im CMS gepflegt). unit: "Uhr" oder leer bei Jahreszahlen; tag optional */
+  window.DAY = {
+    erwachsene: { label: 'Erwachsene', stops: [
+      { time: '10.30', unit: 'Uhr', tag: 'Tierpark', img: 'tierpark', alt: 'Braunes Lamm vor einem Schaf mit dichter Wolle', text: 'Den Tag im Tierpark beginnen: Wollschweine, Ziegen und Schafe alter Rassen.' },
+      { time: '12.00', unit: 'Uhr', tag: 'Museum', img: 'ausstellung', alt: 'Ausstellung mit Silhouetten römischer Figuren und Funden', text: 'Im Museum zeigen Funde, wie der Alltag vor 2000 Jahren aussah.' },
+      { time: '13.30', unit: 'Uhr', tag: 'Theater', img: 'theater', alt: 'Ruinen des römischen Theaters im Sommer', text: 'Picknick im römischen Theater mit Blick über das ganze Gelände.' },
+      { time: '15.00', unit: 'Uhr', tag: 'App-Rundgang', img: 'app', alt: 'Smartphone mit der App vor dem Theater', text: 'Mit der App erscheinen verschwundene Gebäude genau dort, wo sie standen.' },
+      { time: '16.30', unit: 'Uhr', tag: 'Besucherzentrum', img: 'info', alt: 'Informationstafel mit Lageplan', text: 'Zum Schluss ins Besucherzentrum: Lageplan, Souvenirs und Tipps.' }] },
+    familien: { label: 'Familien', stops: [
+      { time: '10.00', unit: 'Uhr', tag: 'Tierpark', img: 'tierpark', alt: 'Braunes Lamm vor einem Schaf mit dichter Wolle', text: 'Ziegen und Schweine füttern im Römischen Haustierpark.' },
+      { time: '11.30', unit: 'Uhr', tag: 'Römerhaus', img: 'kueche', alt: 'Tisch in der römischen Küche mit Brot und Gefässen', text: 'In der Küche des Römerhauses riechen, was auf den Tisch kam.' },
+      { time: '13.00', unit: 'Uhr', tag: 'Picknick', img: 'theater', alt: 'Ruinen des römischen Theaters', text: 'Picknick auf den Rängen des Theaters.' },
+      { time: '14.30', unit: 'Uhr', tag: 'Rätselroute', img: 'familie', alt: 'Familie an einem Werktisch mit römischen Gegenständen', text: 'Mit dem Rätselheft die Monumente erkunden.' }] },
+    schulen: { label: 'Schulen', stops: [
+      { time: '09.00', unit: 'Uhr', tag: 'Workshop', img: 'kinder', alt: 'Kinder an einem Werktisch im Workshop', text: 'Brot backen nach römischem Rezept im Workshop-Raum.' },
+      { time: '10.30', unit: 'Uhr', tag: 'Grabungscamp', img: 'grabung', alt: 'Hände legen im Grabungscamp einen Fund frei', text: 'Selbst graben und Funde bestimmen wie echte Archäologinnen und Archäologen.' },
+      { time: '12.00', unit: 'Uhr', tag: 'Theater', img: 'theater', alt: 'Ruinen des römischen Theaters', text: 'Mittagspause im Theater.' },
+      { time: '13.30', unit: 'Uhr', tag: 'Museum', img: 'ausstellung', alt: 'Ausstellung im Museum', text: 'Führung durch das Museum zum Silberschatz.' }] },
+    gruppen: { label: 'Gruppen', stops: [
+      { time: '10.00', unit: 'Uhr', tag: 'Führung', img: 'gruppen', alt: 'Werkstatt mit römischen Tongefässen', text: 'Führung durch die Römerstadt mit den wichtigsten Monumenten.' },
+      { time: '12.00', unit: 'Uhr', tag: 'Römisches Essen', img: 'speisezimmer', alt: 'Gedeckter Tisch im römischen Speisezimmer', text: 'Mittagessen nach römischen Rezepten.' },
+      { time: '14.00', unit: 'Uhr', tag: 'Römerhaus', img: 'bad', alt: 'Bad im Römerhaus', text: 'Freie Besichtigung von Römerhaus und Museum.' },
+      { time: '15.30', unit: 'Uhr', tag: 'Garten', img: 'garten', alt: 'Kräutergarten', text: 'Ausklang im Kräutergarten.' }] },
+    geschichte: { label: 'Variante: Jahreszahlen', stops: [
+      { time: '44 v. Chr.', unit: '', tag: 'Gründung', img: 'hero', alt: 'Kind in römischer Rüstung', text: 'Lucius Munatius Plancus gründet die Colonia Raurica.' },
+      { time: '15 v. Chr.', unit: '', tag: '', img: 'theater', alt: 'Römisches Theater', text: 'Unter Augustus entsteht die Stadt Augusta Raurica.' },
+      { time: '200', unit: '', tag: 'Blütezeit', img: 'ausstellung', alt: 'Funde im Museum', text: 'Rund 15 000 Menschen leben in der Stadt.' },
+      { time: 'Heute', unit: '', tag: 'Museum', img: 'info', alt: 'Informationstafel', text: 'Ausgrabungen machen die Stadt Schritt für Schritt wieder sichtbar.' }] },
+  };
+</script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const dp = document.querySelector('#dp'), rail = document.querySelector('#rail'), info = document.querySelector('#info');
+  const bar = document.querySelector('#bar'), prev = document.querySelector('#prev'), next = document.querySelector('#next');
+  const lines = info.querySelectorAll('.dp__line');
+  const mobile = matchMedia('(max-width: 900px)');
+  const LAND = [2 / 3, 4 / 5];     // Folgekacheln abwechselnd 3:2 und 5:4 (Höhe/Breite)
+  let stops = [], tiles = [], idx = 0;
+
+  // ---------- Kacheln bauen ----------
+  function build(key) {
+    stops = DAY[key].stops;
+    rail.innerHTML = stops.map((s, i) => `<button type="button" class="dp__tile media" aria-label="${s.time} ${s.unit}${s.tag ? ': ' + s.tag : ''}">
+      <img src="../../shared/img/${s.img}.jpg" alt="${s.alt}" width="1920" height="1280"></button>`).join('');
+    tiles = [...rail.children];
+    tiles.forEach((t, i) => t.addEventListener('click', () => { if (!dragged) goTo(i); }));
+    AR.lazy(rail);
+    idx = 0;
+    gsap.set(bar, { width: `${100 / stops.length}%` });
+  }
+
+  // ---------- Position jeder Kachel ----------
+  // d = Abstand zur aktiven Kachel. d < 0: weg, d = 0: hochkant 4:5, d > 0: quer, unten bündig (oben weggeschnitten)
+  function layout(animate) {
+    const W = dp.clientWidth, g = parseFloat(getComputedStyle(dp).columnGap) || parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--g'));
+    const tw = mobile.matches ? Math.min(340, W * .865) : (W - 2 * g) / 3;
+    const H = tw * 1.25;
+    dp.parentElement.style.setProperty('--tw', `${tw}px`);
+    const dur = animate && !reduced ? .8 : 0;
+
+    tiles.forEach((t, i) => {
+      const d = i - idx;
+      const cut = mobile.matches || d <= 0 ? 0 : H - tw * LAND[(d - 1) % 2];
+      gsap.to(t, { x: d * (tw + g), clipPath: `inset(${cut}px 0px 0px 0px)`, autoAlpha: d < 0 ? 0 : 1, duration: dur, ease: AR.ease.inOut, overwrite: 'auto' });
+      gsap.to(t.querySelector('img'), { y: cut / 2, duration: dur, ease: AR.ease.inOut, overwrite: 'auto' });   // Bildmitte bleibt stehen
+      t.tabIndex = d === 0 || d === 1 ? 0 : -1;
+      t.setAttribute('aria-current', d === 0 ? 'step' : 'false');
+      t.setAttribute('aria-hidden', d < 0);
+    });
+    gsap.to(bar, { xPercent: idx * 100, duration: dur, ease: AR.ease.inOut, overwrite: 'auto' });
+    prev.setAttribute('aria-disabled', idx === 0);
+    next.setAttribute('aria-disabled', idx === stops.length - 1);
+  }
+
+  // ---------- Text wechseln ----------
+  function text(animate) {
+    const s = stops[idx];
+    const apply = () => {
+      info.querySelector('.js-time').textContent = s.time;
+      info.querySelector('.js-unit').textContent = s.unit;
+      info.querySelector('.js-tag').textContent = s.tag;
+      info.querySelector('.js-tagline').hidden = !s.tag;
+      info.querySelector('.js-text').textContent = s.text;
+    };
+    if (!animate) return apply();
+    gsap.timeline()
+      .to(lines, { autoAlpha: 0, y: reduced ? 0 : -10, duration: .16, ease: AR.ease.out, overwrite: true })
+      .add(apply)
+      .fromTo(lines, { autoAlpha: 0, y: reduced ? 0 : 16 }, { autoAlpha: 1, y: 0, duration: reduced ? .2 : .45, stagger: reduced ? 0 : AR.stagger, ease: AR.ease.out });
+  }
+
+  // Am Rand kurz federn statt nichts zu tun
+  const nudge = dir => { if (!reduced) gsap.fromTo(rail, { x: 0 }, { keyframes: [{ x: -dir * 18, duration: .14 }, { x: 0, duration: .28 }], ease: AR.ease.out }); };
+
+  function goTo(i) {
+    if (i < 0 || i >= stops.length) return nudge(i < 0 ? -1 : 1);
+    if (i === idx) return;
+    idx = i;
+    layout(true);
+    text(true);
+  }
+  const step = dir => goTo(idx + dir);
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+  dp.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+
+  // ---------- Wischen / Ziehen (Observer) ----------
+  let dragX = 0, dragged = false;
+  Observer.create({
+    target: dp, type: 'touch,pointer', dragMinimum: 6, lockAxis: true,
+    onPress: () => { dragX = 0; dragged = false; },
+    onDrag: self => {
+      if (self.axis !== 'x') return;
+      dragged = true;
+      dragX += self.deltaX;
+      const edge = (dragX > 0 && idx === 0) || (dragX < 0 && idx === stops.length - 1);
+      gsap.set(rail, { x: dragX * (edge ? .2 : .45) });
+    },
+    onRelease: () => {
+      if (!dragged) return;
+      gsap.to(rail, { x: 0, duration: .4, ease: AR.ease.out });
+      if (Math.abs(dragX) > 50) step(dragX < 0 ? 1 : -1);
+      setTimeout(() => { dragged = false; }, 0);   // Klick nach dem Ziehen ignorieren
+    },
+  });
+  // Trackpad seitlich: eine Geste = ein Schritt
+  let acc = 0, lock = false, quiet;
+  dp.parentElement.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    clearTimeout(quiet); quiet = setTimeout(() => { acc = 0; lock = false; }, 180);
+    if (lock) return;
+    acc += e.deltaX;
+    if (Math.abs(acc) > 28) { lock = true; step(Math.sign(acc)); }
+  }, { passive: false });
+
+  // ---------- Dropdown Zielgruppe ----------
+  const ddBtn = document.querySelector('#ddBtn'), menu = document.querySelector('#ddMenu');
+  menu.innerHTML = Object.entries(DAY).map(([k, v]) => `<li role="none"><button type="button" class="dd__opt" role="menuitemradio" aria-checked="false" data-key="${k}">${v.label}<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></button></li>`).join('');
+  const opts = [...menu.querySelectorAll('.dd__opt')];
+  let open = false;
+  function toggleMenu(state, focusBtn) {
+    open = state;
+    ddBtn.setAttribute('aria-expanded', open);
+    gsap.killTweensOf(menu);
+    if (open) {
+      gsap.set(menu, { visibility: 'visible' });   // sofort sichtbar, damit der Fokus hinein kann
+      gsap.fromTo(menu, { opacity: 0, scale: reduced ? 1 : .97, y: reduced ? 0 : -4 }, { opacity: 1, scale: 1, y: 0, duration: AR.dur.hover, ease: AR.ease.out });
+      (opts.find(o => o.getAttribute('aria-checked') === 'true') || opts[0]).focus();
+    } else {
+      gsap.to(menu, { autoAlpha: 0, scale: reduced ? 1 : .97, duration: .15, ease: AR.ease.out });
+      if (focusBtn) ddBtn.focus();
+    }
+  }
+  ddBtn.addEventListener('click', () => toggleMenu(!open));
+  menu.addEventListener('keydown', e => {
+    const i = opts.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown') { e.preventDefault(); opts[(i + 1) % opts.length].focus(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); opts[(i - 1 + opts.length) % opts.length].focus(); }
+    if (e.key === 'Escape') { e.preventDefault(); toggleMenu(false, true); }
+    if (e.key === 'Tab') toggleMenu(false);
+  });
+  document.addEventListener('click', e => { if (open && !e.target.closest('.dd')) toggleMenu(false); });
+
+  function choose(key, animate) {
+    opts.forEach(o => o.setAttribute('aria-checked', o.dataset.key === key));
+    ddBtn.querySelector('span').textContent = DAY[key].label;
+    ddBtn.classList.add('has-val');
+    if (!animate) { build(key); layout(false); text(false); return; }
+    gsap.timeline()
+      .to([...tiles, ...lines], { autoAlpha: 0, y: reduced ? 0 : 16, duration: .2, stagger: reduced ? 0 : .03, ease: AR.ease.out })
+      .add(() => {
+        build(key); layout(false); text(false);
+        gsap.from(tiles, { autoAlpha: 0, y: reduced ? 0 : 24, duration: reduced ? .2 : AR.dur.move, stagger: reduced ? 0 : AR.stagger, ease: AR.ease.out });
+        gsap.fromTo(lines, { autoAlpha: 0, y: reduced ? 0 : 16 }, { autoAlpha: 1, y: 0, duration: reduced ? .2 : .45, stagger: reduced ? 0 : AR.stagger, delay: .15, ease: AR.ease.out });
+      });
+  }
+  opts.forEach(o => o.addEventListener('click', () => { toggleMenu(false, true); choose(o.dataset.key, true); }));
+
+  // ---------- Start: Vorauswahl (Einstellung im CMS, hier per ?gruppe=…) ----------
+  const preset = new URLSearchParams(location.search).get('gruppe');
+  if (DAY[preset]) choose(preset, false);
+  else { build('erwachsene'); layout(false); text(false); }
+  gsap.set(menu, { autoAlpha: 0 });
+  addEventListener('resize', () => layout(false));
+  mobile.addEventListener('change', () => layout(false));
+
+  // ---------- Erster Auftritt beim Scrollen ----------
+  gsap.timeline({ scrollTrigger: { trigger: '#day', start: 'top 75%', once: true }, defaults: { ease: AR.ease.out } })
+    .from('.day__head > *', { autoAlpha: 0, y: reduced ? 0 : 24, duration: AR.dur.reveal, stagger: AR.stagger })
+    .from(tiles, { autoAlpha: 0, xPercent: reduced ? 0 : 14, duration: AR.dur.reveal, stagger: .09, immediateRender: true }, .1)
+    .from(lines, { autoAlpha: 0, y: reduced ? 0 : 16, duration: AR.dur.move, stagger: AR.stagger }, .35)
+    .from('.day__bar', { autoAlpha: 0, duration: AR.dur.move }, .4);
+});
+</script>
+</body>
+</html>

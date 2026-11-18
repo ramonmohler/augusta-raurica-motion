@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search results – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Search results (Figma 3348:29453) ---------- */
+  .search { padding-block: var(--s3) var(--s8); display: grid; gap: var(--s3); }
+  .search__top { display: grid; gap: var(--s15); }
+
+  /* Suchfeld: Pill 888 breit, Rand Schwarz 20 %, Fokus Schwarz */
+  .sbar { display: flex; align-items: center; gap: var(--s3); width: min(888px, 100%); padding: 4px 4px 4px 24px; border: 1.5px solid rgba(0,0,0,.45); border-radius: 64px; transition: border-color var(--dur-hover) ease; }
+  .sbar:focus-within { border-color: var(--black); }
+  .sbar input { flex: 1; min-width: 0; height: 51px; border: 0; background: none; font: 400 var(--small)/1.5 var(--font); outline: none; }
+  .sbar input::placeholder { color: var(--anth-light); }
+  .sbar input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  /* Filter-Chips (Figma „Filters“) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 20px; border-radius: 999px; border: 1.5px solid rgba(0,0,0,.2); background: transparent; color: var(--anth); cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: border-color var(--dur-hover) ease, background-color var(--dur-hover) ease, color var(--dur-hover) ease; }
+  .chip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+  .chip[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--black); } }
+
+  /* Ergebnis-Leiste: Anzahl links, Sortierung rechts */
+  .search__bar { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--g); }
+  .search__count { font-size: var(--copy); }
+  .sort { display: grid; gap: 8px; justify-items: start; font-size: var(--small); }
+  .sort__pill { position: relative; }
+  .sort select { appearance: none; -webkit-appearance: none; min-height: 44px; padding: 10px 44px 10px 20px; border-radius: 999px; border: 1.5px solid var(--anth); background: transparent; cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: border-color var(--dur-hover) ease; }
+  .sort svg.i { position: absolute; right: 18px; top: 50%; translate: 0 -50%; pointer-events: none; width: 14px; height: 14px; }
+  @media (hover: hover) and (pointer: fine) { .sort select:hover { border-color: var(--black); } }
+
+  /* Liste */
+  .search__list { position: relative; list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+  .sres { display: grid; grid-template-columns: 204px minmax(0, 549fr) minmax(0, 351fr) 168px; gap: var(--g); padding: 12px 0; border-top: 1px solid var(--line); align-items: start; background: var(--weiss); }
+  .sres[hidden] { display: none; }
+  .sres.no-pic { grid-template-columns: minmax(0, 777fr) minmax(0, 351fr) 168px; }
+  .sres__pic { aspect-ratio: 204 / 136; }
+  .sres__content { display: grid; gap: 8px; padding-right: var(--g); }
+  .sres h3 { font-size: var(--copy); line-height: 1.5; }
+  .sres h3 a { text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .sres h3 a:hover { text-decoration: underline; text-underline-offset: 4px; } }
+  .sres p { font-size: var(--small); }
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; list-style: none; margin: 0; padding: 0; font-size: var(--small); color: var(--anth-light); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 6px; }
+  .crumbs li:last-child { color: var(--anth); }
+  .crumbs svg.i { width: 12px; height: 12px; }
+  .sres__tags { display: grid; gap: 8px; justify-items: start; font-size: var(--btn-s); font-weight: 500; text-transform: uppercase; letter-spacing: .02em; }
+  .sres__act { justify-self: end; }
+  .sres--empty { display: block; padding: var(--s3) 0; }
+
+  .search__more { display: flex; justify-content: center; }
+  .search__more .btn svg.i:first-child { transform: none; }
+
+  @media (max-width: 900px) {
+    .sres, .sres.no-pic { grid-template-columns: minmax(0, 1fr); gap: 12px; padding-block: 20px; }
+    .sres__act { justify-self: start; }
+    .sres__content { padding-right: 0; }
+    .sbar { gap: 12px; }
+    .search__bar { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="Search results">
+
+<main class="search wrap">
+  <div class="search__top">
+    <h2>Suchergebnisse</h2>
+    <form class="sbar" role="search" id="sform">
+      <label class="sr-only" for="q">Suchbegriff</label>
+      <input id="q" type="search" value="Römer" placeholder="Wonach suchen Sie?" autocomplete="off">
+      <button class="btn" type="submit">Suchen <svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
+    </form>
+    <div class="chips" role="group" aria-label="Nach Kategorie filtern" id="chips">
+      <button class="chip" type="button" data-cat="Alle" aria-pressed="true">Alle <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+      <button class="chip" type="button" data-cat="Ausstellungen" aria-pressed="false">Ausstellungen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+      <button class="chip" type="button" data-cat="Veranstaltungen" aria-pressed="false">Veranstaltungen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+      <button class="chip" type="button" data-cat="Führungen" aria-pressed="false">Führungen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+      <button class="chip" type="button" data-cat="Schulen" aria-pressed="false">Schulen <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+      <button class="chip" type="button" data-cat="Seiten" aria-pressed="false">Seiten <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></button>
+    </div>
+  </div>
+
+  <div class="search__bar">
+    <p class="search__count" id="count" aria-live="polite"></p>
+    <div class="sort">
+      <label for="sort">Sortieren nach</label>
+      <span class="sort__pill">
+        <select id="sort">
+          <option value="rel">Relevanz</option>
+          <option value="new">Neueste zuerst</option>
+          <option value="old">Älteste zuerst</option>
+        </select>
+        <svg class="i" aria-hidden="true"><use href="#i-down"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Ergebnisse: data-cat (Filter), data-date (Sortierung), data-rel (Relevanz), data-text (Suche) -->
+  <ol class="search__list" id="list">
+    <li class="sres" data-cat="Ausstellungen" data-date="2026-10-08" data-rel="9">
+      <a class="sres__pic media" href="#" tabindex="-1" aria-hidden="true"><img src="../../shared/img/speisezimmer.jpg" alt="" loading="lazy"></a>
+      <div class="sres__content"><h3><a href="#">Römerhaus – Wohnen wie die Römer</a></h3><p>Im rekonstruierten Römerhaus erleben Sie, wie eine wohlhabende Familie in Augusta Raurica vor rund 2000 Jahren gewohnt, gekocht und gebadet hat.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Entdecken <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Römerhaus</li></ol></div>
+      <div class="sres__tags"><span>Ausstellung</span><span>08.10.2026</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres" data-cat="Veranstaltungen" data-date="2026-08-29" data-rel="8">
+      <a class="sres__pic media" href="#" tabindex="-1" aria-hidden="true"><img src="../../shared/img/kueche.jpg" alt="" loading="lazy"></a>
+      <div class="sres__content"><h3><a href="#">Römerfest 2026</a></h3><p>Zwei Tage römisches Leben: Gladiatoren, Handwerk, Musik und Speisen nach antiken Rezepten – das grösste Römerfest der Schweiz.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Programm <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Römerfest</li></ol></div>
+      <div class="sres__tags"><span>Veranstaltung</span><span>29.08.2026</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres no-pic" data-cat="Seiten" data-date="2026-01-12" data-rel="7">
+      <div class="sres__content"><h3><a href="#">Öffnungszeiten und Preise</a></h3><p>Alle Informationen zu Öffnungszeiten, Eintrittspreisen und Ermässigungen für das Museum und das Freigelände von Augusta Raurica.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Besuch planen <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Tickets</li></ol></div>
+      <div class="sres__tags"><span>Seite</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres" data-cat="Führungen" data-date="2026-06-14" data-rel="6">
+      <a class="sres__pic media" href="#" tabindex="-1" aria-hidden="true"><img src="../../shared/img/theater.jpg" alt="" loading="lazy"></a>
+      <div class="sres__content"><h3><a href="#">Führung: Die Römer im Theater</a></h3><p>Eine Stunde durch das besterhaltene antike Theater nördlich der Alpen – mit Geschichten über Spiele, Publikum und Bühnentechnik.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Programm <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Führungen</li></ol></div>
+      <div class="sres__tags"><span>Führung</span><span>14.06.2026</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres" data-cat="Schulen" data-date="2026-03-02" data-rel="5">
+      <a class="sres__pic media" href="#" tabindex="-1" aria-hidden="true"><img src="../../shared/img/kinder.jpg" alt="" loading="lazy"></a>
+      <div class="sres__content"><h3><a href="#">Workshop: Kochen wie die Römer</a></h3><p>Schulklassen mahlen Getreide, backen Fladenbrot und lernen, was in einer römischen Küche auf den Tisch kam.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Schulen <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Workshops</li></ol></div>
+      <div class="sres__tags"><span>Workshop</span><span>02.03.2026</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres" data-cat="Ausstellungen" data-date="2025-11-20" data-rel="4">
+      <a class="sres__pic media" href="#" tabindex="-1" aria-hidden="true"><img src="../../shared/img/bad.jpg" alt="" loading="lazy"></a>
+      <div class="sres__content"><h3><a href="#">Baden bei den Römern</a></h3><p>Warmbad, Kaltbad, Schwitzraum: Die Ausstellung zeigt, wie die Thermen von Augusta Raurica funktionierten.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Museum <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Ausstellungen</li></ol></div>
+      <div class="sres__tags"><span>Ausstellung</span><span>20.11.2025</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+    <li class="sres no-pic" data-cat="Seiten" data-date="2025-09-01" data-rel="3">
+      <div class="sres__content"><h3><a href="#">Die römische Stadt</a></h3><p>Stadtgeschichte, Umland und die Monumente unter freiem Himmel – ein Überblick über die grösste erhaltene Römerstadt nördlich der Alpen.</p>
+        <ol class="crumbs" aria-label="Pfad"><li>Startseite <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Römerstadt und Museum <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></li><li>Die römische Stadt</li></ol></div>
+      <div class="sres__tags"><span>Seite</span></div>
+      <div class="sres__act"><a class="tlink" href="#"><span>Mehr erfahren</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </li>
+  </ol>
+
+  <div class="search__more"><button class="btn btn--outline" type="button" id="more"><svg class="i" aria-hidden="true" style="transform:rotate(90deg)"><use href="#i-arrow"/></svg> Weitere Ergebnisse laden</button></div>
+</main>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Volltextsuche mit Filter-Chips und Sortierung (Anforderung Suan: Relevanz, Neueste, Älteste). Beim Filtern und Sortieren gleiten die Ergebnisse mit GSAP Flip an ihren neuen Platz, statt zu springen.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Kopf, Leiste und Ergebnisse gleiten 24 px hoch</td><td>Laden, 70 ms gestaffelt</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Filter: bleibende Zeilen gleiten an den neuen Platz, neue blenden 12 px von unten ein, wegfallende blenden aus</td><td>Klick auf Chip</td><td>0.35 s · <code>AR.ease.inOut</code> (Flip), Ein-/Ausblenden <code>AR.ease.out</code></td></tr>
+    <tr><td>Chip: Plus dreht 45° zum Kreuz, Fläche wird schwarz</td><td>Klick</td><td>0.3 s · <code>AR.ease.out</code>, Farbe CSS 0.2 s</td></tr>
+    <tr><td>Sortierung: Zeilen tauschen den Platz</td><td>Auswahl im Dropdown</td><td>0.45 s · <code>AR.ease.inOut</code>, 30 ms gestaffelt</td></tr>
+    <tr><td>Anzahl-Text wechselt (alter Text hoch weg, neuer von unten)</td><td>jede Änderung</td><td>0.2 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Weitere Ergebnisse: drei Zeilen blenden gestaffelt ein, Button gleitet nach unten</td><td>Klick</td><td>0.35 s · 60 ms gestaffelt</td></tr>
+    <tr><td>Keine Treffer: Hinweis blendet ein</td><td>Suche ohne Treffer</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Kein Gleiten: Ergebnisse wechseln sofort, nur kurzes Einblenden (0.2 s).</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const list = document.querySelector('#list');
+  const rows = gsap.utils.toArray('.sres', list);
+  const count = document.querySelector('#count');
+  const more = document.querySelector('#more');
+  const input = document.querySelector('#q');
+  const PAGE = 3;
+  let cat = 'Alle', sort = 'rel', query = input.value, shown = PAGE;
+
+  const norm = t => t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const matches = row => (cat === 'Alle' || row.dataset.cat === cat) && norm(row.textContent).includes(norm(query.trim()));
+  const sorted = () => [...rows].sort((a, b) =>
+    sort === 'new' ? b.dataset.date.localeCompare(a.dataset.date) :
+    sort === 'old' ? a.dataset.date.localeCompare(b.dataset.date) :
+    b.dataset.rel - a.dataset.rel);
+
+  // Leere Liste: Hinweis-Zeile
+  const empty = document.createElement('li');
+  empty.className = 'sres sres--empty';
+  empty.hidden = true;
+  list.append(empty);
+
+  // Liste neu aufbauen. Flip merkt sich die Positionen vorher und animiert zur neuen Anordnung.
+  function render({ animate = true, stagger = 0 } = {}) {
+    const state = Flip.getState(rows.concat(more));
+    const hits = sorted().filter(matches);
+    sorted().forEach(r => list.insertBefore(r, empty));          // DOM-Reihenfolge = Sortierung
+    rows.forEach(r => r.hidden = !hits.slice(0, shown).includes(r));
+    more.parentElement.hidden = hits.length <= shown;
+
+    const text = `${hits.length} ${hits.length === 1 ? 'Ergebnis' : 'Ergebnisse'} für «${query.trim()}»`;
+    swapText(count, text);
+    empty.hidden = hits.length > 0;
+    if (!hits.length) {
+      empty.innerHTML = `<p>Keine Treffer für «${query.trim()}»${cat !== 'Alle' ? ` in «${cat}»` : ''}. Prüfen Sie die Schreibweise oder wählen Sie «Alle».</p>`;
+      gsap.fromTo(empty, { autoAlpha: 0, y: reduced ? 0 : 8 }, { autoAlpha: 1, y: 0, duration: AR.dur.ui });
+    }
+    AR.lazy(list);
+    if (!animate) return;
+
+    if (reduced) {
+      gsap.fromTo(rows.filter(r => !r.hidden), { autoAlpha: 0 }, { autoAlpha: 1, duration: .2 });
+      return;
+    }
+    Flip.from(state, {
+      duration: stagger ? .45 : .35, ease: AR.ease.inOut, stagger, absolute: true, nested: true,
+      onEnter: els => gsap.fromTo(els, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: .35, ease: AR.ease.out, stagger: .06 }),
+      onLeave: els => gsap.to(els, { autoAlpha: 0, duration: .2, ease: AR.ease.out }),
+    });
+  }
+
+  // Anzahl-Text: alter Text gleitet hoch weg, neuer kommt von unten
+  function swapText(el, text) {
+    if (el.textContent === text) return;
+    if (reduced || !el.textContent) { el.textContent = text; return; }
+    gsap.timeline()
+      .to(el, { autoAlpha: 0, y: -6, duration: .12, ease: AR.ease.out })
+      .call(() => el.textContent = text)
+      .fromTo(el, { y: 6 }, { autoAlpha: 1, y: 0, duration: .2, ease: AR.ease.out });
+  }
+
+  // Filter-Chips: nur einer aktiv. Plus dreht 45° zum Kreuz.
+  const chips = gsap.utils.toArray('#chips .chip');
+  const setIcon = (chip, on) => gsap.to(chip.querySelector('svg'), { rotation: on ? 45 : 0, duration: AR.dur.ui, ease: AR.ease.out });
+  chips.forEach(chip => {
+    if (chip.getAttribute('aria-pressed') === 'true') gsap.set(chip.querySelector('svg'), { rotation: 45 });
+    chip.addEventListener('click', () => {
+      if (chip.dataset.cat === cat) return;
+      chips.forEach(c => { const on = c === chip; c.setAttribute('aria-pressed', on); setIcon(c, on); });
+      cat = chip.dataset.cat; shown = PAGE;
+      render();
+    });
+  });
+
+  document.querySelector('#sort').addEventListener('change', e => { sort = e.target.value; render({ stagger: .03 }); });
+  document.querySelector('#sform').addEventListener('submit', e => { e.preventDefault(); query = input.value; shown = PAGE; render(); });
+  more.addEventListener('click', () => {
+    const before = rows.filter(r => !r.hidden).length;
+    shown += PAGE;
+    render();
+    const next = rows.find(r => !r.hidden && rows.filter(x => !x.hidden).indexOf(r) === before);
+    next?.querySelector('h3 a').focus({ preventScroll: true });
+  });
+
+  // Start: Liste aufbauen, dann Intro
+  render({ animate: false });
+  AR.reveal(['.search__top > *', '.search__bar', ...rows.filter(r => !r.hidden), '.search__more']);
+});
+</script>
+</body>
+</html>

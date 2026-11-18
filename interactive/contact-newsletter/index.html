@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact/Newsletter – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Contact/Newsletter (Figma 3385:20882)
+     Inhalt: Newsletter · Kontakt · CTA   ×   Hintergrund: Bild (Box Weiss) · Gold · Rot ---------- */
+  .cn { position: relative; overflow: hidden; padding: var(--s8) var(--m); }
+  .cn--bild { background: var(--anth); }
+  .cn__bg { position: absolute; inset: -12% 0; }
+  .cn__bg img { width: 100%; height: 100%; object-fit: cover; }
+
+  .cn__box { --fg: var(--anth); --line: var(--anth-light); --ph: var(--anth-light); --ic: var(--rot); --div: var(--anth-a20); --err: var(--rot);
+    position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 498fr) minmax(0, 612fr); column-gap: clamp(32px, 9.6vw, 138px); row-gap: var(--s2);
+    align-items: center; padding: var(--s3); background: var(--weiss); color: var(--fg); }
+  /* Gold: nur volles Anthrazit erreicht 4.5:1 → Text, Linie und Platzhalter in Anthrazit */
+  .cn--gold .cn__box { background: var(--gold); --line: var(--anth); --ph: rgba(33, 40, 39, .85); --ic: var(--anth); --div: rgba(33, 40, 39, .3); --err: var(--anth); }
+  /* Rot: Weiss; Platzhalter 90 % Weiss (≥ 4.5:1 auf #A65163) */
+  .cn--rot .cn__box { background: var(--rot); --fg: var(--weiss); --line: var(--weiss); --ph: rgba(255, 255, 255, .9); --ic: var(--weiss); --div: rgba(255, 255, 255, .35); --err: var(--weiss); }
+  .cn__box--top { align-items: start; }
+  .cn__box h2 { font-size: var(--h3); }
+  .cn__box h2 + p { margin-top: var(--s15); font-size: var(--small); }
+  .cn__cta { justify-self: end; }
+
+  /* Newsletter-Feld */
+  .nl { display: flex; align-items: flex-end; gap: var(--s15); }
+  .nl__field { flex: 1; min-width: 0; display: grid; gap: 8px; }
+  .nl__field label { font-size: var(--small); }
+  .nl__line { position: relative; }
+  .nl__field input { width: 100%; height: 40px; padding: 0 0 8px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--fg); font: 400 var(--small)/1.5 var(--font); outline: none; }
+  .nl__field input::placeholder { color: var(--ph); }
+  .nl__line::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--fg); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--dur-ui) var(--ease-out); }
+  .nl__line:focus-within::after, .nl__line:has([aria-invalid="true"])::after { transform: scaleX(1); }
+  .nl__line:has([aria-invalid="true"])::after { background: var(--err); }
+  .nl__err { display: flex; gap: 6px; align-items: center; font-size: 14px; font-weight: 500; color: var(--err); }
+  .nl__err:empty { display: none; }
+  .nl__ok { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; align-items: start; font-size: var(--small); }
+  .nl__ok strong { display: block; font-size: var(--h4); line-height: 1.3; margin-bottom: 4px; }
+  .nl__ok svg { width: 40px; height: 40px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Kontakt-Liste (Anzahl Zeilen frei) */
+  .clist { list-style: none; margin: 0; padding: 0; }
+  .clist li { display: grid; grid-template-columns: 30px minmax(0, 1fr); padding-block: 14px; border-top: 1px solid var(--div); font-size: var(--small); }
+  .clist li:first-child { border-top: 0; padding-top: 0; }
+  .clist svg.i { color: var(--ic); margin-top: 4px; }
+  .clist a { text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .clist a:hover { text-decoration: underline; text-underline-offset: 4px; } }
+
+  .cn--rot .btn { --bg: var(--weiss); --fg: var(--anth); --bd: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .cn--rot .btn:hover { --bg: var(--gold-20); --fg: var(--anth); --bd: var(--gold-20); } }
+
+  .cn--weiss { background: var(--weiss); }
+  .demo-label { padding: var(--s3) var(--m) 0; font-size: 14px; color: var(--anth-light); }
+
+  @media (max-width: 900px) {
+    .cn__box { grid-template-columns: minmax(0, 1fr); padding: var(--s2) var(--m); }
+    .cn__cta { justify-self: start; }
+    .nl { flex-direction: column; align-items: stretch; }
+    .nl .btn { justify-content: center; }
+  }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="Contact/Newsletter">
+
+<!-- ========== Mit Bild ========== -->
+<p class="demo-label">Mit Bild · Newsletter</p>
+<section class="cn cn--bild" aria-labelledby="h1">
+  <div class="cn__bg media"><img src="../../shared/img/garten.jpg" alt=""></div>
+  <div class="cn__box">
+    <div><h2 id="h1">Bleiben Sie auf dem Laufenden</h2><p>Neue Ausstellungen, Führungen und das Römerfest: einmal im Monat in Ihrem Postfach.</p></div>
+    <div class="nl-wrap" aria-live="polite">
+      <form class="nl" novalidate>
+        <div class="nl__field"><label for="m1">E-Mail*</label><div class="nl__line"><input id="m1" type="email" required autocomplete="email" placeholder="Unter welcher E-Mail kann ich dich erreichen?" aria-describedby="m1-err"></div><p class="nl__err" id="m1-err" aria-live="polite"></p></div>
+        <button class="btn" type="submit">Absenden</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<p class="demo-label">Mit Bild · Kontakt</p>
+<section class="cn cn--bild" aria-labelledby="h2">
+  <div class="cn__bg media"><img src="../../shared/img/garten.jpg" alt=""></div>
+  <div class="cn__box cn__box--top">
+    <div><h2 id="h2">Haben Sie Fragen zu Ihrem Besuch?</h2><p>Unser Besucherdienst hilft Ihnen gerne weiter, von Montag bis Freitag.</p></div>
+    <ul class="clist">
+      <li><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+41123456789">123 456 78 90</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:example.email@mail.com">example.email@mail.com</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span>AUGUSTA RAURICA<br>Giebenacherstrasse 17<br>CH-4302 Augst</span></li>
+    </ul>
+  </div>
+</section>
+
+<p class="demo-label">Mit Bild · CTA</p>
+<section class="cn cn--bild" aria-labelledby="h3">
+  <div class="cn__bg media"><img src="../../shared/img/garten.jpg" alt=""></div>
+  <div class="cn__box">
+    <div><h2 id="h3">Werden Sie Teil von Augusta Raurica</h2><p>Als Mitglied besuchen Sie Museum und Römerhaus ein Jahr lang gratis und unterstützen die Forschung.</p></div>
+    <a class="btn cn__cta" href="#">Mitglied werden</a>
+  </div>
+</section>
+
+<!-- ========== Farbig ========== -->
+<p class="demo-label">Gold · CTA</p>
+<section class="cn cn--weiss cn--gold" aria-labelledby="h4">
+  <div class="cn__box">
+    <div><h2 id="h4">Werden Sie Teil von Augusta Raurica</h2><p>Als Mitglied besuchen Sie Museum und Römerhaus ein Jahr lang gratis und unterstützen die Forschung.</p></div>
+    <a class="btn cn__cta" href="#">Mitglied werden</a>
+  </div>
+</section>
+
+<p class="demo-label">Rot · CTA</p>
+<section class="cn cn--weiss cn--rot" aria-labelledby="h5">
+  <div class="cn__box">
+    <div><h2 id="h5">Werden Sie Teil von Augusta Raurica</h2><p>Als Mitglied besuchen Sie Museum und Römerhaus ein Jahr lang gratis und unterstützen die Forschung.</p></div>
+    <a class="btn cn__cta" href="#">Mitglied werden</a>
+  </div>
+</section>
+
+<p class="demo-label">Gold · Kontakt</p>
+<section class="cn cn--weiss cn--gold" aria-labelledby="h6">
+  <div class="cn__box cn__box--top">
+    <div><h2 id="h6">Haben Sie Fragen zu Ihrem Besuch?</h2><p>Unser Besucherdienst hilft Ihnen gerne weiter, von Montag bis Freitag.</p></div>
+    <ul class="clist">
+      <li><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+41123456789">123 456 78 90</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:example.email@mail.com">example.email@mail.com</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span>AUGUSTA RAURICA<br>Giebenacherstrasse 17<br>CH-4302 Augst</span></li>
+    </ul>
+  </div>
+</section>
+
+<p class="demo-label">Rot · Kontakt</p>
+<section class="cn cn--weiss cn--rot" aria-labelledby="h7">
+  <div class="cn__box cn__box--top">
+    <div><h2 id="h7">Haben Sie Fragen zu Ihrem Besuch?</h2><p>Unser Besucherdienst hilft Ihnen gerne weiter, von Montag bis Freitag.</p></div>
+    <ul class="clist">
+      <li><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+41123456789">123 456 78 90</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><a href="mailto:example.email@mail.com">example.email@mail.com</a></li>
+      <li><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span>AUGUSTA RAURICA<br>Giebenacherstrasse 17<br>CH-4302 Augst</span></li>
+    </ul>
+  </div>
+</section>
+
+<p class="demo-label">Gold · Newsletter</p>
+<section class="cn cn--weiss cn--gold" aria-labelledby="h8">
+  <div class="cn__box">
+    <div><h2 id="h8">Bleiben Sie auf dem Laufenden</h2><p>Neue Ausstellungen, Führungen und das Römerfest: einmal im Monat in Ihrem Postfach.</p></div>
+    <div class="nl-wrap" aria-live="polite">
+      <form class="nl" novalidate>
+        <div class="nl__field"><label for="m2">E-Mail*</label><div class="nl__line"><input id="m2" type="email" required autocomplete="email" placeholder="Unter welcher E-Mail kann ich dich erreichen?" aria-describedby="m2-err"></div><p class="nl__err" id="m2-err" aria-live="polite"></p></div>
+        <button class="btn" type="submit">Absenden</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<p class="demo-label">Rot · Newsletter</p>
+<section class="cn cn--weiss cn--rot" aria-labelledby="h9">
+  <div class="cn__box">
+    <div><h2 id="h9">Bleiben Sie auf dem Laufenden</h2><p>Neue Ausstellungen, Führungen und das Römerfest: einmal im Monat in Ihrem Postfach.</p></div>
+    <div class="nl-wrap" aria-live="polite">
+      <form class="nl" novalidate>
+        <div class="nl__field"><label for="m3">E-Mail*</label><div class="nl__line"><input id="m3" type="email" required autocomplete="email" placeholder="Unter welcher E-Mail kann ich dich erreichen?" aria-describedby="m3-err"></div><p class="nl__err" id="m3-err" aria-live="polite"></p></div>
+        <button class="btn" type="submit">Absenden</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Eine Komponente, drei Inhalte (Newsletter, Kontakt mit beliebig vielen Zeilen, CTA) und drei Hintergründe (Bild, Gold, Rot), wie von AR gewünscht. Newsletter mit Double-Opt-in: Nach dem Absenden erscheint der Hinweis auf die Bestätigungs-E-Mail.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Box entfaltet sich von oben nach unten (Clip)</td><td>Scroll, Box bei 80 % Viewport</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Titel, Text, Formular / Kontaktzeilen / Button gleiten 16 px hoch</td><td>+0.2 s, 70 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Hintergrundbild bewegt sich langsamer als die Seite (−10 % → +10 %)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code></td></tr>
+    <tr><td>Fokus: Linie unter dem Feld wird dick (wächst von links)</td><td>Fokus</td><td>CSS 0.3 s</td></tr>
+    <tr><td>Fehler: Feld zuckt seitlich, Meldung blendet ein, Linie färbt sich</td><td>Absenden mit leerer/falscher E-Mail</td><td>0.3 s + 0.2 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Erfolg: Formular blendet aus, Höhe passt sich an, Bestätigung blendet ein, Brief-Icon zeichnet sich</td><td>Absenden mit gültiger E-Mail</td><td>0.2 s raus · 0.3 s Höhe · 0.5 s Strich</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Box blendet nur ein (kein Clip), kein Parallax, kein Zucken, kein Strichzeichnen.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  AR.lazy();
+
+  // 1 · Scroll: Box entfaltet sich, Inhalt folgt gestaffelt
+  gsap.utils.toArray('.cn').forEach(sec => {
+    const box = sec.querySelector('.cn__box');
+    const parts = box.querySelectorAll(':scope > div > *, .clist li, .nl, .cn__cta');
+    const tl = gsap.timeline({ scrollTrigger: { trigger: box, start: 'top 80%', once: true } });
+    if (reduced) {
+      tl.from(box, { autoAlpha: 0, duration: .4 });
+      return;
+    }
+    tl.from(box, { clipPath: 'inset(0% 0% 100% 0%)', duration: AR.dur.reveal, ease: AR.ease.out })
+      .from(parts, { autoAlpha: 0, y: 16, duration: AR.dur.move, stagger: AR.stagger, ease: AR.ease.out }, .2);
+
+    // Parallax fürs Hintergrundbild
+    const bg = sec.querySelector('.cn__bg');
+    if (bg) gsap.fromTo(bg, { yPercent: -10 }, { yPercent: 10, ease: 'none', scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  // 2 · Newsletter: Validierung + Double-Opt-in-Bestätigung
+  gsap.utils.toArray('form.nl').forEach(form => {
+    const input = form.querySelector('input');
+    const err = form.querySelector('.nl__err');
+    const wrap = form.parentElement;
+
+    const validate = () => {
+      const msg = input.validity.valueMissing ? 'Bitte geben Sie Ihre E-Mail-Adresse ein.'
+        : input.validity.typeMismatch ? 'Bitte prüfen Sie die E-Mail-Adresse, z. B. name@beispiel.ch.' : '';
+      const was = err.textContent;
+      input.setAttribute('aria-invalid', !!msg);
+      err.textContent = msg;
+      if (msg && !was) gsap.fromTo(err, { autoAlpha: 0, y: reduced ? 0 : -4 }, { autoAlpha: 1, y: 0, duration: AR.dur.hover, ease: AR.ease.out });
+      return !msg;
+    };
+    input.addEventListener('input', () => { if (input.getAttribute('aria-invalid') === 'true') validate(); });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!validate()) {
+        if (!reduced) gsap.fromTo(form.querySelector('.nl__field'), { x: 0 }, { keyframes: { x: [-6, 6, -4, 4, 0] }, duration: .3, ease: AR.ease.out });
+        input.focus();
+        return;
+      }
+      const h = wrap.offsetHeight;
+      gsap.to(form, { autoAlpha: 0, y: reduced ? 0 : -8, duration: AR.dur.hover, ease: AR.ease.out, onComplete: () => {
+        wrap.innerHTML = `<div class="nl__ok" tabindex="-1">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 11h30v20H5z"/><path d="m5 11 15 11 15-11"/></svg>
+          <p><strong>Fast geschafft!</strong>Wir haben eine E-Mail an ${input.value.replace(/</g, '&lt;')} geschickt. Bitte bestätigen Sie die Anmeldung über den Link darin.</p></div>`;
+        const ok = wrap.firstElementChild;
+        ok.focus({ preventScroll: true });
+        gsap.from(wrap, { height: h, duration: AR.dur.ui, ease: AR.ease.out, clearProps: 'height' });
+        // opacity statt autoAlpha, damit der Fokus auf der Meldung bleibt
+        gsap.from(ok, { opacity: 0, y: reduced ? 0 : 8, duration: AR.dur.ui, ease: AR.ease.out });
+        if (!reduced) ok.querySelectorAll('path').forEach((p, i) => {
+          const len = p.getTotalLength();
+          gsap.fromTo(p, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: .5, delay: .1 + i * .15, ease: AR.ease.out });
+        });
+      } });
+    });
+  });
+});
+</script>
+</body>
+</html>

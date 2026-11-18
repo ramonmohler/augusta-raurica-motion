@@ -1,0 +1,56 @@
+/* =====================================================================
+   Augusta Raurica – Bild-Kachel mit Hover-Zustand + Lightbox (Figma „Lightbox“ 3455:37885)
+   Wird von allen Media-Demos geladen (Image Gallery, Gallery slider, Single Image, Lightbox).
+   ===================================================================== */
+
+/* ---------- Bild-Kachel (Figma Gallery-Bild, Status Default / Hover) ----------
+   Hover: Bild 105 %, Verlauf 0 → 60 % Schwarz von unten, Bildlegende Copy-small + runder Button Bright 38 px.
+   Kachel ist ein <button>: öffnet die Lightbox, Bildlegende steht zusätzlich in der Lightbox. */
+.g-item { position: relative; display: block; width: 100%; aspect-ratio: var(--ar, 3 / 2); padding: 0; border: 0; background: var(--gold-20); color: var(--weiss); cursor: zoom-in; overflow: hidden; text-align: left; -webkit-tap-highlight-color: transparent; }
+.g-item .media { position: absolute; inset: 0; background: none; transition: transform 600ms var(--ease-out); }
+.g-item::after { content: ""; position: absolute; inset: auto 0 0; height: 200px; max-height: 70%; z-index: 1; pointer-events: none;
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.6)); opacity: 0; transition: opacity var(--dur-ui) var(--ease-out); }
+.g-cap { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; padding: 24px 86px 24px 24px; font-size: var(--small); line-height: 1.4;
+  opacity: 0; transform: translateY(8px); transition: opacity 250ms ease, transform var(--dur-ui) var(--ease-out); }
+.g-zoom { position: absolute; z-index: 2; right: 24px; bottom: 24px; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--weiss); color: var(--anth); opacity: 0; transform: scale(.9); transition: opacity var(--dur-hover) ease, transform 250ms var(--ease-out); }
+.g-zoom svg.i { width: 14px; height: 14px; }
+/* Copyright als „©“-Overlay; der volle Nachweis steht in der Lightbox */
+.g-copy { position: absolute; z-index: 2; top: 12px; right: 12px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  font: 500 12px/1 var(--font); color: var(--weiss); background: rgba(0,0,0,.32); }
+@media (hover: hover) and (pointer: fine) {
+  .g-item:hover .media { transform: scale(1.05); }
+  .g-item:hover::after { opacity: 1; }
+  .g-item:hover .g-cap, .g-item:hover .g-zoom { opacity: 1; transform: none; }
+}
+.g-item:focus-visible { outline-offset: 4px; }
+.g-item:focus-visible::after { opacity: 1; }
+.g-item:focus-visible .g-cap, .g-item:focus-visible .g-zoom { opacity: 1; transform: none; }
+.g-item:active .g-zoom { transform: scale(.94); }
+/* Touch: kein Hover → Lupe immer sichtbar, Legende nur in der Lightbox */
+@media (hover: none) { .g-zoom { opacity: 1; transform: none; right: 12px; bottom: 12px; } }
+@media (max-width: 900px) { .g-cap { display: none; } .g-zoom { right: 12px; bottom: 12px; } }
+@media (prefers-reduced-motion: reduce) { .g-item .media, .g-cap, .g-zoom { transition-duration: 1ms; } }
+
+/* ---------- Lightbox (Dialog) ---------- */
+.lb { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; color: var(--weiss); background: transparent; overflow: hidden; }
+.lb::backdrop { background: transparent; }
+.lb__bg { position: absolute; inset: 0; background: var(--anth); }
+.lb__stage { position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 16px;
+  padding: calc(env(safe-area-inset-top, 0px) + 24px) max(var(--m), env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) max(var(--m), env(safe-area-inset-left, 0px)); }
+.lb__top { display: flex; justify-content: space-between; align-items: center; font-size: var(--small); }
+.lb__fig { position: relative; margin: 0; min-height: 0; touch-action: pan-y; }
+.lb__img { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; user-select: none; -webkit-user-drag: none; cursor: grab; will-change: transform; }
+.lb__img:active { cursor: grabbing; }
+.lb__bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+.lb__cap { font-size: var(--small); line-height: 1.5; min-width: 0; max-width: 72ch; }
+.lb__credit { display: block; color: var(--weiss-a60); }
+.lb__nav { display: flex; gap: 10px; flex: none; }
+.lb .round { width: 38px; height: 38px; }
+.lb .round svg.i { width: 14px; height: 14px; }
+@media (max-width: 900px) {
+  .lb__stage { padding-inline: 20px; }
+  .lb__bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .lb .round { width: 44px; height: 44px; }
+}
+.lb [hidden] { display: none; }

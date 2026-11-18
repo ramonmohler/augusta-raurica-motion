@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navbar – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../shared/navbar.css">
+<style>
+  /* ---------- Demo-Seite ---------- */
+  .hero { position: relative; height: 100svh; min-height: 560px; overflow: hidden; background: var(--anth); }
+  .hero img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .hero::before { content: ""; position: absolute; inset: 0 0 auto; height: 40%; z-index: 1; background: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,0)); }
+  .hero__hint { position: absolute; z-index: 1; left: var(--m); bottom: var(--s3); color: var(--weiss); max-width: 34ch; font-size: var(--small); }
+  .copy { padding-block: var(--sec); max-width: 760px; display: grid; gap: var(--s15); }
+  .copy p { font-size: var(--copy); }
+</style>
+</head>
+<body data-section="Navigation Components" data-title="Navbar">
+
+<main id="main">
+  <section class="hero" id="hero" aria-label="Bild">
+    <div class="media" style="height:100%"><img src="../../shared/img/hero.jpg" alt="Kind in römischer Rüstung mit rotem Schild am Römerfest" width="1920" height="1080"></div>
+    <p class="hero__hint">Über dem Bild ist die Navbar weiss (Bright) und bleibt stehen. Danach blendet Scrollen nach unten sie aus, Scrollen nach oben holt sie zurück. Mobil: AR-Kürzel links, Suche, Barrierefreiheit und Menü rechts.</p>
+  </section>
+  <section class="copy wrap">
+    <h2>Besuch planen</h2>
+    <p>Augusta Raurica ist die am besten erhaltene Römerstadt nördlich der Alpen. Theater, Tempel, Thermen und das Römerhaus liegen eingebettet zwischen Feldern und Wäldern, nur 20 Minuten von Basel entfernt.</p>
+    <p>Sobald der Bildbereich verlassen ist, wird die Navbar weiss mit Anthrazit (Dark) und bekommt einen dezenten Schatten statt einer Linie. Klicken Sie auf das Barrierefreiheits-Symbol: Das Panel öffnet sich unter der Navbar, der Button wird aktiv, alle anderen werden grau. Ein erneuter Klick oder ein Klick auf einen anderen Button schliesst es.</p>
+    <p>Die Sprachauswahl öffnet sich mit einem Klick auf «DE», eine Auswahl schliesst sie wieder. Das Menü-Overlay selbst zeigt die Demo «Menü»; hier ist nur der Wechsel Burger → Kreuz zu sehen.</p>
+  </section>
+  <section class="copy wrap">
+    <h2>Römerstadt und Museum</h2>
+    <p>Über 20 Monumente sind frei zugänglich. Im Museum zeigt der Silberschatz von Kaiseraugst, wie reich die Stadt in der Spätantike war. Der Tierpark hält alte Haustierrassen, wie sie schon die Römer kannten.</p>
+    <p>Scrollen Sie weiter nach unten und wieder hinauf, um das Aus- und Einblenden der Navbar zu sehen.</p>
+  </section>
+  <div class="demo-spacer" style="min-height:100vh">Ende der Demo</div>
+</main>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Gemeinsame Komponente <code>shared/navbar.js</code> + <code>navbar.css</code>, Aufruf <code>AR.navbar({ tone, solidAfter, home })</code> – alle Heros verwenden genau diese Navbar. Anforderung Suan: Die Navbar verschwindet beim Scrollen nach unten und erscheint beim Scrollen nach oben. Barrierefreiheit öffnet ein Panel unter der Navbar (Button aktiv, andere grau, schliessen per erneutem Klick oder anderem Button). Sprachauswahl öffnet per Klick, Auswahl schliesst. Bei offenem Panel ist das Burger-Symbol ausgeblendet.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Navbar-Elemente blenden von oben ein</td><td>Laden, 50 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Navbar gleitet nach oben weg (<code>yPercent: -100</code>)</td><td>Scroll nach unten, erst nach dem Hero</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Navbar kommt zurück</td><td>Scroll nach oben</td><td>0.4 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bright → Dark (weiss mit Anthrazit, Schatten <code>0 2px 20px rgba(33,40,39,.08)</code>, keine Linie)</td><td>Hero verlässt den Bereich unter der Navbar</td><td>CSS 0.25 s</td></tr>
+    <tr><td>Mobile (≤ 900 px): AR-Kürzel statt vollem Logo, Sprache im Menü-Overlay</td><td colspan="2">Layout wie Figma «Mobile/Navbar»: Höhe 64, Rand 20, Icons 24 mit 24 Abstand, Menü 48 daneben</td></tr>
+    <tr><td>Sprachen FR IT EN gleiten aus «DE» heraus</td><td>Klick auf DE</td><td>0.2 s · 40 ms gestaffelt</td></tr>
+    <tr><td>Panel Barrierefreiheit öffnet von oben (Clip), Inhalt folgt</td><td>Klick auf Barrierefreiheit</td><td>0.35 s · Inhalt 0.3 s, 40 ms gestaffelt</td></tr>
+    <tr><td>Burger blendet aus, «Menü» rückt nach rechts</td><td>mit dem Panel</td><td>0.25 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Auswahl-Hintergrund gleitet (Kontrast, Schriftgrösse)</td><td>Klick</td><td>0.25 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Burger → Kreuz</td><td>Klick auf Menü</td><td>0.3 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Navbar blendet nur ein und aus (kein Gleiten), Panel und Sprachen blenden ohne Versatz ein.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo src="../../shared/navbar.js"></script>
+<script data-demo>
+/* Die Navbar ist eine gemeinsame Komponente (shared/navbar.js + navbar.css) und wird in allen Hero-Demos gleich verwendet. */
+AR.demo(() => {
+  AR.lazy();
+  AR.navbar({ tone: 'bright', solidAfter: '#hero' });
+});
+</script>
+</body>
+</html>

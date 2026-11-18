@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text + Image – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../media/lightbox/lightbox.css">
+<style>
+  /* ---------- Text + Image (Figma 3303:16568) – Text 5 Spalten, Bild 6 Spalten (3:2), Bild links oder rechts ---------- */
+  .ti { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--g); align-items: center; }
+  .ti__text { grid-column: 1 / span 5; display: grid; gap: var(--s15); justify-items: start; }
+  .ti__text h2 { font-size: var(--h2); line-height: 1.2; }
+  .ti__text .btns { margin-top: 8px; }
+  .ti__fig { grid-column: 7 / span 6; margin: 0; }
+  .ti--left .ti__fig { grid-column: 1 / span 6; grid-row: 1; }
+  .ti--left .ti__text { grid-column: 8 / span 5; grid-row: 1; }
+  /* Bild = Kachel aus der Image Gallery (.g-item, media/lightbox/lightbox.css): Hover, Lupe, Lightbox */
+  .ti__fig .g-item { --ar: 3 / 2; }
+  /* wie Single Image: Bild ist 12 % höher als der Rahmen, Reserve für die Parallax */
+  .ti__fig .g-item .media img { position: absolute; left: 0; top: -6%; height: 112%; }
+  @media (max-width: 900px) {
+    .ti { grid-template-columns: minmax(0, 1fr); row-gap: var(--s3); }
+    .ti__text, .ti__fig, .ti--left .ti__text, .ti--left .ti__fig { grid-column: 1; grid-row: auto; }
+    .ti--left .ti__fig, .ti__fig { order: -1; }
+  }
+  .label { font-size: 13px; color: var(--anth-light); margin-bottom: var(--s2); }
+
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Text + Image">
+
+<div class="demo-spacer demo-spacer--short">Scrollen, um die Komponente einzublenden<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+
+<section class="sec wrap" aria-labelledby="h1">
+  <p class="label">Variante: Bild rechts, mit Bildlegende (bei Hover und in der Lightbox)</p>
+  <div class="ti" data-ti>
+    <div class="ti__text">
+      <h2 id="h1">Baden wie die Römer</h2>
+      <p>Im Römerhaus zeigt das Bad, wie warm und kalt sich vor 2000 Jahren abwechselten. Gewärmt wurde der Raum über eine Fussbodenheizung, das Hypokaust, das vom Ofen im Nebenraum beheizt wurde.</p>
+      <div class="btns">
+        <a class="btn" href="#">Römerhaus entdecken<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--outline" href="#">Öffnungszeiten<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+    <div class="ti__fig">
+      <button class="g-item" type="button" data-cap="Das Bad im Römerhaus mit Wanne und Becken" data-credit="© Augusta Raurica, Foto: Name Fotograf*in" aria-label="Bild vergrössern: Das Bad im Römerhaus mit Wanne und Becken"><div class="media"><img src="../../shared/img/bad.jpg" alt="Römisches Bad mit gewölbter Decke, Becken und Wanne" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Das Bad im Römerhaus mit Wanne und Becken</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
+<section class="sec wrap" aria-labelledby="h2">
+  <p class="label">Variante: Bild links, ein Button, ohne Bildlegende</p>
+  <div class="ti ti--left" data-ti>
+    <div class="ti__text">
+      <h2 id="h2">Ein Garten für Küche und Medizin</h2>
+      <p>Im Garten des Römerhauses wachsen Kräuter, Gemüse und Heilpflanzen, die schon in römischen Kochbüchern vorkommen.</p>
+      <div class="btns"><a class="btn" href="#">Mehr zum Garten<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    </div>
+    <div class="ti__fig">
+      <button class="g-item" type="button" data-credit="© Augusta Raurica" aria-label="Bild vergrössern: Garten des Römerhauses"><div class="media"><img src="../../shared/img/garten.jpg" alt="Kräutergarten mit Beeten vor einer römischen Mauer" width="1920" height="1279" loading="lazy" decoding="async"></div><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Das Bild lädt wie bei Single Image: der Rahmen öffnet sich von innen, das Foto blendet ein und bewegt sich danach beim Scrollen langsamer als die Seite. Hover und Lightbox sind dieselben wie in der Image Gallery (gemeinsamer Code <code>media/lightbox</code>): Bild 105 %, Verlauf, Bildlegende (falls vorhanden) und Lupe; die Bildlegende und der Bildnachweis stehen in der Lightbox.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Rahmen öffnet sich (<code>clip-path</code> 6 % → 0 %)</td><td>Scroll, Bild bei 85 % Viewport</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Bild-Parallax im Rahmen (−5 % → +5 %)</td><td>Scroll, an Scroll gekoppelt</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Titel, Copy, Buttons gleiten 24 px hoch</td><td>Scroll, <code>top 75%</code>, einmal, +0.15 s</td><td>0.9 s, 70 ms gestaffelt · <code>AR.ease.out</code></td></tr>
+    <tr><td>Hover: Bild 105 %, Verlauf 0 → 60 %, Legende + Lupe von unten</td><td>Maus / Tastaturfokus</td><td>CSS (siehe <a href="../../media/image-gallery/">Image Gallery</a>)</td></tr>
+    <tr><td>Lightbox öffnen / schliessen (ohne Zähler und Pfeile)</td><td>Klick, Enter, Esc</td><td>siehe <a href="../../media/lightbox/">Lightbox</a> · Code in <a href="../../media/lightbox/lightbox.js">lightbox.js</a></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Bild und Text blenden nur ein (Bild 0.4 s, Text 0.6 s), keine Parallax, Lightbox ohne Morph.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../../media/lightbox/lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  AR.lazy();
+
+  gsap.utils.toArray('[data-ti]').forEach(block => {
+    const frame = block.querySelector('.g-item');
+    const text = block.querySelectorAll('.ti__text > *');
+
+    // 1 · Bild wie Single Image: Rahmen öffnet sich von innen
+    gsap.fromTo(frame, reduced ? { autoAlpha: 0 } : { clipPath: 'inset(6% 6% 6% 6%)' }, {
+      ...(reduced ? { autoAlpha: 1, duration: .4 } : { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, clearProps: 'clipPath' }),
+      ease: AR.ease.out,
+      scrollTrigger: { trigger: frame, start: 'top 85%', once: true },
+    });
+
+    // 2 · Parallax: Bild bewegt sich im Rahmen langsamer als die Seite
+    if (!reduced) gsap.fromTo(frame.querySelector('img'), { yPercent: -5 }, {
+      yPercent: 5, ease: 'none',
+      scrollTrigger: { trigger: frame, start: 'top bottom', end: 'bottom top', scrub: true },
+    });
+
+    // 3 · Text gleitet hoch
+    gsap.from(text, {
+      autoAlpha: 0, y: reduced ? 0 : 24, duration: reduced ? .6 : AR.dur.reveal, ease: reduced ? 'none' : AR.ease.out,
+      stagger: reduced ? .05 : AR.stagger, delay: reduced ? 0 : .15,
+      scrollTrigger: { trigger: block, start: 'top 75%', once: true },
+    });
+
+    // 4 · Hover + Lightbox wie Image Gallery (gemeinsamer Code in media/lightbox/lightbox.js), ein Bild pro Lightbox
+    ARLightbox([frame]);
+  });
+});
+</script>
+</body>
+</html>

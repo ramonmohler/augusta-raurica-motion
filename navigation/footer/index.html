@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Footer – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Footer (Figma 3535:25463) – 80/48, Logo Rot 463 breit, 4 Spalten, Links Button/capital ---------- */
+  .ftr { padding-block: var(--s5) var(--s2); font-size: var(--small); }
+  .ftr__logo { display: block; width: min(463px, 100%); margin-bottom: var(--s5); overflow: hidden; }   /* Logo steigt aus dieser Kante auf */
+  .ftr__logo img { width: 100%; height: auto; }
+  .ftr__cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--g); row-gap: var(--s2); }
+  .ftr__col { display: grid; gap: 12px; align-content: start; }
+  .ftr__col h2 { font-size: var(--small); font-weight: 400; line-height: 1.5; }
+  .ftr__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ftr__col a.l { display: inline-block; font: 700 14px/1.4 var(--font); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; padding-block: 2px;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; transition: background-size var(--dur-hover) var(--ease-out), color var(--dur-hover) ease; }
+  @media (hover: hover) and (pointer: fine) { .ftr__col a.l:hover { color: var(--black); background-size: 100% 1.5px; } }
+  .ftr__col address { font-style: normal; font: 700 14px/1.6 var(--font); letter-spacing: .06em; text-transform: uppercase; }
+  .ftr__col address a { text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .ftr__col address a:hover { text-decoration: underline; text-underline-offset: 4px; } }
+
+  /* Sprache: gewählte Anthrazit, andere Anthrazit light (4.9 : 1) */
+  .ftr__lang { display: flex; gap: 4px; align-self: start; margin-top: 30px; margin-left: -10px; }
+  .ftr__lang button { min-width: 44px; min-height: 44px; padding: 0 10px; border: 0; background: none; cursor: pointer; font: 700 var(--menu)/1 var(--font); color: var(--anth-light); transition: color var(--dur-hover) ease; }
+  .ftr__lang button[aria-pressed="true"] { color: var(--anth); }
+  @media (hover: hover) and (pointer: fine) { .ftr__lang button:hover { color: var(--black); } }
+
+  .ftr__social { display: flex; gap: 12px; margin-top: var(--s3); list-style: none; padding: 0; }
+  .ftr__social .round { width: 42px; height: 42px; text-decoration: none; }
+  .ftr__social svg.i { width: 18px; height: 18px; }
+  .ftr__logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) 80px; margin-top: var(--s3); padding-block: var(--s15); }
+  .ftr__logos img { height: 56px; width: auto; }
+  .ftr__legal { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px var(--s2); padding-top: 12px; margin-top: var(--s15); color: var(--anth-light); }
+  .ftr__rule { position: absolute; inset: 0 0 auto; height: 1px; background: var(--anth-a20); transform-origin: 0 50%; }
+  .ftr__legal nav { display: flex; flex-wrap: wrap; gap: 4px var(--s1); }
+  .ftr__legal a { color: inherit; text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) { .ftr__legal a:hover { color: var(--anth); text-decoration: underline; text-underline-offset: 4px; } }
+
+  @media (max-width: 900px) {
+    .ftr__cols { grid-template-columns: minmax(0, 1fr); row-gap: var(--s3); }
+    .ftr__lang { margin-top: 0; }
+    .ftr__logo { width: 260px; margin-bottom: var(--s4); }
+    .ftr__logos { flex-direction: column; align-items: flex-start; }
+    .ftr__logos img { height: 40px; }
+    .ftr__legal { flex-direction: column-reverse; }
+    .ftr__legal nav { flex-direction: column; }
+  }
+
+  .page-hint { min-height: 90vh; display: grid; place-content: center; text-align: center; gap: 12px; color: var(--anth-light); background: var(--gold-20); padding: var(--m); }
+  .page-hint h1 { font-size: var(--h2); color: var(--anth); }
+</style>
+</head>
+<body data-section="Navigation Components" data-title="Footer">
+
+<section class="page-hint">
+  <h1>Footer</h1>
+  <p>Nach unten scrollen. Der Footer baut sich beim Erscheinen auf, die Sprachwahl wechselt die Beschriftungen.</p>
+  <svg class="i" style="margin:auto;width:20px;height:20px" aria-hidden="true"><use href="#i-down"/></svg>
+</section>
+
+<footer class="ftr wrap" id="ftr">
+  <a class="ftr__logo" href="#" aria-label="Augusta Raurica – Startseite"><img src="../../shared/img/logo-rot.svg" alt="" width="1344" height="113"></a>
+  <div class="ftr__cols">
+    <nav class="ftr__col" aria-labelledby="f1"><h2 id="f1" data-i18n="direct">Direkt zu</h2>
+      <ul><li><a class="l" href="#">Besuch planen</a></li><li><a class="l" href="#">Lageplan</a></li><li><a class="l" href="#">Römerstadt und Museum</a></li><li><a class="l" href="#">Programm</a></li><li><a class="l" href="#">Archäologie und Sammlung</a></li><li><a class="l" href="#">Wissenswertes</a></li><li><a class="l" href="#">Institution</a></li></ul>
+    </nav>
+    <nav class="ftr__col" aria-labelledby="f2"><h2 id="f2" data-i18n="direct">Direkt zu</h2>
+      <ul><li><a class="l" href="#">Offene Stellen</a></li><li><a class="l" href="#">Fotobestellungen</a></li><li><a class="l" href="#">Drehgenehmigungen</a></li><li><a class="l" href="#">Medien</a></li><li><a class="l" href="#">Kontakt</a></li><li><a class="l" href="#">Öffnungszeiten</a></li></ul>
+    </nav>
+    <div class="ftr__col"><h2 data-i18n="contact">Kontakt</h2>
+      <address>Augusta Raurica<br>Giebenacherstrasse 17<br>CH-4302 Augst<br><a href="mailto:mail@augusta-raurica.ch">mail@augusta-raurica.ch</a><br><a href="tel:+41615522222">0041 (0)61 552 22 22</a></address>
+    </div>
+    <div class="ftr__lang" role="group" aria-label="Sprache">
+      <button type="button" aria-pressed="true" data-lang="de" lang="de">DE</button><button type="button" aria-pressed="false" data-lang="fr" lang="fr">FR</button><button type="button" aria-pressed="false" data-lang="it" lang="it">IT</button><button type="button" aria-pressed="false" data-lang="en" lang="en">EN</button>
+    </div>
+  </div>
+  <ul class="ftr__social">
+    <li><a class="round" href="https://www.tripadvisor.ch" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-s-tripadvisor"/></svg><span class="sr-only">Tripadvisor (öffnet in neuem Tab)</span></a></li>
+    <li><a class="round" href="https://www.youtube.com" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-s-youtube"/></svg><span class="sr-only">YouTube (öffnet in neuem Tab)</span></a></li>
+    <li><a class="round" href="https://www.facebook.com" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-s-facebook"/></svg><span class="sr-only">Facebook (öffnet in neuem Tab)</span></a></li>
+    <li><a class="round" href="https://www.instagram.com" target="_blank" rel="noopener"><svg class="i" aria-hidden="true"><use href="#i-s-instagram"/></svg><span class="sr-only">Instagram (öffnet in neuem Tab)</span></a></li>
+  </ul>
+  <div class="ftr__logos">
+    <img src="../../shared/img/logo-bund.png" alt="Schweizerische Eidgenossenschaft, Eidgenössisches Departement des Innern EDI, Bundesamt für Kultur BAK" width="1430" height="160">
+    <img src="../../shared/img/logo-bl.png" alt="Basel-Landschaft" width="819" height="192">
+  </div>
+  <div class="ftr__legal">
+    <span class="ftr__rule" aria-hidden="true"></span>
+    <p data-i18n="copy">©Augusta Raurica, Bildungs-, Kultur- und Sportdirektion des Kanton Basel-Landschaft</p>
+    <nav aria-label="Rechtliches"><a href="#" data-i18n="cookies">Cookie-Einstellungen</a><a href="#" data-i18n="imprint">Impressum</a><a href="#" data-i18n="privacy">Datenschutzerklärung</a></nav>
+  </div>
+</footer>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Der Footer baut sich einmal auf, wenn er ins Bild kommt: Logo steigt aus der Kante, Spalten folgen gestaffelt, die Trennlinie zieht sich auf. Die Sprachwahl (DE/FR/IT/EN) tauscht die Beschriftungen mit einer kurzen Überblendung. Social Links öffnen in einem neuen Tab. App-Store-Badges sind im Figma-Footer noch nicht gestaltet und fehlen deshalb hier.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Logo steigt aus der Kante auf (Clip + 30 % y)</td><td>Footer 80 % im Viewport, einmal</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Spaltentitel und Links gleiten 16 px hoch</td><td>+0.15 s, 25 ms gestaffelt</td><td>0.6 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Social-Icons erscheinen (95 % → 100 %)</td><td>+0.4 s, 60 ms gestaffelt</td><td>0.4 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Logos blenden ein, Trennlinie zieht von links auf</td><td>+0.5 s</td><td>0.6 s / 0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Beschriftungen tauschen (raus 6 px nach oben, rein von unten)</td><td>Klick auf Sprache</td><td>0.15 s raus, 0.25 s rein</td></tr>
+    <tr><td>Links: Unterstrich wächst</td><td>Hover</td><td>CSS 0.2 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Alles blendet nur ein (kein Versatz, keine Linie, die sich aufzieht); Sprachwechsel ohne Bewegung.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const ftr = document.querySelector('#ftr');
+  const y = v => reduced ? 0 : v;
+
+  // 1 · Aufbau, sobald der Footer ins Bild kommt (einmal)
+  const tl = gsap.timeline({ defaults: { ease: AR.ease.out }, scrollTrigger: { trigger: ftr, start: 'top 80%', once: true } });
+  tl.from('.ftr__logo img', { yPercent: y(30), clipPath: reduced ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)', autoAlpha: reduced ? 0 : 1, duration: 1.1 })
+    .from('.ftr__col h2, .ftr__col li, .ftr__col address, .ftr__lang', { y: y(16), autoAlpha: 0, duration: AR.dur.move, stagger: .025 }, .15)
+    .from('.ftr__social li', { scale: reduced ? 1 : .95, autoAlpha: 0, duration: .4, stagger: .06 }, .4)
+    .from('.ftr__logos img', { autoAlpha: 0, y: y(8), duration: AR.dur.move, stagger: .08 }, .5)
+    .from('.ftr__rule', { scaleX: reduced ? 1 : 0, autoAlpha: reduced ? 0 : 1, duration: AR.dur.reveal }, .5)
+    .from('.ftr__legal p, .ftr__legal nav', { autoAlpha: 0, duration: AR.dur.move }, .7);
+
+  // 2 · Sprachwahl: Beschriftungen kurz austauschen
+  const T = {
+    de: { direct: 'Direkt zu', contact: 'Kontakt', copy: '©Augusta Raurica, Bildungs-, Kultur- und Sportdirektion des Kanton Basel-Landschaft', cookies: 'Cookie-Einstellungen', imprint: 'Impressum', privacy: 'Datenschutzerklärung' },
+    fr: { direct: 'Accès direct', contact: 'Contact', copy: '©Augusta Raurica, Direction de l’éducation, de la culture et du sport du canton de Bâle-Campagne', cookies: 'Paramètres des cookies', imprint: 'Mentions légales', privacy: 'Protection des données' },
+    it: { direct: 'Accesso diretto', contact: 'Contatto', copy: '©Augusta Raurica, Direzione dell’educazione, della cultura e dello sport del Cantone di Basilea Campagna', cookies: 'Impostazioni dei cookie', imprint: 'Colophon', privacy: 'Protezione dei dati' },
+    en: { direct: 'Quick links', contact: 'Contact', copy: '©Augusta Raurica, Department of Education, Culture and Sport, Canton of Basel-Landschaft', cookies: 'Cookie settings', imprint: 'Imprint', privacy: 'Privacy policy' },
+  };
+  const labels = gsap.utils.toArray('[data-i18n]', ftr);
+  const langBtns = gsap.utils.toArray('.ftr__lang button');
+  langBtns.forEach(b => b.addEventListener('click', () => {
+    if (b.getAttribute('aria-pressed') === 'true') return;
+    langBtns.forEach(x => x.setAttribute('aria-pressed', x === b));
+    const t = T[b.dataset.lang];
+    gsap.timeline({ defaults: { ease: AR.ease.out } })
+      .to(labels, { y: y(-6), autoAlpha: 0, duration: .15 })
+      .add(() => labels.forEach(l => { l.textContent = t[l.dataset.i18n]; l.lang = b.dataset.lang; }))
+      .fromTo(labels, { y: y(6) }, { y: 0, autoAlpha: 1, duration: .25, stagger: .02 });
+  }));
+});
+</script>
+</body>
+</html>

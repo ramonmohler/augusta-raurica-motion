@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAQ – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- FAQ (Figma 3348:29401) – Intro links 5 Spalten, Liste rechts 6 Spalten ---------- */
+  .faq { align-items: start; }
+  .faq__intro { grid-column: 1 / span 5; display: grid; gap: var(--s15); justify-items: start; }
+  .faq__intro p { font-size: var(--small); max-width: 46ch; }
+  .faq__list { grid-column: 7 / span 6; }
+
+  .acc { border-top: 1px solid var(--line); }
+  .acc:last-of-type { border-bottom: 1px solid var(--line); }
+  .acc[hidden] { display: none; }
+  .acc__q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s15); padding: 20px 0; border: 0; background: none; color: var(--anth); cursor: pointer; text-align: left; font: 500 var(--h4)/1.3 var(--font); }
+  .acc__ic { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--anth); display: grid; place-items: center;
+    transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease; }
+  .acc__ic svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; overflow: visible; }
+  .acc__ic .v { transform-box: fill-box; transform-origin: 50% 50%; }   /* senkrechter Strich: Plus → Minus */
+  .acc__q[aria-expanded="true"] .acc__ic { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .acc__q:hover .acc__ic { background: var(--black); border-color: var(--black); color: var(--weiss); } }
+  .acc__q::after { content: ""; position: absolute; inset: 0; }   /* ganze Zeile klickbar */
+  .acc { position: relative; }
+  .acc__a { overflow: hidden; }
+  .acc__a[hidden] { display: none; }
+  .acc__a p { padding-bottom: var(--s15); padding-right: 62px; font-size: var(--small); line-height: 1.75; }
+
+  .faq__more { margin-top: var(--s2); }
+  .faq__more svg.i { transform: rotate(90deg); }
+
+  @media (max-width: 900px) {
+    .faq { row-gap: var(--s3); }
+    .acc__a p { padding-right: 0; }
+  }
+</style>
+</head>
+<body data-section="Interactive &amp; Functional Components" data-title="FAQ">
+
+<div class="demo-spacer demo-spacer--short">Die FAQ blendet beim Scrollen ein</div>
+
+<section class="sec wrap" aria-labelledby="faq-h">
+  <div class="faq grid">
+    <div class="faq__intro">
+      <h2 id="faq-h">Häufige Fragen</h2>
+      <p>Hier finden Sie Antworten auf die wichtigsten Fragen rund um Ihren Besuch in Augusta Raurica.</p>
+      <a class="btn" href="#">Kontakt aufnehmen <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+
+    <div class="faq__list" id="faqList">
+      <!-- Jede Frage: Button mit aria-expanded + aria-controls, Antwort mit hidden, solange zu -->
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a1" id="q1">Wie komme ich nach Augusta Raurica?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a1" role="region" aria-labelledby="q1" hidden><p>Mit dem Zug bis Kaiseraugst, von dort sind es rund zehn Minuten zu Fuss. Mit dem Auto über die A3, Ausfahrt Augst – Parkplätze gibt es direkt beim Museum.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a2" id="q2">Wann ist das Museum geöffnet?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a2" role="region" aria-labelledby="q2" hidden><p>Das Museum und das Römerhaus sind täglich von 10 bis 17 Uhr geöffnet. Das Freigelände ist jederzeit frei zugänglich.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a3" id="q3">Gibt es Führungen für Gruppen und Schulen?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a3" role="region" aria-labelledby="q3" hidden><p>Ja. Öffentliche Führungen finden jeden Sonntag statt. Für Gruppen und Schulklassen buchen Sie eine private Führung mindestens zwei Wochen im Voraus.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a4" id="q4">Ist das Freigelände barrierefrei?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a4" role="region" aria-labelledby="q4" hidden><p>Museum, Römerhaus und die Hauptwege sind rollstuhlgängig. Einzelne Monumente erreichen Sie nur über Treppen oder Kieswege.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a5" id="q5">Darf ich meinen Hund mitbringen?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a5" role="region" aria-labelledby="q5" hidden><p>Auf dem Freigelände sind Hunde an der Leine willkommen. Ins Museum und ins Römerhaus dürfen nur Assistenzhunde.</p></div>
+      </div>
+      <!-- ab der 6. Frage: automatisch versteckt + Button «Mehr anzeigen» (Anforderung Suan) -->
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a6" id="q6">Kann ich vor Ort essen?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a6" role="region" aria-labelledby="q6" hidden><p>Im Museumscafé gibt es kleine Speisen und Getränke. Picknickplätze finden Sie beim Tierpark und beim Theater.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a7" id="q7">Darf ich fotografieren?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a7" role="region" aria-labelledby="q7" hidden><p>Für private Zwecke ja, ohne Blitz und Stativ. Für kommerzielle Aufnahmen und Drohnenflüge brauchen Sie eine Bewilligung.</p></div>
+      </div>
+      <div class="acc">
+        <h3><button class="acc__q" type="button" aria-expanded="false" aria-controls="a8" id="q8">Wo kann ich mein Gepäck lassen?<span class="acc__ic" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><path class="v" d="M8 2v12"/></svg></span></button></h3>
+        <div class="acc__a" id="a8" role="region" aria-labelledby="q8" hidden><p>Beim Museumseingang stehen kostenlose Schliessfächer bereit. Grosse Koffer nimmt die Kasse entgegen.</p></div>
+      </div>
+      <button class="btn btn--outline faq__more" type="button" aria-expanded="false" hidden><span>Mehr anzeigen</span> <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Akkordeon, barrierefrei: jede Frage ist ein Button mit <code>aria-expanded</code>, die Antwort ist <code>hidden</code>, solange sie zu ist. Ab der 6. Frage blendet die Komponente die übrigen aus und zeigt «Mehr anzeigen».</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Intro und Zeilen gleiten 24 px hoch und blenden ein</td><td>Scroll (88 % Viewport), 70 ms gestaffelt</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Antwort öffnet: Höhe 0 → auto, Text 6 px von oben</td><td>Klick / Enter / Leertaste</td><td>0.35 s · <code>AR.ease.out</code>, Text +0.08 s</td></tr>
+    <tr><td>Antwort schliesst: Höhe → 0, Text blendet aus</td><td>Klick</td><td>0.25 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Icon: senkrechter Strich klappt weg (Plus → Minus), Kreis wird schwarz</td><td>mit dem Öffnen</td><td>0.3 s · <code>AR.ease.out</code>, Farbe CSS 0.2 s</td></tr>
+    <tr><td>«Mehr anzeigen»: weitere Fragen gleiten 12 px hoch, Fokus springt zur ersten neuen Frage</td><td>Klick</td><td>0.3 s · 50 ms gestaffelt</td></tr>
+    <tr><td>Hover: Kreis wird schwarz</td><td>Maus</td><td>CSS 0.2 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Antworten öffnen ohne Höhenanimation (nur kurzes Einblenden), keine Verschiebungen.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const list = document.querySelector('#faqList');
+  const items = gsap.utils.toArray('.acc', list);
+  const more = list.querySelector('.faq__more');
+  const LIMIT = 5;
+
+  // 1 · Mehr als 5 Fragen → Rest verstecken, Button zeigen
+  const extra = items.slice(LIMIT);
+  extra.forEach(el => el.hidden = true);
+  more.hidden = extra.length === 0;
+
+  // 2 · Scroll-Reveal
+  AR.reveal('.faq__intro > *');
+  AR.reveal(items.slice(0, LIMIT).concat(more));
+
+  // 3 · Öffnen / Schliessen
+  function toggle(item, open) {
+    const btn = item.querySelector('.acc__q');
+    const panel = item.querySelector('.acc__a');
+    const text = panel.firstElementChild;
+    const bar = item.querySelector('.acc__ic .v');
+    btn.setAttribute('aria-expanded', open);
+    gsap.killTweensOf([panel, text, bar]);
+    gsap.to(bar, { scaleY: open ? 0 : 1, duration: AR.dur.ui, ease: AR.ease.out });
+
+    if (reduced) {
+      panel.hidden = !open;
+      if (open) gsap.fromTo(text, { autoAlpha: 0 }, { autoAlpha: 1, duration: .2 });
+      return;
+    }
+    if (open) {
+      panel.hidden = false;
+      gsap.fromTo(panel, { height: 0 }, { height: 'auto', duration: .35, ease: AR.ease.out });
+      gsap.fromTo(text, { autoAlpha: 0, y: -6 }, { autoAlpha: 1, y: 0, duration: AR.dur.ui, delay: .08, ease: AR.ease.out });
+    } else {
+      gsap.to(text, { autoAlpha: 0, duration: .15, ease: AR.ease.out });
+      gsap.to(panel, { height: 0, duration: .25, ease: AR.ease.out, onComplete: () => { panel.hidden = true; gsap.set(panel, { clearProps: 'height' }); } });
+    }
+  }
+  items.forEach(item => item.querySelector('.acc__q').addEventListener('click', e => {
+    toggle(item, e.currentTarget.getAttribute('aria-expanded') !== 'true');
+  }));
+
+  // erste Frage offen wie im Design
+  gsap.set(items[0].querySelector('.acc__ic .v'), { scaleY: 0 });
+  items[0].querySelector('.acc__q').setAttribute('aria-expanded', 'true');
+  items[0].querySelector('.acc__a').hidden = false;
+
+  // 4 · Mehr anzeigen / Weniger anzeigen
+  more.addEventListener('click', () => {
+    const open = more.getAttribute('aria-expanded') !== 'true';
+    more.setAttribute('aria-expanded', open);
+    more.querySelector('span').textContent = open ? 'Weniger anzeigen' : 'Mehr anzeigen';
+    gsap.to(more.querySelector('svg'), { rotation: open ? -90 : 90, duration: AR.dur.ui, ease: AR.ease.out });
+    if (open) {
+      extra.forEach(el => el.hidden = false);
+      // opacity statt autoAlpha: so bleiben die neuen Fragen sofort fokussierbar
+      gsap.fromTo(extra, { opacity: 0, y: reduced ? 0 : 12 }, { opacity: 1, y: 0, duration: AR.dur.ui, stagger: .05, ease: AR.ease.out });
+      extra[0].querySelector('.acc__q').focus({ preventScroll: true });
+    } else {
+      gsap.to(extra, { opacity: 0, duration: .2, ease: AR.ease.out, onComplete: () => extra.forEach(el => el.hidden = true) });
+    }
+  });
+  gsap.set(more.querySelector('svg'), { rotation: 90 });
+});
+</script>
+</body>
+</html>
