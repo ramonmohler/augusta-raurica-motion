@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wissenswertes-Teaser – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<link rel="stylesheet" href="../../media/lightbox/lightbox.css">
+<style>
+  /* ---------- Wissenswertes-Teaser (Figma 3660:45914)
+     Desktop 1440: Padding 128/48, Text 546 breit, Abstand 138, rechts eine Bildspur (Spalten 318, Abstand 24),
+     die über den rechten Rand hinausläuft. Mobile 393: Text oben, Spur darunter (Spalten 240, Abstand 16), links und rechts angeschnitten. ---------- */
+  .wt { padding-block: var(--sec); overflow: hidden; background: var(--weiss); }
+  .wt__in { display: flex; align-items: center; gap: calc(138 / 1440 * 100vw); }
+  .wt__text { flex: 0 0 min(546px, 38vw); display: grid; gap: var(--s2); justify-items: start; }
+  .wt__text h2 { font-size: var(--h2); }
+  .wt__text p { font-size: var(--copy); max-width: 60ch; }
+  .wt__track { --cw: calc(318 / 1440 * 100vw); flex: none; display: flex; align-items: center; gap: var(--g); }
+  .wt__col { flex: none; width: var(--cw); display: grid; gap: var(--g); will-change: transform; }
+  .wt .g-item { width: 100%; }
+  @media (min-width: 1680px) { .wt__track { --cw: calc(414 / 1920 * 100vw); } }
+  @media (max-width: 900px) {
+    .wt__in { flex-direction: column; align-items: stretch; gap: var(--s3); }
+    .wt__text { flex: none; }
+    .wt__track { --cw: 240px; gap: 16px; margin-left: -219px; }   /* wie Figma: erste Spalte links angeschnitten */
+    .wt__col { gap: 16px; }
+  }
+</style>
+</head>
+<body data-section="Text (Content)" data-title="Wissenswertes-Teaser">
+<div class="demo-spacer demo-spacer--short">Nach unten scrollen<svg class="i" aria-hidden="true"><use href="#i-down"/></svg></div>
+
+<section class="wt" id="wt" aria-labelledby="wt-h">
+  <div class="wt__in wrap">
+    <div class="wt__text">
+      <h2 id="wt-h">Wissenswertes</h2>
+      <p>Funde, Forschung und Geschichten aus Augusta Raurica: Hier erfahren Sie, was die Archäologinnen und Archäologen zurzeit beschäftigt.</p>
+      <a class="btn" href="#">Entdecken <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="wt__track" id="track">
+      <div class="wt__col" data-depth="1"><button class="g-item" type="button" style="--ar:318 / 397" data-cap="Auf der Grabung" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/f-06da55dc.jpg" alt="Hände lassen Erde auf einer Grabung durch die Finger rieseln" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+      <div class="wt__col" data-depth="1.6"><button class="g-item" type="button" style="--ar:318 / 212" data-cap="Raum mit Mosaikboden" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/f-cf18149b.jpg" alt="Speisezimmer mit Mosaikboden und Liegen im Römerhaus" width="1920" height="1181" loading="lazy" decoding="async"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:318 / 254" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Vorratsgefässen und Arbeitstisch" width="1220" height="1920" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+      <div class="wt__col" data-depth="2.2"><button class="g-item" type="button" style="--ar:318 / 398" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Amphoren im Römerhaus" width="1220" height="1920" loading="lazy" decoding="async" style="object-position:50% 70%"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+    </div>
+  </div>
+</section>
+
+<div class="demo-spacer">Weiter scrollen: Die Spalten wandern mit unterschiedlicher Geschwindigkeit nach links.</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Text links, rechts eine angeschnittene Bildspur. Die Bilder schieben sich beim Erscheinen von rechts nach links herein und laufen danach beim Scrollen mit leichtem Parallax weiter nach links, jede Spalte etwas schneller als die vorherige (Tiefe). Hover und Lightbox wie in der Bildergalerie.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Titel, Text, Button gleiten auf (y 24 → 0), gestaffelt</td><td>Scroll, Section bei 88 % Viewport</td><td>0.9 s · <code>AR.ease.out</code>, 70 ms</td></tr>
+    <tr><td>Bilder schieben sich von rechts herein: x +30 % der Breite → 0 und Rahmen öffnet von rechts (<code>clip-path</code>)</td><td>Scroll, Section bei 75 % Viewport</td><td>1.2 s · <code>AR.ease.out</code>, 120 ms pro Bild</td></tr>
+    <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Parallax: Spalten wandern nach links (x +24 px → −24 px × Tiefe 1 / 1.6 / 2.2)</td><td>Scroll, solange die Section sichtbar ist</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Hover: Bild 105 %, Verlauf, Legende + Lupe</td><td>Maus / Tastaturfokus</td><td>CSS · <code>--ease-out</code>, wie <a href="../../media/image-gallery/">Image Gallery</a></td></tr>
+    <tr><td>Lightbox</td><td>Klick, Enter, Esc</td><td>siehe <a href="../../media/lightbox/">Lightbox</a></td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Text und Bilder blenden nur ein, kein Hereinschieben, keine Parallax.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script src="../../media/lightbox/lightbox.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const section = document.querySelector('#wt');
+  const tiles = gsap.utils.toArray('#track .g-item');
+  const cols = gsap.utils.toArray('#track .wt__col');
+  AR.lazy();
+
+  // 1 · Text gleitet auf
+  AR.reveal('.wt__text > *');
+
+  // 2 · Bilder schieben sich von rechts nach links herein (Position + Rahmen öffnet von rechts)
+  gsap.fromTo(tiles,
+    reduced ? { autoAlpha: 0 } : { xPercent: 30, clipPath: 'inset(0% 0% 0% 100%)' },
+    { ...(reduced ? { autoAlpha: 1, duration: .5 } : { xPercent: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, clearProps: 'clipPath' }),
+      ease: AR.ease.out, stagger: .12,
+      scrollTrigger: { trigger: section, start: 'top 75%', once: true } });
+
+  if (reduced) { ARLightbox(tiles); return; }
+
+  // 3 · Parallax beim Scrollen: Spalten wandern nach links, hintere schneller (data-depth)
+  cols.forEach(col => {
+    const d = parseFloat(col.dataset.depth);
+    gsap.fromTo(col, { x: 24 * d }, { x: -24 * d, ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  // 4 · Lightbox (gemeinsamer Code in media/lightbox/lightbox.js)
+  ARLightbox(tiles);
+});
+</script>
+</body>
+</html>
