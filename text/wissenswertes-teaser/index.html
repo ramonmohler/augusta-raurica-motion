@@ -48,20 +48,20 @@
   </div>
 </section>
 
-<div class="demo-spacer">Weiter scrollen: Die Spalten wandern mit unterschiedlicher Geschwindigkeit nach links.</div>
+<div class="demo-spacer">Weiter scrollen: Die Spalten verschieben sich gegeneinander nach oben und unten.</div>
 
 <template id="demo-notes">
-  <p class="demo-sheet__lead">Text links, rechts eine angeschnittene Bildspur. Die Bilder schieben sich beim Erscheinen von rechts nach links herein Beim Scrollen verschieben sich die Spalten vertikal gegeneinander: die äusseren laufen nach unten, die mittlere nach oben (Parallax). Hover und Lightbox wie in der Bildergalerie.</p>
+  <p class="demo-sheet__lead">Text links, rechts eine angeschnittene Bildspur. Die Bilder laden wie alle anderen Bilder (Rahmen öffnet sich von innen, wie Single Image). Beim Scrollen verschieben sich die Spalten vertikal gegeneinander: die äusseren laufen nach unten, die mittlere nach oben (Parallax). Hover und Lightbox wie in der Bildergalerie.</p>
   <h3>Ablauf</h3>
   <table>
     <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
     <tr><td>Titel, Text, Button gleiten auf (y 24 → 0), gestaffelt</td><td>Scroll, Section bei 88 % Viewport</td><td>0.9 s · <code>AR.ease.out</code>, 70 ms</td></tr>
-    <tr><td>Bilder schieben sich von rechts herein: x +30 % der Breite → 0 und Rahmen öffnet von rechts (<code>clip-path</code>)</td><td>Scroll, Section bei 75 % Viewport</td><td>1.2 s · <code>AR.ease.out</code>, 120 ms pro Bild</td></tr>
+    <tr><td>Rahmen öffnet sich von innen (<code>clip-path</code> 6 % → 0 %), wie Single Image und Image Gallery</td><td>Scroll, Bild bei 85 % Viewport</td><td>1.1 s · <code>AR.ease.out</code></td></tr>
     <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
-    <tr><td>Parallax im Gegenlauf: Spalte 1 + 3 y −64 → +64 px, Spalte 2 +64 → −64 px (Mobile ± 32 px)</td><td>Scroll, solange die Section sichtbar ist</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Parallax im Gegenlauf: Spalte 1 + 3 y −120 → +120 px, Spalte 2 +120 → −120 px (Mobile ± 56 px)</td><td>Scroll, solange die Section sichtbar ist</td><td><code>scrub: true</code>, linear</td></tr>
     <tr><td>Hover: Bild 105 %, Verlauf, Legende + Lupe</td><td>Maus / Tastaturfokus</td><td>CSS · <code>--ease-out</code>, wie <a href="../../media/image-gallery/">Image Gallery</a></td></tr>
     <tr><td>Lightbox</td><td>Klick, Enter, Esc</td><td>siehe <a href="../../media/lightbox/">Lightbox</a></td></tr>
-    <tr><td>Reduzierte Bewegung</td><td colspan="2">Text und Bilder blenden nur ein, kein Hereinschieben, keine Parallax.</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Text und Bilder blenden nur ein (0.4 s), keine Parallax.</td></tr>
   </table>
 </template>
 
@@ -81,17 +81,19 @@ AR.demo(({ reduced }) => {
   // 1 · Text gleitet auf
   AR.reveal('.wt__text > *');
 
-  // 2 · Bilder schieben sich von rechts nach links herein (Position + Rahmen öffnet von rechts)
-  gsap.fromTo(tiles,
-    reduced ? { autoAlpha: 0 } : { xPercent: 30, clipPath: 'inset(0% 0% 0% 100%)' },
-    { ...(reduced ? { autoAlpha: 1, duration: .5 } : { xPercent: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, clearProps: 'clipPath' }),
-      ease: AR.ease.out, stagger: .12,
-      scrollTrigger: { trigger: section, start: 'top 75%', once: true } });
+  // 2 · Laden wie alle Bilder (Single Image / Image Gallery): Rahmen öffnet sich von innen, Bild blendet per AR.lazy ein
+  tiles.forEach(frame => {
+    gsap.fromTo(frame, reduced ? { autoAlpha: 0 } : { clipPath: 'inset(6% 6% 6% 6%)' }, {
+      ...(reduced ? { autoAlpha: 1, duration: .4 } : { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, clearProps: 'clipPath' }),
+      ease: AR.ease.out,
+      scrollTrigger: { trigger: frame, start: 'top 85%', once: true },
+    });
+  });
 
   if (reduced) { ARLightbox(tiles); return; }
 
   // 3 · Parallax im Gegenlauf: äussere Spalten laufen nach unten, die mittlere nach oben (data-dir)
-  const amp = () => innerWidth <= 900 ? 32 : 64;
+  const amp = () => innerWidth <= 900 ? 56 : 120;
   cols.forEach(col => {
     const dir = parseFloat(col.dataset.dir);
     gsap.fromTo(col, { y: () => -amp() * dir }, { y: () => amp() * dir, ease: 'none',
