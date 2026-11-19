@@ -28,7 +28,7 @@
 .g-item:focus-visible .g-cap, .g-item:focus-visible .g-zoom { opacity: 1; transform: none; }
 .g-item:active .g-zoom { transform: scale(.94); }
 /* Touch: kein Hover → Lupe immer sichtbar, Legende nur in der Lightbox */
-@media (hover: none) { .g-zoom { opacity: 1; transform: none; right: 12px; bottom: 12px; } }
+/* Touch: kein Hover-Zustand – Bild antippen öffnet direkt die Lightbox */
 @media (max-width: 900px) { .g-cap { display: none; } .g-zoom { right: 12px; bottom: 12px; } }
 @media (prefers-reduced-motion: reduce) { .g-item .media, .g-cap, .g-zoom { transition-duration: 1ms; } }
 

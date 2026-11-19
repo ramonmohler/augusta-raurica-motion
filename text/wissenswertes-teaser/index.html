@@ -41,9 +41,9 @@
       <a class="btn" href="#">Entdecken <svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
     <div class="wt__track" id="track">
-      <div class="wt__col" data-depth="1"><button class="g-item" type="button" style="--ar:318 / 397" data-cap="Auf der Grabung" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/f-06da55dc.jpg" alt="Hände lassen Erde auf einer Grabung durch die Finger rieseln" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
-      <div class="wt__col" data-depth="1.6"><button class="g-item" type="button" style="--ar:318 / 212" data-cap="Raum mit Mosaikboden" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/f-cf18149b.jpg" alt="Speisezimmer mit Mosaikboden und Liegen im Römerhaus" width="1920" height="1181" loading="lazy" decoding="async"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:318 / 254" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Vorratsgefässen und Arbeitstisch" width="1220" height="1920" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
-      <div class="wt__col" data-depth="2.2"><button class="g-item" type="button" style="--ar:318 / 398" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Amphoren im Römerhaus" width="1220" height="1920" loading="lazy" decoding="async" style="object-position:50% 70%"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+      <div class="wt__col" data-dir="1"><button class="g-item" type="button" style="--ar:318 / 397" data-cap="Auf der Grabung" aria-label="Bild vergrössern: Auf der Grabung"><div class="media"><img src="../../shared/img/f-06da55dc.jpg" alt="Hände lassen Erde auf einer Grabung durch die Finger rieseln" width="1920" height="1280" loading="lazy" decoding="async"></div><span class="g-cap">Auf der Grabung</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+      <div class="wt__col" data-dir="-1"><button class="g-item" type="button" style="--ar:318 / 212" data-cap="Raum mit Mosaikboden" aria-label="Bild vergrössern: Raum mit Mosaikboden"><div class="media"><img src="../../shared/img/f-cf18149b.jpg" alt="Speisezimmer mit Mosaikboden und Liegen im Römerhaus" width="1920" height="1181" loading="lazy" decoding="async"></div><span class="g-cap">Raum mit Mosaikboden</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button><button class="g-item" type="button" style="--ar:318 / 254" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Vorratsgefässen und Arbeitstisch" width="1220" height="1920" loading="lazy" decoding="async"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
+      <div class="wt__col" data-dir="1"><button class="g-item" type="button" style="--ar:318 / 398" data-cap="Küche mit Vorratsgefässen" aria-label="Bild vergrössern: Küche mit Vorratsgefässen"><div class="media"><img src="../../shared/img/f-6bf49c63.jpg" alt="Römische Küche mit Amphoren im Römerhaus" width="1220" height="1920" loading="lazy" decoding="async" style="object-position:50% 70%"></div><span class="g-cap">Küche mit Vorratsgefässen</span><span class="g-zoom" aria-hidden="true"><svg class="i"><use href="#i-plus"/></svg></span></button></div>
     </div>
   </div>
 </section>
@@ -51,14 +51,14 @@
 <div class="demo-spacer">Weiter scrollen: Die Spalten wandern mit unterschiedlicher Geschwindigkeit nach links.</div>
 
 <template id="demo-notes">
-  <p class="demo-sheet__lead">Text links, rechts eine angeschnittene Bildspur. Die Bilder schieben sich beim Erscheinen von rechts nach links herein und laufen danach beim Scrollen mit leichtem Parallax weiter nach links, jede Spalte etwas schneller als die vorherige (Tiefe). Hover und Lightbox wie in der Bildergalerie.</p>
+  <p class="demo-sheet__lead">Text links, rechts eine angeschnittene Bildspur. Die Bilder schieben sich beim Erscheinen von rechts nach links herein Beim Scrollen verschieben sich die Spalten vertikal gegeneinander: die äusseren laufen nach unten, die mittlere nach oben (Parallax). Hover und Lightbox wie in der Bildergalerie.</p>
   <h3>Ablauf</h3>
   <table>
     <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
     <tr><td>Titel, Text, Button gleiten auf (y 24 → 0), gestaffelt</td><td>Scroll, Section bei 88 % Viewport</td><td>0.9 s · <code>AR.ease.out</code>, 70 ms</td></tr>
     <tr><td>Bilder schieben sich von rechts herein: x +30 % der Breite → 0 und Rahmen öffnet von rechts (<code>clip-path</code>)</td><td>Scroll, Section bei 75 % Viewport</td><td>1.2 s · <code>AR.ease.out</code>, 120 ms pro Bild</td></tr>
     <tr><td>Bild blendet ein, 104 % → 100 %</td><td>Bild geladen (<code>AR.lazy</code>)</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
-    <tr><td>Parallax: Spalten wandern nach links (x +24 px → −24 px × Tiefe 1 / 1.6 / 2.2)</td><td>Scroll, solange die Section sichtbar ist</td><td><code>scrub: true</code>, linear</td></tr>
+    <tr><td>Parallax im Gegenlauf: Spalte 1 + 3 y −64 → +64 px, Spalte 2 +64 → −64 px (Mobile ± 32 px)</td><td>Scroll, solange die Section sichtbar ist</td><td><code>scrub: true</code>, linear</td></tr>
     <tr><td>Hover: Bild 105 %, Verlauf, Legende + Lupe</td><td>Maus / Tastaturfokus</td><td>CSS · <code>--ease-out</code>, wie <a href="../../media/image-gallery/">Image Gallery</a></td></tr>
     <tr><td>Lightbox</td><td>Klick, Enter, Esc</td><td>siehe <a href="../../media/lightbox/">Lightbox</a></td></tr>
     <tr><td>Reduzierte Bewegung</td><td colspan="2">Text und Bilder blenden nur ein, kein Hereinschieben, keine Parallax.</td></tr>
@@ -90,11 +90,12 @@ AR.demo(({ reduced }) => {
 
   if (reduced) { ARLightbox(tiles); return; }
 
-  // 3 · Parallax beim Scrollen: Spalten wandern nach links, hintere schneller (data-depth)
+  // 3 · Parallax im Gegenlauf: äussere Spalten laufen nach unten, die mittlere nach oben (data-dir)
+  const amp = () => innerWidth <= 900 ? 32 : 64;
   cols.forEach(col => {
-    const d = parseFloat(col.dataset.depth);
-    gsap.fromTo(col, { x: 24 * d }, { x: -24 * d, ease: 'none',
-      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true } });
+    const dir = parseFloat(col.dataset.dir);
+    gsap.fromTo(col, { y: () => -amp() * dir }, { y: () => amp() * dir, ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true } });
   });
 
   // 4 · Lightbox (gemeinsamer Code in media/lightbox/lightbox.js)
