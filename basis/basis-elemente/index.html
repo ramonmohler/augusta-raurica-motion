@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basis-Elemente – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Seite: eine Zeile pro Komponente, Name links (4 Spalten), Live-Beispiel rechts ---------- */
+  .intro { background: var(--gold-20); padding-block: var(--s5) var(--s4); }
+  .intro h1 { font-size: var(--h2); }
+  .intro p { margin-top: var(--s1); max-width: 60ch; font-size: var(--small); }
+  .spec { padding-block: var(--s5); border-top: 1px solid var(--line); align-items: start; }
+  .spec__head { grid-column: 1 / span 4; display: grid; gap: 8px; }
+  .spec__head h2 { font-size: var(--h3); }
+  .spec__head p { font-size: var(--small); color: var(--anth-light); max-width: 34ch; }
+  .spec__body { grid-column: 5 / -1; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s15); }
+  .stage { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: var(--s2); border-radius: 16px; background: var(--weiss); border: 1px solid var(--line); }
+  .stage--dark { background: var(--anth); border-color: var(--anth); color: var(--weiss); }
+  .stage--col { flex-direction: column; align-items: flex-start; }
+  .stage__label { flex-basis: 100%; font-size: 13px; color: var(--anth-light); }
+  .stage--dark .stage__label { color: var(--weiss-a60); }
+  .hint { font-size: 13px; color: var(--anth-light); }
+  .stage > * { max-width: 100%; }
+  @media (max-width: 900px) { .spec__head, .spec__body { grid-column: 1 / -1; } .stage { padding: 20px; } }
+  @media (max-width: 600px) { .tabs { display: flex; width: 100%; gap: 2px; } .tab { flex: 1; min-width: 0; padding: 12px 4px; font-size: 13px; letter-spacing: .02em; } }
+
+  /* ---------- Buttons: Zustand „Unselected“ (Figma) = nicht verfügbar ---------- */
+  .btn[aria-disabled="true"] { opacity: .4; pointer-events: none; }
+  .btn .i:first-child { margin-left: -4px; }
+  .tert { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; background: none; padding: 0; color: inherit; cursor: pointer;
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
+  .tert .i { transition: transform 250ms var(--ease-out); }
+  .tert[aria-disabled="true"] { opacity: .4; pointer-events: none; }
+  @media (hover: hover) and (pointer: fine) {
+    .tert:hover { color: var(--black); }
+    .stage--dark .tert:hover { color: var(--gold-20); }
+    .tert:hover .i:last-child { transform: translateX(4px); }
+    .tert:hover .i:first-child:not(:last-child) { transform: translateX(-2px); }
+  }
+  .tert:active { transform: scale(.97); }
+
+  /* ---------- Button-Navigation ---------- */
+  .pager { display: flex; align-items: center; gap: 12px; }
+  .pager__count { min-width: 64px; font-size: var(--small); font-variant-numeric: tabular-nums; overflow: hidden; height: 1.5em; }
+  .pager__count span { display: inline-block; }
+  .round[aria-disabled="true"] { pointer-events: none; }
+
+  /* ---------- Filters ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--anth-a20); background: transparent; color: var(--anth);
+    font: 700 14px/1.2 var(--font); letter-spacing: .04em; text-transform: uppercase; cursor: pointer;
+    transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
+  .chip .i { width: 14px; height: 14px; transition: transform var(--dur-ui) var(--ease-out); }
+  .chip[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .chip[aria-pressed="true"] .i { transform: rotate(45deg); }
+  .chip:active { transform: scale(.96); }
+  .stage--dark .chip { color: var(--weiss); border-color: var(--weiss-a40); }
+  .stage--dark .chip[aria-pressed="true"] { background: var(--weiss); border-color: var(--weiss); color: var(--anth); }
+  @media (hover: hover) and (pointer: fine) {
+    .chip:hover { border-color: var(--black); }
+    .stage--dark .chip:hover { border-color: var(--weiss); }
+  }
+  .chips__reset { font-size: 13px; }
+  .count { font-size: var(--small); }
+  .count b { display: inline-block; min-width: 2ch; font-variant-numeric: tabular-nums; }
+
+  /* ---------- Tags ---------- */
+  .tag { display: inline-flex; align-items: center; gap: 4px; font: 500 14px/1.2 var(--font); letter-spacing: .04em; text-transform: uppercase; color: var(--anth); text-decoration: none;
+    transition: color var(--dur-hover) ease, background-color var(--dur-hover) ease; }
+  .tag .i { width: 14px; height: 14px; }
+  .tag--pic { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px); }
+  .tag--pic-dark { background: rgba(33,40,39,.66); color: var(--weiss); }
+  .stage--dark .tag:not(.tag--pic) { color: var(--weiss); }
+  a.tag { cursor: pointer; }
+  @media (hover: hover) and (pointer: fine) {
+    a.tag:hover { color: var(--black); }
+    .stage--dark a.tag:not(.tag--pic):hover { color: var(--weiss-a60); }
+    a.tag--pic:hover { background: rgba(255,255,255,.85); color: var(--black); }
+    a.tag--pic-dark:hover { background: rgba(33,40,39,.85); color: var(--weiss); }
+  }
+  .pic { position: relative; width: min(100%, 420px); aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; }
+  .pic img { width: 100%; height: 100%; object-fit: cover; }
+  .pic__tags { position: absolute; left: 16px; top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+  /* ---------- Search bar ---------- */
+  .search { display: flex; align-items: center; gap: 8px; width: min(100%, 520px); padding: 4px 4px 4px 24px; border: 1.5px solid var(--black); border-radius: 999px; background: var(--weiss);
+    transition: box-shadow var(--dur-hover) ease; }
+  .search:focus-within { box-shadow: 0 0 0 4px var(--gold-40); }
+  .search input { flex: 1; min-width: 0; height: 48px; border: 0; background: none; outline: none; font-size: var(--small); }
+  .search input::placeholder { color: var(--anth-light); }
+  .search .btn { flex: none; }
+  .search .btn .i { transition: transform 250ms var(--ease-out); }
+  .search__out { min-height: 1.5em; font-size: var(--small); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .search .btn.is-busy .i { animation: spin .7s linear infinite; }
+
+  /* ---------- Tabs (Segment mit gleitendem Hintergrund) ---------- */
+  .tabs { position: relative; display: inline-flex; gap: 8px; padding: 4px; border-radius: 999px; background: var(--weiss); border: 1px solid var(--line); }
+  .tabs__ind { position: absolute; left: 0; top: 4px; height: calc(100% - 8px); border-radius: 999px; background: var(--anth); pointer-events: none; }
+  .tab { position: relative; z-index: 1; min-height: 44px; padding: 12px 20px; border: 0; border-radius: 999px; background: none; cursor: pointer; color: var(--anth);
+    font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; transition: color var(--dur-ui) var(--ease-out); }
+  .tab[aria-selected="true"] { color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .tab:not([aria-selected="true"]):hover { color: var(--black); background: var(--gold-20); } }
+  .tabpanel { font-size: var(--small); max-width: 52ch; }
+  .tabpanel strong { display: block; font-size: var(--h4); margin-bottom: 4px; }
+
+  /* ---------- Breadcrumbs ---------- */
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: 0; padding: 0; list-style: none; font-size: var(--small); }
+  .crumbs li { display: inline-flex; align-items: center; gap: 8px; color: var(--anth-a66); }
+  .crumbs li + li::before { content: ""; width: 14px; height: 14px; background: currentColor; opacity: .9;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 8h12M9 3l5 5-5 5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 8h12M9 3l5 5-5 5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .crumbs a { color: inherit; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: color var(--dur-hover) ease, background-size var(--dur-ui) var(--ease-out); }
+  .crumbs [aria-current] { color: var(--anth); }
+  .stage--dark .crumbs li { color: var(--weiss-a60); }
+  .stage--dark .crumbs [aria-current] { color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) {
+    .crumbs a:hover { color: var(--anth); background-size: 100% 1px; }
+    .stage--dark .crumbs a:hover { color: var(--weiss); }
+  }
+
+  /* ---------- Dropdown ---------- */
+  .dd { position: relative; }
+  .dd__btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--anth); background: transparent; color: var(--anth); cursor: pointer;
+    font: 700 14px/1.2 var(--font); letter-spacing: .04em; text-transform: uppercase;
+    transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
+  .dd__btn .i { width: 14px; height: 14px; transition: transform var(--dur-ui) var(--ease-out); }
+  .dd__btn[aria-expanded="true"] { border-color: var(--black); color: var(--black); }
+  .dd__btn[aria-expanded="true"] .i { transform: rotate(180deg); }
+  .dd__btn.has-val { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .dd__btn:disabled { opacity: .4; cursor: default; }
+  .dd__btn:active:not(:disabled) { transform: scale(.97); }
+  @media (hover: hover) and (pointer: fine) { .dd__btn:not(:disabled):not(.has-val):hover { border-color: var(--black); color: var(--black); } }
+  .dd__list { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; min-width: 200px; margin: 0; padding: 8px 4px; list-style: none; border: 1.5px solid var(--black); border-radius: 16px; background: var(--weiss);
+    transform-origin: 24px 0; visibility: hidden; }
+  .dd__opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 10px 12px; color: var(--anth); font-size: 16px; cursor: pointer; }
+  .dd__opt.is-active { background: var(--gold-20); }
+  .dd__opt[aria-selected="true"] { font-weight: 700; }
+  .dd__opt .i { width: 14px; height: 14px; opacity: 0; }
+  .dd__opt[aria-selected="true"] .i { opacity: 1; }
+  .stage--dark .dd__btn { color: var(--weiss); border-color: var(--weiss); }
+  .stage--dark .dd__btn.has-val { background: var(--weiss); color: var(--anth); }
+  .stage--dark .dd__list { border-color: var(--weiss); }
+
+  /* ---------- Sprachwahl ---------- */
+  .lang { position: relative; }
+  .lang__btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: none; color: inherit; cursor: pointer; font: 700 16px/1 var(--font); letter-spacing: .04em; }
+  .lang__btn .i { width: 14px; height: 14px; transition: transform var(--dur-ui) var(--ease-out); }
+  .lang__btn[aria-expanded="true"] .i { transform: rotate(180deg); }
+  .lang__list { position: absolute; z-index: 20; top: 100%; left: 0; margin: 0; padding: 4px 0; list-style: none; display: grid; visibility: hidden; }
+  .lang__list button, .lang-row button { min-width: 44px; min-height: 36px; padding: 0 4px; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; font: 700 16px/1 var(--font); letter-spacing: .04em; opacity: .6;
+    transition: opacity var(--dur-hover) ease; }
+  .lang__list button[aria-current="true"], .lang-row button[aria-current="true"] { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .lang__list button:hover, .lang-row button:hover { opacity: 1; } }
+  .lang-row { position: relative; display: flex; gap: 4px; }
+  .lang-row button { min-width: 36px; text-align: center; position: relative; }
+  .lang-row__ind { position: absolute; left: 0; bottom: 2px; height: 1.5px; background: currentColor; pointer-events: none; }
+
+  /* ---------- In-Text-Link: Linie wächst von links ---------- */
+  .copy { font-size: var(--copy); line-height: 1.6; max-width: 56ch; }
+  .ilink { color: var(--rot); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; padding-bottom: 2px; transition: background-size var(--dur-ui) var(--ease-out); }
+  .stage--dark .ilink { color: var(--gold); }
+  @media (hover: hover) and (pointer: fine) { .ilink:hover { background-size: 100% 1.5px; } }
+  .ilink:focus-visible { background-size: 100% 1.5px; }
+
+  /* ---------- Stepper ---------- */
+  .steps { display: flex; width: 100%; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .step { position: relative; flex: 1; display: grid; justify-items: center; gap: 8px; text-align: center; font-size: var(--small); color: var(--anth); }
+  .step::before, .step::after { content: ""; position: absolute; top: 21px; height: 1.5px; width: calc(50% - 21px); background: var(--anth-a20); }
+  .step::before { left: 0; } .step::after { right: 0; }
+  .step:first-child::before, .step:last-child::after { display: none; }
+  .step__fill { position: absolute; top: 21px; height: 1.5px; left: calc(50% + 21px); width: calc(100% - 42px); background: var(--anth); transform-origin: 0 50%; transform: scaleX(0); z-index: 1; }
+  .step:last-child .step__fill { display: none; }
+  .step__dot { position: relative; z-index: 2; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--anth); background: var(--weiss); color: var(--anth);
+    transition: background-color var(--dur-ui) var(--ease-out), border-color var(--dur-ui) var(--ease-out), color var(--dur-ui) var(--ease-out); }
+  .step__dot .i { position: absolute; width: 16px; height: 16px; }
+  .step__dot .ok path { stroke-dasharray: 14; stroke-dashoffset: 14; }
+  .step[data-state="current"] .step__dot { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .step[data-state="done"] .step__dot { border-color: var(--anth-a66); color: var(--anth-a66); }
+  .step[data-state="done"] .step__name { color: var(--anth-light); }
+  .steps-ctrl { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 600px) { .step__name { font-size: 13px; } }
+</style>
+</head>
+<body data-section="Basis-Elemente" data-title="Basis-Elemente">
+
+<header class="intro">
+  <div class="wrap">
+    <h1>Basis-Elemente</h1>
+    <p>Alle Grundbausteine aus Figma, Spalte „2 · Erstellt / Ready for Dev“, als Live-Beispiel: Buttons, Button-Navigation, Filter, Tags, Suche, Tabs, Breadcrumbs, Dropdown, Sprachwahl, In-Text-Link und Stepper. Alles lässt sich anklicken, mit der Tastatur bedienen und mit der Maus überfahren.</p>
+  </div>
+</header>
+
+<main>
+  <!-- Buttons -->
+  <section class="spec grid wrap" aria-labelledby="h-btn">
+    <div class="spec__head"><h2 id="h-btn">Buttons</h2><p>Primary, Secondary, Tertiary, je dunkel und hell. Hover wird schwarz, der Pfeil schiebt sich 4 px nach rechts, beim Klicken drückt der Button leicht ein.</p></div>
+    <div class="spec__body">
+      <div class="stage">
+        <span class="stage__label">Dunkel</span>
+        <a class="btn" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--outline" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="tert" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <span class="stage__label">Nicht verfügbar</span>
+        <a class="btn" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--outline" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="tert" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="stage stage--dark">
+        <span class="stage__label">Hell, auf dunklem Grund oder Bild</span>
+        <a class="btn btn--light" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost-light" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="tert" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Button-Navigation -->
+  <section class="spec grid wrap" aria-labelledby="h-nav">
+    <div class="spec__head"><h2 id="h-nav">Button-Navigation</h2><p>Runde Pfeile für Slider. Am Anfang und am Ende ist der jeweilige Pfeil nicht verfügbar. Die Zahl rollt in Laufrichtung.</p></div>
+    <div class="spec__body">
+      <div class="stage">
+        <div class="pager" id="pager">
+          <button class="round round--prev" type="button" aria-label="Zurück" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button class="round" type="button" aria-label="Weiter"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <span class="pager__count" aria-live="polite"><span>1</span> / 5</span>
+        </div>
+      </div>
+      <div class="stage stage--dark">
+        <div class="pager">
+          <button class="round round--light round--prev" type="button" aria-label="Zurück"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button class="round round--light" type="button" aria-label="Weiter"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="spec grid wrap" aria-labelledby="h-filter">
+    <div class="spec__head"><h2 id="h-filter">Filter</h2><p>Mehrfachauswahl. Gewählt wird der Filter schwarz und das Plus dreht sich zum Kreuz. Die Trefferzahl zählt mit.</p></div>
+    <div class="spec__body">
+      <div class="stage">
+        <div class="chips" id="chips" role="group" aria-label="Angebote filtern">
+          <button class="chip" type="button" aria-pressed="false" data-n="12">Führungen<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button class="chip" type="button" aria-pressed="true" data-n="8">Workshops<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button class="chip" type="button" aria-pressed="false" data-n="5">Familien<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button class="chip" type="button" aria-pressed="false" data-n="9">Schulen<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </div>
+        <p class="count" aria-live="polite"><b id="hits">8</b> Angebote</p>
+        <button class="tert chips__reset" type="button" id="reset">Zurücksetzen</button>
+      </div>
+      <div class="stage stage--dark">
+        <div class="chips" role="group" aria-label="Beispiel hell">
+          <button class="chip" type="button" aria-pressed="false">Filter<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+          <button class="chip" type="button" aria-pressed="true">Filter<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tags -->
+  <section class="spec grid wrap" aria-labelledby="h-tag">
+    <div class="spec__head"><h2 id="h-tag">Tags</h2><p>Status und Themen, zum Beispiel freie Plätze oder „Co-Creation“. Auf Bildern mit halbtransparentem, weichgezeichnetem Grund. Als Link wird der Grund beim Hover dichter.</p></div>
+    <div class="spec__body">
+      <div class="stage">
+        <span class="tag"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>20 freie Plätze</span>
+        <a class="tag" href="#"><svg class="i" aria-hidden="true"><use href="#i-bank"/></svg>Co-Creation</a>
+        <span class="tag"><svg class="i" aria-hidden="true"><use href="#i-close"/></svg>Abgesagt</span>
+      </div>
+      <div class="pic">
+        <img src="../../shared/img/theater.jpg" alt="Römisches Theater von Augusta Raurica" width="1600" height="1067">
+        <div class="pic__tags">
+          <a class="tag tag--pic" href="#"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>Ausgebucht</a>
+          <a class="tag tag--pic tag--pic-dark" href="#"><svg class="i" aria-hidden="true"><use href="#i-hand"/></svg>Workshop</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search bar -->
+  <section class="spec grid wrap" aria-labelledby="h-search">
+    <div class="spec__head"><h2 id="h-search">Suchfeld</h2><p>Mit Fokus bekommt das Feld einen weichen Rand. Beim Absenden dreht sich die Lupe kurz, dann erscheint die Trefferzahl.</p></div>
+    <div class="spec__body">
+      <div class="stage stage--col">
+        <form class="search" id="search" role="search">
+          <label class="sr-only" for="q">Suchbegriff</label>
+          <input id="q" type="search" placeholder="Suchbegriff eingeben" autocomplete="off">
+          <button class="btn" type="submit">Suchen<svg class="i" aria-hidden="true"><use href="#i-search"/></svg></button>
+        </form>
+        <p class="search__out" id="searchOut" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <section class="spec grid wrap" aria-labelledby="h-tabs">
+    <div class="spec__head"><h2 id="h-tabs">Tabs</h2><p>Der dunkle Hintergrund gleitet zum gewählten Tab, der Inhalt wechselt mit kurzem Überblenden. Pfeiltasten wechseln zwischen den Tabs.</p></div>
+    <div class="spec__body">
+      <div class="stage stage--col">
+        <div class="tabs" role="tablist" aria-label="Zielgruppe" id="tabs">
+          <span class="tabs__ind" aria-hidden="true"></span>
+          <button class="tab" role="tab" id="t1" aria-selected="true" aria-controls="p1">Familien</button>
+          <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2" tabindex="-1">Schulen</button>
+          <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="p3" tabindex="-1">Gruppen</button>
+        </div>
+        <div class="tabpanel" role="tabpanel" id="p1" aria-labelledby="t1"><strong>Für Familien</strong>Spielerisch die Römerzeit entdecken: Tierpark, Römerhaus und Workshops für Kinder ab 6 Jahren.</div>
+        <div class="tabpanel" role="tabpanel" id="p2" aria-labelledby="t2" hidden><strong>Für Schulen</strong>Lehrplanbezogene Workshops und Führungen für alle Stufen, mit Unterlagen zur Vor- und Nachbereitung.</div>
+        <div class="tabpanel" role="tabpanel" id="p3" aria-labelledby="t3" hidden><strong>Für Gruppen</strong>Private Führungen für Vereine und Firmen, auf Wunsch mit römischem Apéro.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumbs -->
+  <section class="spec grid wrap" aria-labelledby="h-bc">
+    <div class="spec__head"><h2 id="h-bc">Breadcrumbs</h2><p>Kurz und lang, dunkel und hell. Beim Hover wird der Link dunkler und eine Linie wächst von links.</p></div>
+    <div class="spec__body">
+      <div class="stage stage--col">
+        <nav aria-label="Brotkrümel kurz"><ol class="crumbs"><li><a href="#">Startseite</a></li><li><a href="#">Entdecken</a></li><li><span aria-current="page">Aktuelle Seite</span></li></ol></nav>
+        <nav aria-label="Brotkrümel lang"><ol class="crumbs"><li><a href="#">Startseite</a></li><li><a href="#">Entdecken</a></li><li><a href="#">Museen</a></li><li><a href="#">Römerhaus</a></li><li><span aria-current="page">Aktuelle Seite</span></li></ol></nav>
+      </div>
+      <div class="stage stage--dark stage--col">
+        <nav aria-label="Brotkrümel hell"><ol class="crumbs"><li><a href="#">Startseite</a></li><li><a href="#">Entdecken</a></li><li><span aria-current="page">Aktuelle Seite</span></li></ol></nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dropdown -->
+  <section class="spec grid wrap" aria-labelledby="h-dd">
+    <div class="spec__head"><h2 id="h-dd">Dropdown</h2><p>Die Liste klappt vom Button aus auf. Nach der Wahl schliesst sie, der Button wird schwarz und zeigt die Wahl. Bedienbar mit Pfeiltasten, Enter und Escape.</p></div>
+    <div class="spec__body">
+      <div class="stage" style="min-height: 320px; align-items: flex-start;">
+        <div class="dd" data-dd>
+          <button class="dd__btn" type="button" aria-haspopup="listbox" aria-expanded="false"><span>Bitte auswählen</span><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button>
+          <ul class="dd__list" role="listbox" tabindex="-1" aria-label="Ticket">
+            <li class="dd__opt" role="option" aria-selected="false">Einzelticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Familienticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Gruppenticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Jahresabo<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+          </ul>
+        </div>
+        <div class="dd"><button class="dd__btn" type="button" disabled><span>Bitte auswählen</span><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button></div>
+      </div>
+      <div class="stage stage--dark" style="min-height: 320px; align-items: flex-start;">
+        <div class="dd" data-dd>
+          <button class="dd__btn" type="button" aria-haspopup="listbox" aria-expanded="false"><span>Bitte auswählen</span><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button>
+          <ul class="dd__list" role="listbox" tabindex="-1" aria-label="Ticket (hell)">
+            <li class="dd__opt" role="option" aria-selected="false">Einzelticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Familienticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Gruppenticket<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+            <li class="dd__opt" role="option" aria-selected="false">Jahresabo<svg class="i" aria-hidden="true"><use href="#i-check"/></svg></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Language-Button -->
+  <section class="spec grid wrap" aria-labelledby="h-lang">
+    <div class="spec__head"><h2 id="h-lang">Sprachwahl</h2><p>Zwei Formen aus Figma. Kompakt: Klick öffnet die Auswahl, eine Sprache wählen schliesst sie wieder. In einer Zeile: Die Linie unter der aktiven Sprache gleitet zur neuen Wahl.</p></div>
+    <div class="spec__body">
+      <div class="stage" style="min-height: 200px; align-items: flex-start; gap: 48px;">
+        <div class="lang" id="lang">
+          <button class="lang__btn" type="button" aria-expanded="false" aria-controls="langList" aria-label="Sprache: Deutsch"><span>DE</span><svg class="i" aria-hidden="true"><use href="#i-down"/></svg></button>
+          <ul class="lang__list" id="langList">
+            <li><button type="button" lang="de" aria-current="true">DE</button></li>
+            <li><button type="button" lang="en">EN</button></li>
+            <li><button type="button" lang="fr">FR</button></li>
+            <li><button type="button" lang="it">IT</button></li>
+          </ul>
+        </div>
+        <div class="lang-row" id="langRow" role="group" aria-label="Sprache">
+          <button type="button" lang="de" aria-current="true">DE</button>
+          <button type="button" lang="fr">FR</button>
+          <button type="button" lang="it">IT</button>
+          <button type="button" lang="en">EN</button>
+          <span class="lang-row__ind" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- In-Text-Link -->
+  <section class="spec grid wrap" aria-labelledby="h-link">
+    <div class="spec__head"><h2 id="h-link">In-Text-Link</h2><p>Rot im Fliesstext, Gold auf dunklem Grund. Beim Hover wächst eine Linie von links unter dem Link.</p></div>
+    <div class="spec__body">
+      <div class="stage"><p class="copy">Das <a class="ilink" href="#">Römerhaus</a> zeigt, wie eine wohlhabende Familie vor rund 1800 Jahren lebte. Gleich daneben liegt das <a class="ilink" href="#">Museum Augusta Raurica</a> mit dem Silberschatz.</p></div>
+      <div class="stage stage--dark"><p class="copy">Planen Sie Ihren Besuch mit unserem <a class="ilink" href="#">Tagesprogramm</a>.</p></div>
+    </div>
+  </section>
+
+  <!-- Stepper -->
+  <section class="spec grid wrap" aria-labelledby="h-step">
+    <div class="spec__head"><h2 id="h-step">Stepper</h2><p>Für Formulare in mehreren Schritten. Der aktuelle Schritt ist schwarz, erledigte Schritte bekommen ein Häkchen, die Linie füllt sich bis zum nächsten Schritt.</p></div>
+    <div class="spec__body">
+      <div class="stage stage--col">
+        <ol class="steps" id="steps">
+          <li class="step" data-state="current"><span class="step__dot"><svg class="i arr" aria-hidden="true"><use href="#i-arrow"/></svg><svg class="i ok" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__name">Ticket</span><span class="step__fill" aria-hidden="true"></span></li>
+          <li class="step" data-state="todo"><span class="step__dot"><svg class="i arr" aria-hidden="true"><use href="#i-arrow"/></svg><svg class="i ok" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__name">Kontaktdaten</span><span class="step__fill" aria-hidden="true"></span></li>
+          <li class="step" data-state="todo"><span class="step__dot"><svg class="i arr" aria-hidden="true"><use href="#i-arrow"/></svg><svg class="i ok" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8.5 3 3 7-7"/></svg></span><span class="step__name">Bezahlung</span><span class="step__fill" aria-hidden="true"></span></li>
+        </ol>
+        <p class="sr-only" aria-live="polite" id="stepLive"></p>
+        <div class="steps-ctrl">
+          <button class="btn btn--outline" type="button" id="stepBack" aria-disabled="true"><svg class="i" aria-hidden="true" style="transform: rotate(180deg)"><use href="#i-arrow"/></svg>Zurück</button>
+          <button class="btn" type="button" id="stepNext">Weiter<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="demo-spacer demo-spacer--short">Ende der Demo</div>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Die Grundbausteine aus Figma (Abschnitt „2 · Erstellt / Ready for Dev“). Hover- und Klick-Zustände sind CSS-Transitions; Abläufe mit Bewegung (Dropdown, Tabs, Zähler, Stepper) laufen über GSAP.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Buttons: Farbe → Schwarz, Pfeil +4 px, Druck auf 97 %</td><td>Hover / Klick</td><td>CSS 0.2 s · Pfeil 0.25 s <code>--ease-out</code> · Druck 0.16 s</td></tr>
+    <tr><td>Button-Navigation: Zahl rollt 100 % hoch oder runter</td><td>Klick</td><td>0.3 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Filter: Plus dreht 45° zum Kreuz, Trefferzahl zählt hoch/runter</td><td>Klick</td><td>CSS 0.3 s · Zahl 0.4 s</td></tr>
+    <tr><td>Tags auf Bild: Grund dichter</td><td>Hover</td><td>CSS 0.2 s</td></tr>
+    <tr><td>Suchfeld: Fokusrand 4 px Gold 40 · Lupe dreht, Ergebnis gleitet 6 px hoch</td><td>Fokus / Absenden</td><td>CSS 0.2 s · 0.6 s Ladezeit · 0.3 s</td></tr>
+    <tr><td>Tabs: Hintergrund gleitet zum Tab, Inhalt blendet über</td><td>Klick / Pfeiltasten</td><td>0.45 s · <code>AR.ease.inOut</code> · Inhalt 0.25 s</td></tr>
+    <tr><td>Breadcrumbs, In-Text-Link: Linie wächst von links</td><td>Hover / Fokus</td><td>CSS 0.3 s · <code>--ease-out</code></td></tr>
+    <tr><td>Dropdown: Liste skaliert von 96 % aus der Ecke beim Button, Optionen 30 ms gestaffelt</td><td>Klick / Enter / Pfeil runter</td><td>0.2 s auf · 0.15 s zu · <code>AR.ease.out</code></td></tr>
+    <tr><td>Sprachwahl kompakt: Sprachen fallen 6 px gestaffelt ein, Wahl schliesst</td><td>Klick</td><td>0.25 s · 40 ms gestaffelt</td></tr>
+    <tr><td>Sprachwahl Zeile: Linie gleitet zur gewählten Sprache</td><td>Klick</td><td>0.4 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Stepper: Linie füllt sich, Häkchen zeichnet sich, nächster Kreis wird schwarz</td><td>Weiter / Zurück</td><td>0.5 s · <code>AR.ease.inOut</code> · Häkchen 0.3 s</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Keine Verschiebungen, kein Rollen und Gleiten; Zustände wechseln sofort oder mit kurzem Überblenden.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  $$('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+
+  // 0 · Scroll-Reveal pro Komponente
+  AR.reveal('.spec__head');
+  AR.reveal('.spec__body > *');
+
+  // 1 · Button-Navigation: Zahl rollt in Laufrichtung
+  const pager = $('#pager'), [prev, next] = $$('.round', pager), num = $('.pager__count span', pager);
+  let page = 1; const MAX = 5;
+  function go(dir) {
+    const to = page + dir; if (to < 1 || to > MAX) return; page = to;
+    prev.setAttribute('aria-disabled', page === 1); next.setAttribute('aria-disabled', page === MAX);
+    if (reduced) { num.textContent = page; return; }
+    gsap.timeline()
+      .to(num, { yPercent: -100 * dir, autoAlpha: 0, duration: .15, ease: AR.ease.out })
+      .add(() => { num.textContent = page; })
+      .fromTo(num, { yPercent: 100 * dir }, { yPercent: 0, autoAlpha: 1, duration: .25, ease: AR.ease.out });
+  }
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+
+  // 2 · Filter: an/aus, Trefferzahl zählt
+  const chips = $$('#chips .chip'), hits = $('#hits'), counter = { v: 8 };
+  function count() {
+    const on = chips.filter(c => c.getAttribute('aria-pressed') === 'true');
+    const total = on.length ? on.reduce((s, c) => s + +c.dataset.n, 0) : 34;
+    gsap.to(counter, { v: total, duration: reduced ? 0 : .4, ease: AR.ease.out, onUpdate: () => hits.textContent = Math.round(counter.v) });
+  }
+  $$('.chip').forEach(c => c.addEventListener('click', () => {
+    c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') !== 'true');
+    if (chips.includes(c)) count();
+  }));
+  $('#reset').addEventListener('click', () => { chips.forEach(c => c.setAttribute('aria-pressed', 'false')); count(); });
+
+  // 3 · Suche: Lupe dreht kurz, dann Ergebnis
+  const form = $('#search'), out = $('#searchOut');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const q = $('#q').value.trim(), btn = $('.btn', form);
+    if (!q) { $('#q').focus(); return; }
+    btn.classList.add('is-busy'); out.textContent = '';
+    setTimeout(() => {
+      btn.classList.remove('is-busy');
+      out.textContent = `${12 + q.length * 3} Ergebnisse für «${q}»`;
+      gsap.fromTo(out, { autoAlpha: 0, y: reduced ? 0 : 6 }, { autoAlpha: 1, y: 0, duration: AR.dur.ui, ease: AR.ease.out });
+    }, reduced ? 200 : 600);
+  });
+
+  // 4 · Tabs: Hintergrund gleitet, Inhalt blendet über, Pfeiltasten
+  const tabs = $$('#tabs .tab'), ind = $('#tabs .tabs__ind');
+  const place = (t, dur) => gsap.to(ind, { x: t.offsetLeft, width: t.offsetWidth, duration: reduced ? 0 : dur, ease: AR.ease.inOut });
+  function select(t) {
+    const cur = tabs.find(x => x.getAttribute('aria-selected') === 'true');
+    if (cur === t) return;
+    tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; });
+    place(t, .45);
+    const from = $('#' + cur.getAttribute('aria-controls')), to = $('#' + t.getAttribute('aria-controls'));
+    from.hidden = true; to.hidden = false;
+    gsap.fromTo(to, { autoAlpha: 0, y: reduced ? 0 : 6 }, { autoAlpha: 1, y: 0, duration: .25, ease: AR.ease.out });
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+      const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); select(n);
+    });
+  });
+  place(tabs[0], 0);
+  addEventListener('resize', () => place(tabs.find(x => x.getAttribute('aria-selected') === 'true'), 0));
+
+  // 5 · Dropdown: aus der Ecke beim Button, Tastatur
+  $$('[data-dd]').forEach(dd => {
+    const btn = $('.dd__btn', dd), list = $('.dd__list', dd), opts = $$('.dd__opt', list);
+    let active = -1;
+    const mark = i => { active = i; opts.forEach((o, k) => o.classList.toggle('is-active', k === i)); };
+    function open() {
+      btn.setAttribute('aria-expanded', 'true');
+      mark(Math.max(0, opts.findIndex(o => o.getAttribute('aria-selected') === 'true')));
+      gsap.killTweensOf([list, opts]);
+      gsap.set(list, { visibility: 'visible' });   // sofort sichtbar, damit die Liste den Fokus annimmt
+      gsap.fromTo(list, { opacity: 0, scale: reduced ? 1 : .96, y: reduced ? 0 : -4 }, { opacity: 1, scale: 1, y: 0, duration: .2, ease: AR.ease.out });
+      if (!reduced) gsap.fromTo(opts, { autoAlpha: 0, y: -4 }, { autoAlpha: 1, y: 0, duration: .2, stagger: .03, ease: AR.ease.out });
+      list.focus();
+    }
+    function close(focus = true) {
+      if (btn.getAttribute('aria-expanded') !== 'true') return;
+      btn.setAttribute('aria-expanded', 'false');
+      gsap.to(list, { autoAlpha: 0, scale: reduced ? 1 : .98, duration: .15, ease: AR.ease.out });
+      if (focus) btn.focus();
+    }
+    function choose(i) {
+      opts.forEach((o, k) => o.setAttribute('aria-selected', k === i));
+      $('span', btn).textContent = opts[i].textContent.trim();
+      btn.classList.add('has-val');
+      close();
+    }
+    btn.addEventListener('click', () => btn.getAttribute('aria-expanded') === 'true' ? close() : open());
+    btn.addEventListener('keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); open(); } });
+    opts.forEach((o, i) => { o.addEventListener('click', () => choose(i)); o.addEventListener('mousemove', () => mark(i)); });
+    list.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); mark((active + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(active); }
+      else if (e.key === 'Escape') close();
+      else if (e.key === 'Tab') close(false);
+    });
+    document.addEventListener('pointerdown', e => { if (!dd.contains(e.target)) close(false); });
+  });
+
+  // 6 · Sprachwahl kompakt: öffnen, wählen schliesst
+  const lang = $('#lang'), lbtn = $('.lang__btn', lang), llist = $('.lang__list', lang), litems = $$('button', llist);
+  const NAMES = { DE: 'Deutsch', EN: 'English', FR: 'Français', IT: 'Italiano' };
+  function langOpen(open) {
+    lbtn.setAttribute('aria-expanded', open);
+    gsap.killTweensOf([llist, litems]);
+    if (open) {
+      gsap.set(llist, { autoAlpha: 1 });
+      gsap.fromTo(litems, { opacity: 0, y: reduced ? 0 : -6 }, { opacity: 1, y: 0, duration: .25, stagger: .04, ease: AR.ease.out, clearProps: 'opacity,transform' });
+      (litems.find(b => b.getAttribute('aria-current') === 'true') || litems[0]).focus();
+    } else gsap.to(llist, { autoAlpha: 0, duration: .15, ease: AR.ease.out });
+  }
+  lbtn.addEventListener('click', () => langOpen(lbtn.getAttribute('aria-expanded') !== 'true'));
+  litems.forEach(b => b.addEventListener('click', () => {
+    litems.forEach(x => x.removeAttribute('aria-current')); b.setAttribute('aria-current', 'true');
+    $('span', lbtn).textContent = b.textContent; lbtn.setAttribute('aria-label', 'Sprache: ' + NAMES[b.textContent]);
+    langOpen(false); lbtn.focus();
+  }));
+  lang.addEventListener('keydown', e => { if (e.key === 'Escape' && lbtn.getAttribute('aria-expanded') === 'true') { langOpen(false); lbtn.focus(); } });
+  document.addEventListener('pointerdown', e => { if (!lang.contains(e.target) && lbtn.getAttribute('aria-expanded') === 'true') langOpen(false); });
+
+  // 7 · Sprachwahl in einer Zeile: Linie gleitet
+  const row = $('#langRow'), rbtns = $$('button', row), rind = $('.lang-row__ind', row);
+  const line = (b, dur) => gsap.to(rind, { x: b.offsetLeft + 8, width: b.offsetWidth - 16, duration: reduced ? 0 : dur, ease: AR.ease.inOut });
+  rbtns.forEach(b => b.addEventListener('click', () => { rbtns.forEach(x => x.removeAttribute('aria-current')); b.setAttribute('aria-current', 'true'); line(b, .4); }));
+  line(rbtns[0], 0);
+
+  // 8 · Stepper: Linie füllt sich, Häkchen zeichnet sich
+  const steps = $$('#steps .step'), back = $('#stepBack'), fwd = $('#stepNext'), live = $('#stepLive');
+  let cur = 0;
+  function render(dir) {
+    steps.forEach((s, i) => {
+      const state = i < cur ? 'done' : i === cur ? 'current' : 'todo';
+      const was = s.dataset.state; s.dataset.state = state;
+      const arr = $('.arr', s), ok = $('.ok path', s), fill = $('.step__fill', s);
+      gsap.to(arr, { autoAlpha: state === 'done' ? 0 : 1, scale: state === 'done' ? .6 : 1, duration: .2, ease: AR.ease.out });
+      if (state === 'done' && was !== 'done') gsap.to(ok, { strokeDashoffset: 0, duration: reduced ? 0 : .3, delay: reduced ? 0 : .15, ease: AR.ease.out });
+      if (state !== 'done') gsap.to(ok, { strokeDashoffset: 14, duration: .15 });
+      if (fill) gsap.to(fill, { scaleX: i < cur ? 1 : 0, duration: reduced ? 0 : .5, ease: AR.ease.inOut });
+      if (state === 'current' && dir && !reduced) gsap.fromTo($('.step__dot', s), { scale: .9 }, { scale: 1, duration: .4, delay: dir > 0 ? .35 : 0, ease: AR.ease.out });
+    });
+    back.setAttribute('aria-disabled', cur === 0);
+    fwd.setAttribute('aria-disabled', cur === steps.length - 1);
+    live.textContent = `Schritt ${cur + 1} von ${steps.length}: ${$('.step__name', steps[cur]).textContent}`;
+  }
+  fwd.addEventListener('click', () => { if (cur < steps.length - 1) { cur++; render(1); } });
+  back.addEventListener('click', () => { if (cur > 0) { cur--; render(-1); } });
+  render(0);
+});
+</script>
+</body>
+</html>
