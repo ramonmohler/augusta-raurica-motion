@@ -45,13 +45,20 @@ svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
   .btn--ghost-light:hover { --bg: transparent; --fg: var(--gold-20); --bd: var(--gold-20); }
   .btn:hover svg.i { transform: translateX(4px); }
 }
+/* Status „Unselected“ (Figma) */
+.btn[aria-disabled="true"] { --bg: var(--anth-a20); --fg: var(--anth-a66); --bd: var(--anth-a66); pointer-events: none; }
+.btn--outline[aria-disabled="true"] { --bg: transparent; }
+.btn--light[aria-disabled="true"] { --bg: rgba(255, 255, 255, .2); --fg: var(--weiss-a60); --bd: var(--weiss-a60); }
+.btn--ghost-light[aria-disabled="true"] { --bg: transparent; --fg: var(--weiss-a60); --bd: var(--weiss-a60); }
 .btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
 
 /* Runder Pfeil-Button (Figma „Button-Navigation“) */
 .round { width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; border: 1.5px solid currentColor; background: transparent; color: var(--anth); cursor: pointer; padding: 0;
   transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, opacity var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
 .round:active { transform: scale(.94); }
-.round[aria-disabled="true"] { opacity: .4; cursor: default; }
+/* Status „Unselected“ (Figma): Rand 20 %, Pfeil 56 % (dunkel) bzw. 60 % (hell) */
+.round[aria-disabled="true"] { border-color: rgba(0, 0, 0, .2); color: rgba(0, 0, 0, .56); cursor: default; pointer-events: none; }
+.round--light[aria-disabled="true"] { border-color: rgba(255, 255, 255, .2); color: var(--weiss-a60); }
 .round--light { color: var(--weiss); }
 .round--prev svg { transform: rotate(180deg); }
 @media (hover: hover) and (pointer: fine) {
