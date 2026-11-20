@@ -28,7 +28,11 @@
   @media (max-width: 600px) { .tabs { display: flex; width: 100%; gap: 2px; } .tab { flex: 1; min-width: 0; padding: 12px 4px; font-size: 13px; letter-spacing: .02em; } }
 
   /* ---------- Buttons: Zustand „Unselected“ (Figma) = nicht verfügbar ---------- */
-  .btn .i:first-child { margin-left: -4px; }
+  /* Masse wie Figma „Button“: Text 16 px Bold, Laufweite 0, Innenabstand 16/24, Abstand 8, Icon 14 */
+  /* Rand liegt in Figma innen: 16/24 Innenabstand inkl. 1.5 px Rand → 156 × 51 */
+  main .btn, main .tert { font-size: 16px; line-height: 19px; letter-spacing: 0; }
+  main .btn { min-height: 51px; padding: 14.5px 22.5px; gap: 8px; }
+  main .btn svg.i, main .tert svg.i { width: 14px; height: 14px; }
   .tert { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 0; background: none; padding: 0; color: inherit; cursor: pointer;
     font: 700 var(--btn-s)/1.2 var(--font); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; }
   .tert .i { transition: transform 250ms var(--ease-out); }
@@ -208,9 +212,9 @@
         <a class="btn btn--outline" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="tert" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <span class="stage__label">Nicht verfügbar</span>
-        <a class="btn" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--outline" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="tert" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--outline" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="tert" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
       <div class="stage stage--dark">
         <span class="stage__label">Hell, auf dunklem Grund oder Bild</span>
@@ -218,9 +222,9 @@
         <a class="btn btn--ghost-light" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="tert" href="#"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <span class="stage__label">Nicht verfügbar</span>
-        <a class="btn btn--light" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="btn btn--ghost-light" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        <a class="tert" aria-disabled="true">Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--light" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost-light" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="tert" aria-disabled="true"><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg>Button<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </section>

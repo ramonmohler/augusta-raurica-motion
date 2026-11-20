@@ -53,7 +53,7 @@ svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
 .btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
 
 /* Runder Pfeil-Button (Figma „Button-Navigation“) */
-.round { width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; border: 1.5px solid currentColor; background: transparent; color: var(--anth); cursor: pointer; padding: 0;
+.round { width: 42px; height: 42px; border-radius: 50%; display: inline-grid; place-items: center; border: 1.5px solid currentColor; background: transparent; color: var(--anth); cursor: pointer; padding: 0;
   transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, opacity var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
 .round:active { transform: scale(.94); }
 /* Status „Unselected“ (Figma): Rand 20 %, Pfeil 56 % (dunkel) bzw. 60 % (hell) */
@@ -61,6 +61,7 @@ svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor;
 .round--light[aria-disabled="true"] { border-color: rgba(255, 255, 255, .2); color: var(--weiss-a60); }
 .round--light { color: var(--weiss); }
 .round--prev svg { transform: rotate(180deg); }
+.round svg.i { width: 17.5px; height: 17.5px; stroke-width: 1.7; }   /* Figma: Kreis 42, Icon 17.5, Strich 1.875 */
 @media (hover: hover) and (pointer: fine) {
   .round:not([aria-disabled="true"]):hover { background: var(--black); border-color: var(--black); color: var(--weiss); }
   .round--light:not([aria-disabled="true"]):hover { background: var(--weiss); border-color: var(--weiss); color: var(--anth); }
