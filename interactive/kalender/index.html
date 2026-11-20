@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalender – Augusta Raurica Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../../shared/tokens.css">
+<link rel="stylesheet" href="../../shared/base.css">
+<style>
+  /* ---------- Kalender/Angebote (Figma 3348:29491) ---------- */
+  .prog { padding-block: var(--sec); }
+  .prog__head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: var(--s3); }
+  .prog__bar { position: relative; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: var(--s2); }
+  .prog__tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+  main .btn, main .tlink { font-size: 16px; letter-spacing: 0; }
+  main .btn { line-height: 19px; padding: 14.5px 22.5px; min-height: 51px; }
+  main .btn svg.i, main .tlink svg.i { width: 14px; height: 14px; }
+  .btn--off { --bg: var(--anth-a20); --fg: var(--anth-a66); --bd: var(--anth-a66); pointer-events: none; }
+
+  /* Segment Kalender | Angebote: schwarzer Hintergrund gleitet zur Wahl */
+  .seg { position: relative; display: inline-flex; gap: 8px; padding: 4px; border: 1.5px solid var(--anth-a20); border-radius: 999px; background: var(--weiss); }
+  .seg__ind { position: absolute; left: 0; top: 4px; height: calc(100% - 8px); border-radius: 999px; background: var(--anth); pointer-events: none; }
+  .seg button { position: relative; z-index: 1; min-height: 51px; padding: 14.5px 22.5px; border: 0; border-radius: 999px; background: none; cursor: pointer; color: var(--anth);
+    font: 700 16px/19px var(--font); text-transform: uppercase; transition: color var(--dur-ui) var(--ease-out), background-color var(--dur-hover) ease; }
+  .seg button[aria-pressed="true"] { color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .seg button[aria-pressed="false"]:hover { background: var(--gold-20); } }
+
+  /* Filter-Chips, Dropdowns, Grid/List */
+  .filters, .lay { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--anth-a20); background: transparent; color: var(--anth); cursor: pointer;
+    font: 700 14px/1.2 var(--font); text-transform: uppercase; transition: background-color var(--dur-hover) ease, color var(--dur-hover) ease, border-color var(--dur-hover) ease, transform var(--dur-press) var(--ease-out); }
+  .chip svg.i { width: 14px; height: 14px; transition: transform var(--dur-ui) var(--ease-out); }
+  .chip:active { transform: scale(.97); }
+  .chip[aria-pressed="true"] { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  .chip--dd { border-color: var(--anth); }
+  .chip--dd[aria-expanded="true"] { border-color: var(--black); color: var(--black); }
+  .chip--dd[aria-expanded="true"] svg.i { transform: rotate(180deg); }
+  .chip--dd.has-val { background: var(--black); border-color: var(--black); color: var(--weiss); }
+  @media (hover: hover) and (pointer: fine) { .chip:not([aria-pressed="true"]):not(.has-val):hover { border-color: var(--black); color: var(--black); } }
+  .dd { position: relative; }
+  .dd__list { position: absolute; z-index: 30; top: calc(100% + 8px); left: 0; min-width: 200px; margin: 0; padding: 4px; list-style: none; border: 1.5px solid var(--black); border-radius: 16px; background: var(--weiss); visibility: hidden; }
+  .dd__opt { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 10px 12px; border-radius: 12px; color: var(--anth); font-size: 16px; cursor: pointer; transition: background-color 120ms ease; }
+  .dd__opt.is-active { background: rgba(169, 147, 92, .2); }
+  .dd__opt[aria-selected="true"] { font-weight: 700; }
+  .dd__opt svg.i { width: 14px; height: 14px; opacity: 0; }
+  .dd__opt[aria-selected="true"] svg.i { opacity: 1; }
+  .ftoggle { display: none; }
+
+  /* Datumsleiste: goldener Kreis gleitet zum gewählten Tag */
+  .days { position: relative; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; margin-bottom: var(--s25); }
+  .days::-webkit-scrollbar { display: none; }
+  .days.is-dragging { cursor: grabbing; user-select: none; }
+  .days.is-dragging * { pointer-events: none; }
+  .days__row { position: relative; display: flex; gap: 28px; width: max-content; padding-inline: var(--m); }
+  .days__ind { position: absolute; left: 0; top: 0; width: 64px; height: 64px; border-radius: 50%; background: var(--gold); pointer-events: none; }
+  .day { position: relative; z-index: 1; flex: none; display: grid; place-content: center; gap: 2px; width: 64px; height: 64px; border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+    font: 700 14px/1.2 var(--font); color: #808080; transition: color var(--dur-ui) var(--ease-out); }
+  .day span { font-weight: 500; }
+  .day[aria-pressed="true"] { color: var(--anth); }
+  .day.is-empty { color: #C2C2C2; cursor: default; }
+  @media (hover: hover) and (pointer: fine) { .day:not(.is-empty):not([aria-pressed="true"]):hover { color: var(--anth); } }
+
+  /* Grid: horizontaler Slider */
+  .out { min-height: 360px; }
+  .track { display: flex; gap: var(--g); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding-inline: var(--m); scroll-padding-inline: var(--m); cursor: grab; }
+  .track::-webkit-scrollbar { display: none; }
+  .track.is-dragging { cursor: grabbing; user-select: none; }
+  .track.is-dragging * { pointer-events: none; }
+  .ev { position: relative; flex: none; width: min(546px, 82vw); display: grid; align-content: start; }
+  .ev__media { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: var(--gold-20); }
+  .ev__media img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .ev:hover .ev__media img { transform: scale(1.06); } }
+  .ev:focus-within .ev__media img { transform: scale(1.06); }
+  .pills { position: absolute; z-index: 1; left: 16px; top: 16px; right: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(40px); backdrop-filter: blur(40px);
+    font: 500 14px/1.2 var(--font); text-transform: uppercase; color: var(--anth); }
+  .pill svg.i, .tags svg.i, .prow__state svg.i { width: 14px; height: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 12px; font: 500 14px/1.2 var(--font); text-transform: uppercase; }
+  .tags span { display: inline-flex; align-items: center; gap: 4px; }
+  .ev h3 { margin-top: 16px; font-size: 20px; line-height: 1.5; font-weight: 700; }
+  .ev__time { margin-top: 8px; color: var(--anth-light); font-size: 16px; }
+  .ev .btns { margin-top: 20px; gap: 8px 24px; }
+  .bar { display: flex; align-items: center; gap: var(--s3); margin-top: var(--s3); padding-inline: var(--m); }
+  .progress { position: relative; flex: 1; height: 3px; background: var(--anth-a20); overflow: hidden; }
+  .progress span { position: absolute; inset: 0 auto 0 0; width: 100%; background: var(--anth); transform-origin: 0 50%; }
+  .nav { display: flex; gap: 10px; }
+
+  /* Liste */
+  .plist { list-style: none; margin: 0; padding: 0 var(--m); }
+  .prow { display: grid; grid-template-columns: 204px minmax(0, 1fr) minmax(0, .64fr) 176px; gap: 24px; align-items: start; padding-block: 12px; border-top: 1px solid var(--anth-a20); }
+  .prow .ev__media { width: 204px; }
+  .prow h3 { font-size: 20px; line-height: 1.5; }
+  .prow h3 a { text-decoration: none; }
+  .prow__time { margin-top: 4px; color: var(--anth-light); font-size: 16px; }
+  .prow__state { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font: 500 14px/1.2 var(--font); text-transform: uppercase; }
+  .prow .tags { display: grid; gap: 8px; margin: 0; }
+  .prow__cta { display: grid; gap: 16px; justify-items: start; }
+  .empty { padding: 24px var(--m) 8px; font-size: var(--copy); }
+
+  @media (max-width: 900px) {
+    .prog__head .tlink { display: none; }
+    .prog__bar { flex-direction: column; align-items: flex-start; }
+    .ftoggle { display: inline-flex; }
+    .ftoggle[aria-expanded="true"] svg.i { transform: rotate(45deg); }
+    .filters { display: none; flex-basis: 100%; }
+    .prog__tools.is-filters .filters { display: flex; }
+    .seg button { padding: 14.5px 18px; }
+    .days__row { gap: 12px; }
+    .prow { grid-template-columns: 112px minmax(0, 1fr); gap: 12px 16px; }
+    .prow .ev__media { width: 112px; }
+    .prow .tags { grid-column: 2; display: flex; flex-wrap: wrap; gap: 6px 12px; }
+    .prow__cta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
+  }
+</style>
+</head>
+<body data-section="Kalender &amp; Angebote" data-title="Kalender">
+
+<main>
+  <section class="prog" aria-labelledby="cal-h" id="prog">
+    <div class="prog__head wrap"><h2 id="cal-h">Programm und Veranstaltungen</h2><a class="tlink" href="#"><span>Alle Veranstaltungen</span><svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+    <div class="prog__bar wrap">
+      <div class="seg" role="group" aria-label="Ansicht"><span class="seg__ind" aria-hidden="true"></span><button type="button" data-mode="kalender" aria-pressed="true">Kalender</button><button type="button" data-mode="angebote" aria-pressed="false">Angebote</button></div>
+      <div class="prog__tools">
+        <button class="chip ftoggle" type="button" aria-expanded="false">Filter<svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        <div class="filters" id="filters"></div>
+        <div class="lay" role="group" aria-label="Darstellung">
+          <button class="chip" type="button" data-lay="grid" aria-pressed="true"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>Grid</button>
+          <button class="chip" type="button" data-lay="list" aria-pressed="false"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg>List</button>
+        </div>
+      </div>
+    </div>
+    <div class="days" aria-label="Datum wählen"><div class="days__row" id="days"><span class="days__ind" aria-hidden="true"></span></div></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </section>
+</main>
+
+<template id="demo-notes">
+  <p class="demo-sheet__lead">Kalender/Angebote aus Figma (3348:29491): Ansicht Kalender oder Angebote, Darstellung Grid (Slider) oder Liste, Filter Wer/Was/Verfügbarkeit. Inhalte kommen im Projekt aus dem CMS; hier sind es Beispieldaten.</p>
+  <h3>Ablauf</h3>
+  <table>
+    <tr><th>Was</th><th>Auslöser</th><th>Dauer · Easing</th></tr>
+    <tr><td>Titel, Leiste, Daten und Karten gleiten 24 px hoch und blenden ein</td><td>Scroll (88 % Viewport), 70 ms gestaffelt</td><td>0.9 s · <code>AR.ease.out</code></td></tr>
+    <tr><td>Goldener Kreis gleitet zum gewählten Tag, Leiste scrollt den Tag in die Mitte</td><td>Klick auf Tag</td><td>0.5 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Wechsel Tag / Ansicht / Filter: alte Karten blenden aus, neue gleiten 32 px von rechts (Liste: 12 px von unten) ein</td><td>Klick</td><td>0.18 s aus · 0.5 s ein · 60 ms gestaffelt</td></tr>
+    <tr><td>Segment Kalender/Angebote: schwarzer Hintergrund gleitet</td><td>Klick</td><td>0.45 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Slider: Pfeile scrollen eine Karte weiter, Fortschrittsbalken folgt</td><td>Klick / Ziehen / Trackpad</td><td>0.6 s · <code>AR.ease.inOut</code></td></tr>
+    <tr><td>Bild zoomt auf 106 %</td><td>Hover / Fokus</td><td>CSS 0.7 s · <code>--ease-out</code></td></tr>
+    <tr><td>Dropdown rollt auf (clip-path), Auswahl schliesst</td><td>Klick / Tastatur</td><td>0.45 s auf · 0.28 s zu</td></tr>
+    <tr><td>Reduzierte Bewegung</td><td colspan="2">Keine Verschiebungen: Inhalte wechseln mit kurzem Überblenden, Kreis und Slider springen direkt.</td></tr>
+  </table>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="../../shared/demo.js"></script>
+<script data-demo>
+AR.demo(({ reduced }) => {
+  const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const I = n => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+  const IMG = n => `../../shared/img/${n}.jpg`;
+
+  // ---------- Beispieldaten (im Projekt aus dem CMS) ----------
+  const EVENTS = [
+    { t: 'Das perfekte Dinner. Römer, Macht und Müll. Teil II', img: 'ausstellung', cat: 'Ausstellung', who: ['Erwachsene'], tags: ['Ausstellung'], member: true, time: '10:00–15:00 Uhr' },
+    { t: 'Das namenlose Gespenst: Ein Rätselrundgang voller Düfte und Gerüche', img: 'f-9d6ba486', cat: 'Selbständig', who: ['Familien'], tags: ['Selbständig'], time: '10:00–15:00 Uhr' },
+    { t: 'Römische Salben und Zahnpulver herstellen', img: 'moerser', cat: 'Workshop', who: ['Schulen', 'Erwachsene'], tags: ['Workshop'], time: '10:00–12:30 Uhr' },
+    { t: 'Führung für Familien im Römerhaus', img: 'f-21af4782', cat: 'Führung', who: ['Familien'], tags: ['Führung'], time: '13:00–14:00 Uhr' },
+    { t: 'Live in Concert im römischen Theater', img: 'f-48400d13', cat: 'Konzert', who: ['Erwachsene'], tags: ['Open-Air'], time: '19:00–22:30 Uhr' },
+    { t: 'Morgenrunde im Tierpark: Römische Haustierrassen', img: 'tierpark', cat: 'Führung', who: ['Familien'], tags: ['Tierpark'], time: '09:30–10:30 Uhr' },
+    { t: 'Maskenwerkstatt: Eine Theatermaske selbst gestalten', img: 'masken', cat: 'Workshop', who: ['Familien', 'Schulen'], tags: ['Co-Creation', 'Workshop'], time: '13:00–16:00 Uhr' },
+  ];
+  const OFFERS = [
+    { t: 'Gustatio romana – Römische Häppchen selbst gemacht', img: 'kueche', cat: 'Workshop', who: ['Erwachsene', 'Gruppen'], tags: ['Workshop', 'Co-Creation'], member: true },
+    { t: 'Augusta Raurica exklusiv', img: 'theater', cat: 'Führung', who: ['Erwachsene', 'Gruppen'], tags: ['Führung'], member: true },
+    { t: 'Brotbacken: Vom Korn zum Römerbrot', img: 'handschuhe', cat: 'Workshop', who: ['Familien', 'Schulen'], tags: ['Workshop'] },
+    { t: 'Grabungsluft schnuppern', img: 'grabung', cat: 'Workshop', who: ['Familien', 'Schulen'], tags: ['Workshop', 'Co-Creation'] },
+    { t: 'Führung für Familien im Römerhaus', img: 'f-21af4782', cat: 'Führung', who: ['Familien'], tags: ['Führung'] },
+    { t: 'Die Büste des Kaisers: Porträts aus Stein', img: 'bueste', cat: 'Ausstellung', who: ['Erwachsene'], tags: ['Ausstellung'] },
+  ];
+  const WD = ['SO', 'MO', 'DI', 'MI', 'DO', 'FR', 'SA'], WDL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+  const MON = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+  const START = new Date(2026, 8, 20), DAYS = 28, PER_DAY = [5, 2, 3, 3, 4, 3, 5];
+  const key = d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+  const DATED = [];
+  for (let i = 0; i < DAYS; i++) {
+    const d = new Date(START); d.setDate(START.getDate() + i);
+    if (i % 9 === 4) continue;   // ein paar Tage ohne Veranstaltung
+    for (let j = 0; j < PER_DAY[d.getDay()]; j++) {
+      const e = EVENTS[(i * 2 + j) % EVENTS.length];
+      const st = (i + j) % 7 === 0 ? 'booked' : (i + j) % 11 === 3 ? 'cancel' : (i + j) % 3 === 1 ? 'free' : 'open';
+      DATED.push({ ...e, day: key(d), date: d, st, places: 2 + (i + j) % 18 });
+    }
+  }
+  const FILTERS = { wer: ['Wer', ['Erwachsene', 'Familien', 'Schulen', 'Gruppen']], was: ['Was', ['Führung', 'Workshop', 'Ausstellung', 'Selbständig', 'Konzert']], verf: ['Verfügbarkeit', ['Freie Plätze', 'Ausgebuchte ausblenden']] };
+  const state = { mode: 'kalender', layout: 'grid', day: key(new Date(2026, 8, 27)), wer: null, was: null, verf: null };
+
+  // ---------- Markup-Bausteine ----------
+  const stateLabel = e => e.st === 'booked' ? 'Ausgebucht' : e.st === 'cancel' ? 'Abgesagt' : `${e.places} freie Plätze`;
+  const off = e => e.st === 'booked' || e.st === 'cancel';
+  const tags = e => `<p class="tags">${e.member ? `<span>${I('bank')}Nur für Mitglieder</span>` : ''}${e.tags.map(t => `<span>${t === 'Co-Creation' ? I('pin') : ''}${t}</span>`).join('')}</p>`;
+  const when = e => `<span class="sr-only">${WDL[e.date.getDay()]}, ${e.date.getDate()}. ${MON[e.date.getMonth()]}, </span>${e.time}`;
+  const ticket = e => off(e) ? '<span class="btn btn--off" aria-disabled="true">Ticket kaufen</span>' : '<a class="btn" href="#">Ticket kaufen</a>';
+  const more = `<a class="tlink" href="#"><span>Mehr erfahren</span>${I('arrow')}</a>`;
+  const media = (e, pills = '') => `<a class="ev__media" href="#" tabindex="-1" aria-hidden="true"><img src="${IMG(e.img)}" alt="" loading="lazy" decoding="async">${pills ? `<span class="pills">${pills}</span>` : ''}</a>`;
+  const cardEvent = e => `<article class="ev">${media(e, e.st === 'open' ? '' : `<span class="pill">${I('clock')}${stateLabel(e)}</span>`)}${tags(e)}<h3>${e.t}</h3><p class="ev__time">${when(e)}</p><div class="btns">${ticket(e)}${more}</div></article>`;
+  const cardOffer = o => `<article class="ev">${media(o, o.member ? `<span class="pill">${I('bank')}Nur für Mitglieder</span>` : '')}${tags({ ...o, member: false })}<h3>${o.t}</h3><div class="btns"><a class="btn" href="#">Mehr erfahren</a></div></article>`;
+  const rowEvent = e => `<li class="prow">${media(e)}<div><h3><a href="#">${e.t}</a></h3><p class="prow__time">${when(e)}</p><p class="prow__state">${I('clock')}${stateLabel(e)}</p></div>${tags(e)}<div class="prow__cta">${ticket(e)}${more}</div></li>`;
+  const rowOffer = o => `<li class="prow">${media(o)}<div><h3><a href="#">${o.t}</a></h3></div>${tags(o)}<div class="prow__cta"><a class="btn" href="#">Mehr erfahren</a></div></li>`;
+  const slider = (cards, label) => `<div class="track" tabindex="0" aria-label="${label}">${cards}</div><div class="bar"><div class="progress" aria-hidden="true"><span></span></div><div class="nav"><button class="round round--prev" type="button" aria-label="Zurück">${I('arrow')}</button><button class="round" type="button" aria-label="Weiter">${I('arrow')}</button></div></div>`;
+
+  // ---------- Filter-Dropdowns ----------
+  $('#filters').innerHTML = Object.entries(FILTERS).map(([k, [label, opts]]) => `<div class="dd" data-f="${k}"><button class="chip chip--dd" type="button" aria-haspopup="listbox" aria-expanded="false"><span>${label}</span>${I('down')}</button><ul class="dd__list" role="listbox" tabindex="-1" aria-label="${label}">${opts.map(o => `<li class="dd__opt" role="option" aria-selected="false" data-v="${o}">${o}${I('check')}</li>`).join('')}</ul></div>`).join('');
+  $$('.dd').forEach(dd => {
+    const btn = $('.chip', dd), list = $('.dd__list', dd), opts = $$('.dd__opt', list), f = dd.dataset.f;
+    let active = 0;
+    const mark = i => { active = i; opts.forEach((o, k) => o.classList.toggle('is-active', k === i)); };
+    const isOpen = () => btn.getAttribute('aria-expanded') === 'true';
+    function open() {
+      $$('.dd').forEach(o => o !== dd && o._close && o._close(false));
+      btn.setAttribute('aria-expanded', 'true'); mark(Math.max(0, opts.findIndex(o => o.getAttribute('aria-selected') === 'true')));
+      gsap.killTweensOf([list, opts]); gsap.set(list, { visibility: 'visible' });
+      if (reduced) gsap.fromTo(list, { opacity: 0 }, { opacity: 1, duration: .2 });
+      else {
+        gsap.fromTo(list, { opacity: 0, y: -6, clipPath: 'inset(0% 0% 100% 0% round 16px)' }, { opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0% round 16px)', duration: .45, ease: AR.ease.out });
+        gsap.fromTo(opts, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: .35, delay: .06, stagger: .035, ease: AR.ease.out });
+      }
+      list.focus({ preventScroll: true });
+    }
+    function close(focus = true) {
+      if (!isOpen()) return;
+      btn.setAttribute('aria-expanded', 'false'); gsap.killTweensOf([list, opts]);
+      gsap.to(list, { opacity: 0, y: reduced ? 0 : -4, clipPath: reduced ? 'none' : 'inset(0% 0% 100% 0% round 16px)', duration: reduced ? .15 : .28, ease: AR.ease.inOut, onComplete: () => gsap.set(list, { visibility: 'hidden' }) });
+      if (focus) btn.focus();
+    }
+    dd._close = close;
+    function choose(i) {
+      const v = opts[i].dataset.v; state[f] = state[f] === v ? null : v;
+      opts.forEach(o => o.setAttribute('aria-selected', o.dataset.v === state[f]));
+      $('span', btn).textContent = state[f] || FILTERS[f][0]; btn.classList.toggle('has-val', !!state[f]);
+      close(); render();
+    }
+    btn.addEventListener('click', () => isOpen() ? close() : open());
+    btn.addEventListener('keydown', e => { if (e.key === 'ArrowDown') { e.preventDefault(); open(); } });
+    opts.forEach((o, i) => { o.addEventListener('click', () => choose(i)); o.addEventListener('mousemove', () => mark(i)); });
+    list.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); mark((active + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length); }
+      else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(active); }
+      else if (e.key === 'Escape') close(); else if (e.key === 'Tab') close(false);
+    });
+    document.addEventListener('pointerdown', e => { if (!dd.contains(e.target)) close(false); });
+  });
+  const ft = $('.ftoggle'); ft.addEventListener('click', () => { const o = ft.getAttribute('aria-expanded') !== 'true'; ft.setAttribute('aria-expanded', o); $('.prog__tools').classList.toggle('is-filters', o); });
+
+  // ---------- Ziehen mit der Maus (Datumsleiste und Slider) ----------
+  function drag(el, onEnd) {
+    let down = false, moved = false, x0 = 0, l0 = 0;
+    el.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.button !== 0) return; down = true; moved = false; x0 = e.clientX; l0 = el.scrollLeft; gsap.killTweensOf(el); });
+    addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - x0; if (!moved && Math.abs(dx) > 5) { moved = true; el.classList.add('is-dragging'); } if (moved) el.scrollLeft = l0 - dx; });
+    addEventListener('pointerup', () => { if (!down) return; down = false; if (moved) { el.classList.remove('is-dragging'); onEnd && onEnd(); setTimeout(() => moved = false, 0); } });
+    el.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+  }
+
+  // ---------- Datumsleiste ----------
+  const daysEl = $('.days'), row = $('#days'), ind = $('.days__ind');
+  const dayBtns = [];
+  for (let i = 0; i < DAYS; i++) {
+    const d = new Date(START); d.setDate(START.getDate() + i);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'day'; b.dataset.day = key(d);
+    b.setAttribute('aria-label', `${WDL[d.getDay()]}, ${d.getDate()}. ${MON[d.getMonth()]}`); b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = `<span>${WD[d.getDay()]}</span>${d.getDate()}.${d.getMonth() + 1}`;
+    b.addEventListener('click', () => { if (!b.classList.contains('is-empty') && b.dataset.day !== state.day) { state.day = b.dataset.day; render(); } });
+    row.appendChild(b); dayBtns.push(b);
+  }
+  drag(daysEl);
+  function placeDay(dur) {
+    const b = dayBtns.find(x => x.dataset.day === state.day); if (!b) return;
+    dayBtns.forEach(x => x.setAttribute('aria-pressed', x === b));
+    gsap.to(ind, { x: b.offsetLeft, duration: reduced ? 0 : dur, ease: AR.ease.inOut });
+    const target = gsap.utils.clamp(0, daysEl.scrollWidth - daysEl.clientWidth, b.offsetLeft + 32 - daysEl.clientWidth / 2);
+    gsap.to(daysEl, { scrollLeft: target, duration: reduced ? 0 : dur, ease: AR.ease.inOut });
+  }
+
+  // ---------- Slider (Grid) ----------
+  function initSlider(root) {
+    const tr = $('.track', root), bar = $('.progress span', root), [prev, next] = $$('.round', root);
+    if (!tr) return;
+    const cards = () => $$('.ev', tr), max = () => tr.scrollWidth - tr.clientWidth;
+    const update = () => {
+      const m = max(), vis = m > 0 ? tr.clientWidth / tr.scrollWidth : 1, p = m > 0 ? tr.scrollLeft / m : 0;
+      gsap.set(bar, { scaleX: vis, xPercent: p * (1 - vis) * 100 });
+      prev.setAttribute('aria-disabled', tr.scrollLeft <= 2); next.setAttribute('aria-disabled', tr.scrollLeft >= m - 2);
+    };
+    const snaps = () => cards().map(c => Math.min(max(), c.offsetLeft - cards()[0].offsetLeft));
+    const go = x => gsap.to(tr, { scrollLeft: gsap.utils.clamp(0, max(), x), duration: reduced ? 0 : AR.dur.move, ease: AR.ease.inOut, overwrite: true });
+    prev.addEventListener('click', () => go([...snaps()].reverse().find(v => v < tr.scrollLeft - 4) ?? 0));
+    next.addEventListener('click', () => go(snaps().find(v => v > tr.scrollLeft + 4) ?? max()));
+    tr.addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    drag(tr, () => { const s = snaps(); go(s.reduce((a, b) => Math.abs(b - tr.scrollLeft) < Math.abs(a - tr.scrollLeft) ? b : a, s[0])); });
+    update();
+  }
+
+  // ---------- Darstellen ----------
+  const out = $('#out'), segInd = $('.seg__ind');
+  const filtered = list => list.filter(e => (!state.wer || e.who.includes(state.wer)) && (!state.was || e.cat === state.was) && (state.verf !== 'Freie Plätze' || e.st === 'free') && (state.verf !== 'Ausgebuchte ausblenden' || e.st !== 'booked'));
+  function draw() {
+    const list = state.layout === 'list';
+    if (state.mode === 'kalender') {
+      const items = filtered(DATED), has = new Set(items.map(e => e.day));
+      dayBtns.forEach(b => b.classList.toggle('is-empty', !has.has(b.dataset.day)));
+      const day = items.filter(e => e.day === state.day), label = $(`[data-day="${state.day}"]`).getAttribute('aria-label');
+      out.innerHTML = !day.length ? `<p class="empty">An diesem Tag gibt es${state.wer || state.was || state.verf ? ' für diese Auswahl' : ''} keine Veranstaltungen. Wählen Sie einen anderen Tag.</p>`
+        : list ? `<ul class="plist">${day.map(rowEvent).join('')}</ul>` : slider(day.map(cardEvent).join(''), `Veranstaltungen am ${label}`);
+    } else {
+      const items = filtered(OFFERS);
+      out.innerHTML = !items.length ? '<p class="empty">Für diese Auswahl gibt es keine Angebote.</p>'
+        : list ? `<ul class="plist">${items.map(rowOffer).join('')}</ul>` : slider(items.map(cardOffer).join(''), 'Angebote');
+    }
+    if (!list) initSlider(out);
+    return $$('.ev, .prow', out);
+  }
+  let first = true;
+  function render() {
+    $$('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === state.mode));
+    $$('[data-lay]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lay === state.layout));
+    const segBtn = $(`[data-mode="${state.mode}"]`);
+    gsap.to(segInd, { x: segBtn.offsetLeft, width: segBtn.offsetWidth, duration: first || reduced ? 0 : .45, ease: AR.ease.inOut });
+    const showDays = state.mode === 'kalender';
+    if (daysEl.hidden === showDays) {   // Datumsleiste ein- oder ausblenden
+      daysEl.hidden = !showDays;
+      if (showDays && !first) gsap.fromTo(daysEl, { autoAlpha: 0, y: reduced ? 0 : -8 }, { autoAlpha: 1, y: 0, duration: AR.dur.ui, ease: AR.ease.out });
+    }
+    const old = $$('.ev, .prow, .empty', out);
+    const enter = () => {
+      const items = draw();
+      if (showDays) placeDay(first ? 0 : .5);
+      if (first) return;
+      const isList = state.layout === 'list';
+      gsap.fromTo(items, { opacity: 0, x: reduced || isList ? 0 : 32, y: !reduced && isList ? 12 : 0 },
+        { opacity: 1, x: 0, y: 0, duration: .5, stagger: .06, ease: AR.ease.out, clearProps: 'transform' });
+    };
+    if (first || !old.length) { enter(); first = false; return; }
+    gsap.to(old, { opacity: 0, x: reduced ? 0 : -16, duration: .18, ease: AR.ease.out, overwrite: true, onComplete: enter });
+  }
+  $$('[data-mode]').forEach(b => b.addEventListener('click', () => { if (state.mode !== b.dataset.mode) { state.mode = b.dataset.mode; render(); } }));
+  $$('[data-lay]').forEach(b => b.addEventListener('click', () => { if (state.layout !== b.dataset.lay) { state.layout = b.dataset.lay; render(); } }));
+  addEventListener('resize', () => { const b = $(`[data-mode="${state.mode}"]`); gsap.set(segInd, { x: b.offsetLeft, width: b.offsetWidth }); placeDay(0); });
+  render();
+
+  // ---------- Einblenden beim Scrollen ----------
+  AR.reveal('.prog__head > *, .prog__bar > *');
+  if (!reduced) gsap.from([daysEl, out], { autoAlpha: 0, y: 24, duration: AR.dur.reveal, stagger: AR.stagger, ease: AR.ease.out, scrollTrigger: { trigger: daysEl, start: 'top 88%', once: true } });
+});
+</script>
+</body>
+</html>
